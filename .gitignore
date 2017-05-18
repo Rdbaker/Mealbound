@@ -44,3 +44,6 @@ docs/_build
 
 # Virtualenvs
 env/
+
+# py.test cache
+.cache

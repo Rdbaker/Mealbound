@@ -2,7 +2,7 @@
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
 
-from ceraon import commands, public, user
+from ceraon import commands, public, user, models
 from ceraon.assets import assets
 from ceraon.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
 from ceraon.settings import ProdConfig

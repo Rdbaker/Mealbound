@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Database module, including the SQLAlchemy database object and DB-related utilities."""
+"""Database module, including the SQLAlchemy database object and DB-related \
+utilities.
+"""
+import uuid
+
+from sqlalchemy.dialects.postgresql import UUID
+from werkzeug.exceptions import BadRequest
+
 from .compat import basestring
+from .err_constants import Errors
 from .extensions import db
 
 # Alias common SQLAlchemy names
@@ -9,7 +17,8 @@ relationship = db.relationship
 
 
 class CRUDMixin(object):
-    """Mixin that adds convenience methods for CRUD (create, read, update, delete) operations."""
+    """Mixin that adds convenience methods for CRUD (create, read, update,
+    delete) operations."""
 
     @classmethod
     def create(cls, **kwargs):
@@ -45,7 +54,8 @@ class Model(CRUDMixin, db.Model):
 # From Mike Bayer's "Building the app" talk
 # https://speakerdeck.com/zzzeek/building-the-app
 class SurrogatePK(object):
-    """A mixin that adds a surrogate integer 'primary key' column named ``id`` to any declarative-mapped class."""
+    """A mixin that adds a surrogate integer 'primary key' column named ``id``
+    to any declarative-mapped class."""
 
     __table_args__ = {'extend_existing': True}
 
@@ -62,6 +72,30 @@ class SurrogatePK(object):
         return None
 
 
+class UUIDMixin(object):
+    """A mixin that is like SurrogatePK mixin, but uses PostgreSQL's UUID type
+    instead of an integer ID."""
+    __table_args = {'extend_existing': True}
+
+    id = Column(UUID(as_uuid=True), nullable=False, primary_key=True,
+                default=uuid.uuid4)
+
+    @classmethod
+    def get_by_id(cls, record_id):
+        """Get record by UUID."""
+        if not isinstance(record_id, uuid.UUID):
+            try:
+                record_id = uuid.UUID(record_id)
+            except:
+                raise BadRequest(Errors.BAD_GUID)
+        return cls.query.get(record_id)
+
+    @classmethod
+    def find(cls, record_id):
+        """Alias for get_by_id."""
+        return cls.get_by_id(record_id)
+
+
 def reference_col(tablename, nullable=False, pk_name='id', **kwargs):
     """Column that adds primary key foreign key reference.
 
@@ -73,3 +107,11 @@ def reference_col(tablename, nullable=False, pk_name='id', **kwargs):
     return db.Column(
         db.ForeignKey('{0}.{1}'.format(tablename, pk_name)),
         nullable=nullable, **kwargs)
+
+
+class UUIDModel(Model, UUIDMixin):
+    __abstract__ = True
+
+
+class IDModel(Model, SurrogatePK):
+    __abstract__ = True
