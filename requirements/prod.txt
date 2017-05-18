@@ -37,3 +37,6 @@ Flask-Caching>=1.0.0
 
 # Debug toolbar
 Flask-DebugToolbar==0.10.1
+
+# TODO: get the version for this later
+marshmallow

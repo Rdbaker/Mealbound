@@ -2,9 +2,10 @@
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
 
-from ceraon import commands, public, user, models
+from ceraon import commands, public, user
 from ceraon.assets import assets
 from ceraon.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
+from ceraon.models import locations as locations_models
 from ceraon.settings import ProdConfig
 
 
@@ -40,6 +41,9 @@ def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
     app.register_blueprint(user.views.blueprint)
+
+    from ceraon.api.v1.locations import views as locations_views
+    app.register_blueprint(locations_views.blueprint)
     return None
 
 
