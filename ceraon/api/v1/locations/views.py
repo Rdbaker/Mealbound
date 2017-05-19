@@ -1,25 +1,45 @@
 """API routes for locations."""
 
 from flask import Blueprint, jsonify, request
+from werkzeug.exceptions import NotFound
 
+from ceraon.err_constants import Errors
 from ceraon.models.locations import Location
+from ceraon.utils import RESTBlueprint
 
 from .schema import LocationSchema
 
-blueprint = Blueprint('locations', __name__, url_prefix='/api/v1/locations')
+blueprint = RESTBlueprint('locations', __name__, version='v1')
 
 LOCATION_SCHEMA = LocationSchema()
 
-@blueprint.route('', methods=['GET'])
+
+@blueprint.find()
+def find_location(uid):
+    location = Location.find(uid)
+    if location is None:
+        raise NotFound(Errors.LOCATION_NOT_FOUND)
+    return jsonify(data=LOCATION_SCHEMA.dump(location).data)
+
+
+@blueprint.list()
 def list_locations():
     """List the locations
 
     :param page int: (default: 1) the page of locations to retrieve
     :param per_page int: (default: 10) the size of the page to return
+    :param source string: return locations from a specific source, "internal"
+        for locations with no external source
     """
-    page = Location.query.paginate(
-        page=int(request.args.get('page', 1)),
-        per_page=int(request.args.get('per_page', 10)))
+    if request.args.get('source') is not None:
+        source = request.args.get('source')
+        if source == 'internal':
+            source = None
+        filtered = Location.query.filter(Location.source == source)
+    else:
+        filtered = Location.query
+    page = filtered.paginate(page=int(request.args.get('page', 1)),
+                             per_page=int(request.args.get('per_page', 10)))
 
     meta_pagination = {
         'first': request.path + '?page={page}&per_page={per_page}'.format(
