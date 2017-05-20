@@ -43,7 +43,8 @@ class RESTBlueprint(Blueprint):
     """
     def __init__(self, blueprint_name, name, version):
         return super(RESTBlueprint, self).__init__(
-            blueprint_name, name, url_prefix='/api/{}/{}'.format(version, blueprint_name))
+            'api.{}.{}'.format(version, blueprint_name),
+            name, url_prefix='/api/{}/{}'.format(version, blueprint_name))
 
     def flexible_route(self, *args, **kwargs):
         return self.route(*args, **kwargs, strict_slashes=False)

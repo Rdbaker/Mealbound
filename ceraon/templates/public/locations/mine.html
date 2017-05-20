@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Your location:</h1>
+    {% if current_user.location %}
+        <div class="container-narrow">
+          <h2>{{ current_user.location.name }}</h2>
+        </div>
+        <div><a href="{{ url_for('location.show', uid=location.id) }}">Click here</a> to preview the location as a guest</div>
+    {% endif %}
+{% endblock %}

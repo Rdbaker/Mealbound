@@ -3,8 +3,10 @@
 import datetime as dt
 
 from flask_login import UserMixin
+from sqlalchemy.orm import backref
 
-from ceraon.database import Column, Model, SurrogatePK, db, reference_col, relationship
+from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,
+                             relationship)
 from ceraon.extensions import bcrypt
 
 
@@ -38,6 +40,9 @@ class User(UserMixin, SurrogatePK, Model):
     last_name = Column(db.String(30), nullable=True)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
+
+    location_id = reference_col('location', nullable=True)
+    location = relationship('Location', backref=backref('host', uselist=False), cascade='delete')
 
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""

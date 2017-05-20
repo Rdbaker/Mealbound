@@ -7,3 +7,5 @@ class Errors(object):
     LOCATION_NAME_MISSING = ('location-name-missing', 'We require a name.')
     LOCATION_NOT_FOUND = ('location-not-found',
                           'We couldn\'t find that location, sorry about that')
+    LOCATION_ALREADY_CREATED = ('location-already-created',
+                                'You\'ve already created your location!')

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Welcome {{ current_user.username }}</h1>
-    {% if current_user and not current_user.location %}
+    <h1>Create your location!</h1>
+    {% if not current_user.location %}
         <div class="container-narrow">
           <h1>Create Your Location</h1>
             <br/>
@@ -19,5 +19,7 @@
                     <p><input class="btn btn-default btn-submit" type="submit" value="Create"></p>
             </form>
         </div>
+    {% else %}
+        <div>You've already created your location! <a href="{{ url_for('location.mine') }}">Click here</a> to see it</div>
     {% endif %}
 {% endblock %}

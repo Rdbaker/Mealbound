@@ -45,6 +45,28 @@ class CRUDMixin(object):
         return commit and db.session.commit()
 
 
+class PersistentMixin(CRUDMixin):
+    """Mixin that doesn't let a model be deleted from the database. Doesn't
+    allow for very transparent reads, either."""
+    # TODO: make a better pattern for this. One that goes lower under
+    # SQLAlchemy's abstraction layers
+    __table_args__ = {'extend_existing': True}
+
+    _deleted = db.Column(db.Boolean, index=True, default=False)
+
+    @classmethod
+    def get(cls, pk):
+        inst = super()
+        if inst is not None and inst._deleted is True:
+            return None
+        return ret
+
+    def delete(self, *args, **kwargs):
+        """Don't actually delete, just set _deleted to True."""
+        self.update(_deleted=True)
+        return None
+
+
 class Model(CRUDMixin, db.Model):
     """Base model class that includes CRUD convenience methods."""
 
