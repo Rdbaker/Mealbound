@@ -6,5 +6,6 @@
           <h2>{{ current_user.location.name }}</h2>
         </div>
         <div><a href="{{ url_for('location.show', uid=location.id) }}">Click here</a> to preview the location as a guest</div>
+        <div><a href="{{ url_for('location.edit') }}">Click here</a> to edit your location</div>
     {% endif %}
 {% endblock %}

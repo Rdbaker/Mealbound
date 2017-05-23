@@ -9,24 +9,10 @@ from ceraon.err_constants import Errors
 from ceraon.models.locations import Location
 
 
-class CreateLocationForm(Form):
-    """The form to create a location."""
+class LocationForm(Form):
+    """The form to save a location."""
 
     name = StringField('Name of the location',
                        validators=[DataRequired(), Length(min=3, max=128)])
     address = StringField('What is the address',
                           validators=[DataRequired(), Length(max=256)])
-
-    def __init__(self, *args, **kwargs):
-        """Create instance."""
-        super(CreateLocationForm, self).__init__(*args, **kwargs)
-
-    def validate(self):
-        """Validate the form."""
-        initial_validation = super(CreateLocationForm, self).validate()
-        if not initial_validation:
-            return False
-        if current_user.location is not None:
-            self.name.errors.append(Errors.LOCATION_ALREADY_CREATED)
-            return False
-        return True
