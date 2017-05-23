@@ -65,7 +65,6 @@ def create():
             geolocator = Nominatim()
             address, (lat, lon) = geolocator.geocode(form.address.data)
         except:
-            raise
             lat, lon = (None, None)
         Location.create(host=current_user, name=form.name.data,
                         address=form.address.data, latitude=lat, longitude=lon)
@@ -99,7 +98,6 @@ def edit():
                 geolocator = Nominatim()
                 address, (lat, lon) = geolocator.geocode(form.address.data)
             except:
-                raise
                 lat, lon = (None, None)
             current_user.location.update(name=form.name.data,
                                          address=form.address.data,
