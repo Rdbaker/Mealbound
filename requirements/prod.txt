@@ -40,3 +40,6 @@ Flask-DebugToolbar==0.10.1
 
 # TODO: get the version for this later
 marshmallow
+
+# geocoding
+geopy==1.11.0

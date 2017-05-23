@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 """Location forms."""
-from flask_login import current_user
-from flask_wtf import Form
-from wtforms import PasswordField, StringField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
-
-from ceraon.err_constants import Errors
-from ceraon.models.locations import Location
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired, Length
 
 
-class LocationForm(Form):
+class LocationForm(FlaskForm):
     """The form to save a location."""
 
     name = StringField('Name of the location',

@@ -2,12 +2,14 @@
 """Location views."""
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
+from geopy.geocoders import Nominatim
 
 from ceraon.public.locations.forms import LocationForm
 from ceraon.models.locations import Location
 from ceraon.utils import flash_errors
 
-blueprint = Blueprint('location', __name__, url_prefix='/location', static_folder='../static')
+blueprint = Blueprint('location', __name__, url_prefix='/location',
+                      static_folder='../static')
 
 
 @blueprint.route('/', methods=['GET', 'POST'])
@@ -56,9 +58,17 @@ def list():
 @blueprint.route('/new', methods=['GET', 'POST'])
 @login_required
 def create():
+    """Create a new location."""
     form = LocationForm(request.form)
     if form.validate_on_submit():
-        Location.create(host=current_user, name=form.name.data)
+        try:
+            geolocator = Nominatim()
+            address, (lat, lon) = geolocator.geocode(form.address.data)
+        except:
+            raise
+            lat, lon = (None, None)
+        Location.create(host=current_user, name=form.name.data,
+                        address=form.address.data, latitude=lat, longitude=lon)
         flash('You created your location!', 'success')
         return redirect(url_for('location.mine'))
     else:
@@ -78,13 +88,22 @@ def mine():
 @login_required
 def edit():
     """Allow the user to edit their location."""
-    form = LocationForm(name=current_user.location.name)
+    form = LocationForm(name=current_user.location.name,
+                        address=current_user.location.address)
     if request.method == 'GET':
         return render_template('public/locations/edit.html',
                                location=current_user.location, form=form)
     else:
         if form.validate_on_submit():
-            current_user.location.update(name=form.name.data)
+            try:
+                geolocator = Nominatim()
+                address, (lat, lon) = geolocator.geocode(form.address.data)
+            except:
+                raise
+                lat, lon = (None, None)
+            current_user.location.update(name=form.name.data,
+                                         address=form.address.data,
+                                         latitude=lat, longitude=lon)
             flash('You updated your location!', 'success')
             return redirect(url_for('location.mine'))
         else:

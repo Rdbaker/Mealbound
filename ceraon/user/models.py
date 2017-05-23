@@ -42,7 +42,8 @@ class User(UserMixin, SurrogatePK, Model):
     is_admin = Column(db.Boolean(), default=False)
 
     location_id = reference_col('location', nullable=True)
-    location = relationship('Location', backref=backref('host', uselist=False), cascade='delete')
+    location = relationship('Location', backref=backref('host', uselist=False),
+                            cascade='delete')
 
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""
