@@ -3,8 +3,7 @@
 from marshmallow import Schema, fields, validates
 from werkzeug.exceptions import BadRequest
 
-from ceraon.err_constants import Errors
-from ceraon.models.locations import Location
+from ceraon.constants import Errors
 
 
 class LocationSchema(Schema):

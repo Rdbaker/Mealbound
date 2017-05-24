@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from geopy.geocoders import Nominatim
 
+from ceraon.constants import Success
 from ceraon.public.locations.forms import LocationForm
 from ceraon.models.locations import Location
 from ceraon.utils import flash_errors
@@ -68,7 +69,7 @@ def create():
             lat, lon = (None, None)
         Location.create(host=current_user, name=form.name.data,
                         address=form.address.data, latitude=lat, longitude=lon)
-        flash('You created your location!', 'success')
+        flash(Success.LOCATION_CREATED, 'success')
         return redirect(url_for('location.mine'))
     else:
         flash_errors(form)
@@ -102,7 +103,7 @@ def edit():
             current_user.location.update(name=form.name.data,
                                          address=form.address.data,
                                          latitude=lat, longitude=lon)
-            flash('You updated your location!', 'success')
+            flash(Success.LOCATION_UPDATED, 'success')
             return redirect(url_for('location.mine'))
         else:
             flash_errors(form)

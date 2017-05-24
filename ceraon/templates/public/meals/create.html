@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Schedule a meal</h1>
+    <div class="container-narrow">
+        {% include "public/meals/form.html" %}
+    </div>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{{ url_for('static', filename='libs/moment/min/moment.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
+  <script>
+    $(document).ready(function(){
+      $('#scheduled_for').datetimepicker();
+    });
+  </script>
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}">
+{% endblock %}

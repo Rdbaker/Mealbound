@@ -1,9 +1,9 @@
 """API routes for locations."""
 
-from flask import Blueprint, jsonify, request
+from flask import jsonify, request
 from werkzeug.exceptions import NotFound
 
-from ceraon.err_constants import Errors
+from ceraon.constants import Errors
 from ceraon.models.locations import Location
 from ceraon.utils import RESTBlueprint
 

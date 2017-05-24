@@ -2,6 +2,9 @@
 {% block content %}
     <h1>Your location:</h1>
     {% if current_user.location %}
+        <div class="container">
+          <a class="btn btn-large btn-primary" href="{{ url_for('meal.create') }}">Schedule a meal</a>
+        </div>
         <div class="container-narrow">
           <h2>{{ current_user.location.name }}</h2>
           <div>{{ current_user.location.address }}</div>

@@ -8,7 +8,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from werkzeug.exceptions import BadRequest
 
 from .compat import basestring
-from .err_constants import Errors
+from .constants import Errors
 from .extensions import db
 
 # Alias common SQLAlchemy names
@@ -17,8 +17,7 @@ relationship = db.relationship
 
 
 class CRUDMixin(object):
-    """Mixin that adds convenience methods for CRUD (create, read, update,
-    delete) operations."""
+    """Mixin that adds convenience methods for CRUD operations."""
 
     @classmethod
     def create(cls, **kwargs):

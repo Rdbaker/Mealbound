@@ -1,0 +1,13 @@
+<form id="mealForm" class="form" method="POST" action="" role="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  <div class="form-group" style="position: relative;">
+    {{form.scheduled_for.label}}
+    {{form.scheduled_for(placeholder="When", id_="schedule-for",
+                         class_="form-control")}}
+  </div>
+  <div class="form-group">
+    {{form.cost.label}}
+    {{form.cost(placeholder="$4.75", class_="form-control")}}
+  </div>
+  <p><input class="btn btn-default btn-submit" type="submit" value="Submit"></p>
+</form>

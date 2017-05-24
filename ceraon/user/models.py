@@ -45,6 +45,8 @@ class User(UserMixin, SurrogatePK, Model):
     location = relationship('Location', backref=backref('host', uselist=False),
                             cascade='delete')
 
+    user_meals = relationship('UserMeal', cascade='delete')
+
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""
         db.Model.__init__(self, username=username, email=email, **kwargs)

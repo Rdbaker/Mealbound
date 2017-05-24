@@ -4,4 +4,17 @@
     <div class="container-narrow">
       <h2>{{ location.name }}</h2>
     </div>
+    <h3>Upcoming Meals:</h3>
+    <div class="container-narrow">
+      {% for meal in location.meals %}
+        <div>
+          <div>Cost: <b>{{ meal.price }}</b></div>
+          <div>Time: <b>{{ meal.scheduled_for }}</b></div>
+          <form action="{{ url_for('meal.join_or_leave_meal', uid=meal.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="submit" class="btn btn-sm btn-info" value="Join"/>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
 {% endblock %}

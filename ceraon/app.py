@@ -4,14 +4,18 @@ from flask import Flask, render_template
 
 from ceraon import commands, public, user
 from ceraon.assets import assets
-from ceraon.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
-from ceraon.models import locations as locations_models
+from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
+                               login_manager, migrate)
+from ceraon.models import locations as locations_models, meals as meals_models # noqa
 from ceraon.public.locations.views import blueprint as location_blueprint
+from ceraon.public.meals.views import blueprint as meal_blueprint
 from ceraon.settings import ProdConfig
 
 
 def create_app(config_object=ProdConfig):
-    """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
+    """This function is an application factory.
+
+    As explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
 
     :param config_object: The configuration object to use.
     """
@@ -43,6 +47,7 @@ def register_blueprints(app):
     app.register_blueprint(public.views.blueprint)
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(location_blueprint)
+    app.register_blueprint(meal_blueprint)
 
     from ceraon.api.v1.locations import views as locations_views
     app.register_blueprint(locations_views.blueprint)
