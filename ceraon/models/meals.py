@@ -40,3 +40,10 @@ class Meal(UUIDModel):
     def host(self):
         """Get the host of the meal."""
         return self.location.host
+
+    def joined(self, user):
+        """Return True if the given user has joined the meal already."""
+        for um in self.user_meals:
+            if um.user == user:
+                return True
+        return False
