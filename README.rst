@@ -8,22 +8,19 @@ Meal finder
 Quickstart
 ----------
 
-First, set your app's secret key as an environment variable. For example,
-add the following to ``.bashrc`` or ``.bash_profile``.
-
-.. code-block:: bash
-
-    export CERAON_SECRET='something-really-secret'
-
 Before running shell commands, set the ``FLASK_APP`` and ``FLASK_DEBUG``
 environment variables ::
 
     export FLASK_APP=/path/to/autoapp.py
     export FLASK_DEBUG=1
 
+Alternatively, you can run the shell command included in this project ::
+
+    . env.sh
+
 Then run the following commands to bootstrap your environment ::
 
-    git clone https://github.com/rdbaker/ceraon
+    git clone https://rdbaker@bitbucket.org/rdbaker/ceraon.git
     cd ceraon
     pip install -r requirements/dev.txt
     bower install
@@ -31,11 +28,10 @@ Then run the following commands to bootstrap your environment ::
 
 You will see a pretty welcome screen.
 
-Once you have installed your DBMS, run the following to create your app's
+Once you have installed PostgreSQL, run the following to create your app's
 database tables and perform the initial migration ::
 
-    flask db init
-    flask db migrate
+    . setup_db.sh
     flask db upgrade
     flask run
 
