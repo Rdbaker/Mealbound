@@ -56,4 +56,6 @@ class Meal(UUIDModel):
             return False
         elif self.joined(user):
             return False
+        elif self.scheduled_for < dt.datetime.now():
+            return False
         return True
