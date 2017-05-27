@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Location views."""
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_paginate import Pagination
@@ -22,7 +23,7 @@ def search():
     page = Location.query.paginate(page=page_num, per_page=per_page)
     pagination = Pagination(page=page_num, per_page=per_page, search=True,
                             found=(per_page * page.pages), bs_version=3,
-                            record_name='locations',
+                            record_name='locations', outer_window=0,
                             total=(per_page * page.pages))
     return render_template('locations/list.html', locations=page.items,
                            pagination=pagination)
@@ -92,5 +93,4 @@ def edit():
 @blueprint.route('/<string:uid>', methods=['GET'])
 def show(uid):
     """Show the location with the UID."""
-    return render_template('locations/show.html',
-                           location=Location.find(uid))
+    return render_template('locations/show.html', location=Location.find(uid))

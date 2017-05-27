@@ -17,6 +17,7 @@ class Errors(object):
                              'meal for after now')
     MEAL_NEEDS_COST = ('meal-needs-cost', 'The meal needs a cost (even $0)')
     NON_NEGATIVE = ('non-negative', 'This can\'t be negative')
+    CANNOT_JOIN_MEAL = ('cannot-join-meal', 'You can\'t join that meal')
 
 
 class Success(object):
@@ -24,3 +25,4 @@ class Success(object):
     LOCATION_UPDATED = ('location-updated', 'You updated your location!')
     MEAL_CREATED = ('meal-created', 'You scheduled a new meal!')
     MEAL_WAS_JOINED = ('meal-joined', 'You successfully joined a meal!')
+    MEAL_WAS_LEFT = ('meal-left', 'Reservation successfully canceled')

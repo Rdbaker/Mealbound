@@ -5,4 +5,14 @@
       <p>When: <b>{{ meal.scheduled_for }}</b></p>
       <p>Cost: <b>{{ meal.price }}</b></p>
     </div>
+    {% if meal.joined(current_user) or meal.user_can_join(current_user) %}
+      <form action="{{ url_for('meal.join_or_leave_meal', uid=meal.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if meal.joined(current_user) %}
+          <input type="submit" class="btn btn-sm btn-danger" value="Cancel Reservation"/>
+        {% else %}
+          <input type="submit" class="btn btn-sm btn-info" value="Join"/>
+        {% endif %}
+      </form>
+    {% endif %}
 {% endblock %}

@@ -47,3 +47,13 @@ class Meal(UUIDModel):
             if um.user == user:
                 return True
         return False
+
+    def user_can_join(self, user):
+        """Decide whether or not the user can join the meal."""
+        if not user.is_authenticated:
+            return False
+        elif user is self.host:
+            return False
+        elif self.joined(user):
+            return False
+        return True

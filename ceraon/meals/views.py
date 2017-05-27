@@ -54,21 +54,24 @@ def show(uid):
 @login_required
 def join_or_leave_meal(uid):
     """Join a meal or leave a meal."""
-    if request.method == 'POST':
-        return join_meal(uid)
+    meal = Meal.find(uid)
+    if not meal.joined(current_user):
+        return join_meal(meal)
     else:
-        return leave_meal(uid)
+        return leave_meal(meal)
 
 
-def join_meal(meal_uid):
+def join_meal(meal):
     """Allow a user to join a meal."""
-    meal = Meal.find(meal_uid)
     # TODO: do some validation here
     UserMeal.create(meal=meal, user=current_user)
     flash(Success.MEAL_WAS_JOINED[1], 'success')
-    return redirect(url_for('meal.show', uid=meal_uid))
+    return redirect(url_for('meal.show', uid=meal.id))
 
 
-def leave_meal(meal_uid):
+def leave_meal(meal):
     """Allow a user to leave the meal."""
-    pass
+    um = UserMeal.query.get((current_user.id, meal.id))
+    um.delete()
+    flash(Success.MEAL_WAS_LEFT[1], 'info')
+    return redirect(url_for('meal.show', uid=meal.id))
