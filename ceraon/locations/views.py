@@ -48,7 +48,7 @@ def create():
             lat, lon = (None, None)
         Location.create(host=current_user, name=form.name.data,
                         address=form.address.data, latitude=lat, longitude=lon)
-        flash(Success.LOCATION_CREATED, 'success')
+        flash(Success.LOCATION_CREATED[1], 'success')
         return redirect(url_for('location.mine'))
     else:
         flash_errors(form)
