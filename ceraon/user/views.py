@@ -3,11 +3,12 @@
 from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
 
-from ceraon.public.locations.forms import LocationForm
+from ceraon.locations.forms import LocationForm
 from ceraon.models.locations import Location
 from ceraon.utils import flash_errors
 
-blueprint = Blueprint('user', __name__, url_prefix='/users', static_folder='../static')
+blueprint = Blueprint('user', __name__, url_prefix='/users',
+                      static_folder='../static')
 
 
 @blueprint.route('/', methods=['GET', 'POST'])

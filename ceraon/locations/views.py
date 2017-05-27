@@ -2,6 +2,7 @@
 """Location views."""
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
+from flask_paginate import Pagination
 from geopy.geocoders import Nominatim
 
 from ceraon.constants import Success
@@ -16,38 +17,15 @@ blueprint = Blueprint('location', __name__, url_prefix='/location',
 @blueprint.route('/', methods=['GET', 'POST'])
 def search():
     """Search for the locations for the user."""
-    page = Location.query.paginate(page=int(request.args.get('page', 1)),
-                                   per_page=int(request.args.get('per_page',
-                                                                 10)))
-    meta_pagination = {
-        'current': {
-            'num': page.page,
-            'link': 'javascript:void(0)'
-        },
-        'first': {
-            'num': 1,
-            'link': request.path + '?page={page}&per_page={per_page}'.format(
-                page=1, per_page=page.per_page)
-        },
-        'next': {
-            'num': page.next_num or page.pages,
-            'link': request.path + '?page={page}&per_page={per_page}'.format(
-                page=page.next_num or page.pages, per_page=page.per_page)
-        },
-        'last': {
-            'num': page.pages,
-            'link': request.path + '?page={page}&per_page={per_page}'.format(
-                page=page.pages, per_page=page.per_page)
-        },
-        'prev': {
-            'num': page.prev_num or 1,
-            'link': request.path + '?page={page}&per_page={per_page}'.format(
-                page=page.prev_num or 1, per_page=page.per_page)
-        }
-    }
-
+    page_num = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    page = Location.query.paginate(page=page_num, per_page=per_page)
+    pagination = Pagination(page=page_num, per_page=per_page, search=True,
+                            found=(per_page * page.pages), bs_version=3,
+                            record_name='locations',
+                            total=(per_page * page.pages))
     return render_template('public/locations/list.html', locations=page.items,
-                           pagination=meta_pagination)
+                           pagination=pagination)
 
 
 @blueprint.route('/list', methods=['GET'])

@@ -2,7 +2,7 @@
 """Models for locations."""
 from sqlalchemy.dialects.postgresql import JSONB
 
-from ceraon.database import UUIDModel, Column, db, relationship
+from ceraon.database import UUIDModel, Column, db
 
 
 class Location(UUIDModel):

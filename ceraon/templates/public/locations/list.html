@@ -2,6 +2,7 @@
 {% block content %}
   <div class="wrapper">
     <h1>Locations Near You</h1>
+    <div>{{ pagination.info }}
     <div>
     {% for location in locations %}
       <div class="row">
@@ -13,25 +14,7 @@
     {% endfor %}
     </div>
     <div class="pagination btn-group">
-      {% if pagination.first.num != pagination.prev.num and pagination.first.num != pagination.current.num %}
-        <a class="btn btn-sm btn-default" href="{{ pagination.first.link }}">{{ pagination.first.num }}</a>
-        {% if pagination.prev.num - 1 != pagination.first.num %}
-          <div class="btn btn-sm btn-default disabled">...</div>
-        {% endif %}
-      {% endif %}
-      {% if pagination.current.num != pagination.prev.num %}
-        <a class="btn btn-sm btn-default" href="{{ pagination.prev.link }}">{{ pagination.prev.num }}</a>
-      {% endif %}
-      <a class="btn btn-sm btn-default active" href="{{ pagination.current.link }}">{{ pagination.current.num }}</a>
-      {% if pagination.current.num != pagination.next.num %}
-        <a class="btn btn-sm btn-default" href="{{ pagination.next.link }}">{{ pagination.next.num }}</a>
-      {% endif %}
-      {% if pagination.next.num != pagination.last.num and pagination.last.num != pagination.current.num %}
-        {% if pagination.last.num + 1 != pagination.next.num %}
-          <div class="btn btn-sm btn-default disabled">...</div>
-        {% endif %}
-        <a class="btn btn-sm btn-default" href="{{ pagination.last.link }}">{{ pagination.last.num }}</a>
-      {% endif %}
+      {{ pagination.links }}
     </div>
   </div>
 {% endblock %}
