@@ -23,3 +23,8 @@ def members():
     else:
         flash_errors(form)
     return render_template('users/members.html', form=form)
+
+@blueprint.route('/me', methods=['GET'])
+@login_required
+def me():
+    return render_template('users/me.html')
