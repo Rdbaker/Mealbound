@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Welcome {{ current_user.username }}</h1>
+    <div class="container-narrow">
+        <h1>Your Upcoming Meals</h1>
+        <br/>
+        <a href="{{ url_for('location.mine') }}">
+        {% if current_user and not current_user.location %}
+        Become a host: create a location
+        {% else %}
+        Manage your location
+        {% endif %}
+        </a>
+    </div>
+{% endblock %}
