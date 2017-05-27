@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 """Location views."""
-
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_paginate import Pagination
-from geopy.geocoders import Nominatim
 
 from ceraon.constants import Success
 from ceraon.locations.forms import LocationForm
 from ceraon.models.locations import Location
-from ceraon.utils import flash_errors
+from ceraon.utils import flash_errors, FlaskThread
 
 blueprint = Blueprint('location', __name__, url_prefix='/location',
                       static_folder='../static')
@@ -41,13 +39,10 @@ def create():
     """Create a new location."""
     form = LocationForm(request.form)
     if form.validate_on_submit():
-        try:
-            geolocator = Nominatim()
-            address, (lat, lon) = geolocator.geocode(form.address.data)
-        except:
-            lat, lon = (None, None)
-        Location.create(host=current_user, name=form.name.data,
-                        address=form.address.data, latitude=lat, longitude=lon)
+        location = Location.create(host=current_user, name=form.name.data,
+                                   address=form.address.data)
+        th = FlaskThread(target=location.update_coordinates)
+        th.start()
         flash(Success.LOCATION_CREATED[1], 'success')
         return redirect(url_for('location.mine'))
     else:
@@ -74,15 +69,11 @@ def edit():
                                location=current_user.location, form=form)
     else:
         if form.validate_on_submit():
-            try:
-                geolocator = Nominatim()
-                address, (lat, lon) = geolocator.geocode(form.address.data)
-            except:
-                lat, lon = (None, None)
             current_user.location.update(name=form.name.data,
-                                         address=form.address.data,
-                                         latitude=lat, longitude=lon)
-            flash(Success.LOCATION_UPDATED, 'success')
+                                         address=form.address.data)
+            th = FlaskThread(target=current_user.location.update_coordinates)
+            th.start()
+            flash(Success.LOCATION_UPDATED[1], 'success')
             return redirect(url_for('location.mine'))
         else:
             flash_errors(form)

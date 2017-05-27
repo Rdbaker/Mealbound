@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Models for locations."""
+from geopy.geocoders import Nominatim
 from sqlalchemy.dialects.postgresql import JSONB
 
 from ceraon.database import UUIDModel, Column, db
@@ -42,3 +43,17 @@ class Location(UUIDModel):
     def __repr__(self):
         """Return the location as a string."""
         return '<Location({name} | {id})>'.format(name=self.name, id=self.id)
+
+    def update_coordinates(self):
+        """Set the coordinates based on the current address."""
+        self.latitude, self.longitude = self.geocode_coordinates_from_address()
+        self.save()
+
+    def geocode_coordinates_from_address(self):
+        """Invoke the geocoder and attempt to find the corrdinates."""
+        try:
+            geolocator = Nominatim()
+            address, (lat, lon) = geolocator.geocode(self.address)
+        except:
+            lat, lon = None, None
+        return lat, lon

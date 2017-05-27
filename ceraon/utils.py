@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from flask import flash, Blueprint
+from threading import Thread
+
+from flask import flash, Blueprint, current_app
+
+
+class FlaskThread(Thread):
+    """A utility class for threading in a flask app."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.app = current_app._get_current_object()
+
+    def run(self):
+        with self.app.app_context():
+            super().run()
 
 
 def flash_errors(form, category='warning'):
