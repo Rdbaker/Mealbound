@@ -39,7 +39,10 @@ Flask-Caching>=1.0.0
 Flask-DebugToolbar==0.10.1
 
 # TODO: get the version for this later
-marshmallow
+marshmallow==2.13.5
 
 # geocoding
 geopy==1.11.0
+
+# pagination
+flask-paginate==0.4.5

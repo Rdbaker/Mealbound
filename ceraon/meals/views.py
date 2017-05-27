@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 
 from ceraon.constants import Errors, Success
-from ceraon.public.meals.forms import MealForm
+from ceraon.meals.forms import MealForm
 from ceraon.models.meals import Meal, UserMeal
 from ceraon.utils import flash_errors
 

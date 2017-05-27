@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from geopy.geocoders import Nominatim
 
 from ceraon.constants import Success
-from ceraon.public.locations.forms import LocationForm
+from ceraon.locations.forms import LocationForm
 from ceraon.models.locations import Location
 from ceraon.utils import flash_errors
 

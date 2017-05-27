@@ -7,8 +7,8 @@ from ceraon.assets import assets
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
                                login_manager, migrate)
 from ceraon.models import locations as locations_models, meals as meals_models # noqa
-from ceraon.public.locations.views import blueprint as location_blueprint
-from ceraon.public.meals.views import blueprint as meal_blueprint
+from ceraon.locations.views import blueprint as location_blueprint
+from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.settings import ProdConfig
 
 
