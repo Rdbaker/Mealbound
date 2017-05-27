@@ -30,7 +30,7 @@ def create():
         return redirect(url_for('location.mine'))
     else:
         flash_errors(form)
-    return render_template('public/meals/create.html', form=form)
+    return render_template('meals/create.html', form=form)
 
 
 @blueprint.route('/<string:uid>', methods=['DELETE'])
@@ -47,7 +47,7 @@ def destroy(uid):
 @blueprint.route('/<string:uid>', methods=['GET'])
 def show(uid):
     """Show the meal with the given UID."""
-    return render_template('public/meals/show.html', meal=Meal.find(uid))
+    return render_template('meals/show.html', meal=Meal.find(uid))
 
 
 @blueprint.route('/<string:uid>/reservation', methods=['POST', 'DELETE'])

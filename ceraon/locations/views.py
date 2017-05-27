@@ -24,7 +24,7 @@ def search():
                             found=(per_page * page.pages), bs_version=3,
                             record_name='locations',
                             total=(per_page * page.pages))
-    return render_template('public/locations/list.html', locations=page.items,
+    return render_template('locations/list.html', locations=page.items,
                            pagination=pagination)
 
 
@@ -51,14 +51,14 @@ def create():
         return redirect(url_for('location.mine'))
     else:
         flash_errors(form)
-    return render_template('public/locations/create.html', form=form)
+    return render_template('locations/create.html', form=form)
 
 
 @blueprint.route('/mine', methods=['GET'])
 @login_required
 def mine():
     """Show the user their location."""
-    return render_template('public/locations/mine.html',
+    return render_template('locations/mine.html',
                            location=current_user.location)
 
 
@@ -69,7 +69,7 @@ def edit():
     form = LocationForm(name=current_user.location.name,
                         address=current_user.location.address)
     if request.method == 'GET':
-        return render_template('public/locations/edit.html',
+        return render_template('locations/edit.html',
                                location=current_user.location, form=form)
     else:
         if form.validate_on_submit():
@@ -85,12 +85,12 @@ def edit():
             return redirect(url_for('location.mine'))
         else:
             flash_errors(form)
-            return render_template('public/locations/edit.html',
+            return render_template('locations/edit.html',
                                    location=current_user.location, form=form)
 
 
 @blueprint.route('/<string:uid>', methods=['GET'])
 def show(uid):
     """Show the location with the UID."""
-    return render_template('public/locations/show.html',
+    return render_template('locations/show.html',
                            location=Location.find(uid))
