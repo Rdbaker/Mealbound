@@ -29,8 +29,7 @@ class Meal(UUIDModel):
                            default=dt.datetime.utcnow)
 
     location_id = reference_col('location', nullable=False)
-    location = relationship('Location', backref=backref('meals'),
-                            cascade='delete')
+    location = relationship('Location')
 
     price = Column(db.Float(), nullable=False)
 

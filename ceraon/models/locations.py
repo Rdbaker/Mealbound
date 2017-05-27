@@ -3,7 +3,7 @@
 from geopy.geocoders import Nominatim
 from sqlalchemy.dialects.postgresql import JSONB
 
-from ceraon.database import UUIDModel, Column, db
+from ceraon.database import UUIDModel, Column, db, relationship
 
 
 class Location(UUIDModel):
@@ -39,6 +39,8 @@ class Location(UUIDModel):
     address = Column(db.String(255), nullable=False)
 
     phone = Column(db.String(50))
+
+    meals = relationship('Meal', cascade='delete')
 
     def __repr__(self):
         """Return the location as a string."""
