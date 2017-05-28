@@ -1,7 +1,8 @@
 """Test the Location models."""
 import pytest
 
-from ceraon.api.locations.models import Location
+from ceraon.models.locations import Location
+
 
 @pytest.mark.usefixtures('db')
 class TestLocation:
@@ -9,7 +10,7 @@ class TestLocation:
 
     def test_get_by_id(self):
         """Get Location by uuid."""
-        location = Location(name='my location')
+        location = Location(name='my location', address='my address')
         location.save()
 
         retrieved = Location.find(location.id)
