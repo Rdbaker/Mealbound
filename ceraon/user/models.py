@@ -8,6 +8,7 @@ from sqlalchemy.orm import backref
 from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,
                              relationship)
 from ceraon.extensions import bcrypt
+from ceraon.models import locations
 
 
 class Role(SurrogatePK, Model):
@@ -54,6 +55,13 @@ class User(UserMixin, SurrogatePK, Model):
             self.set_password(password)
         else:
             self.password = None
+
+    @classmethod
+    def create(cls, **kwargs):
+        newUser = super(Model, cls).create(**kwargs)
+        # Auto create location for user
+        locations.Location.create(host=newUser, name=newUser.username)
+        return newUser
 
     def set_password(self, password):
         """Set password."""
