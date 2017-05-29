@@ -13,20 +13,6 @@ import datetime as dt
 blueprint = Blueprint('user', __name__, url_prefix='/users',
                       static_folder='../static')
 
-
-@blueprint.route('/', methods=['GET', 'POST'])
-@login_required
-def members():
-    """List members."""
-    form = LocationForm(request.form)
-    if form.validate_on_submit():
-        Location.create(host=current_user, name=form.name.data)
-        flash('You created your location!', 'success')
-        return redirect(url_for('user.members'))
-    else:
-        flash_errors(form)
-    return render_template('users/members.html', form=form)
-
 def filterMealByDate(meal):
     return meal.scheduled_for >= dt.datetime.now()
 
