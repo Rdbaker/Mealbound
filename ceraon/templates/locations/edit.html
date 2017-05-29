@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
+    {% if location.address %}
     <h1>Edit your location!</h1>
+    {% else %}
+    <h1>Add your address to begin hosting meals!</h1>
+    {% endif %}
     <div class="container-narrow">
-      <h1>Create Your Location</h1>
           <br/>
           {% include "locations/form_edit.html" %}
     </div>
