@@ -14,10 +14,10 @@
         {% endif %}
         <br/>
         <a href="{{ url_for('location.mine') }}">
-        {% if current_user and not current_user.location %}
-        Become a host: create a location
+        {% if current_user and not current_user.location.address %}
+        Become a host
         {% else %}
-        Manage your location
+        Manage meals you are hosting
         {% endif %}
         </a>
     </div>
