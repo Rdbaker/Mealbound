@@ -36,6 +36,9 @@ def list():
 @login_required
 def mine():
     """Show the user their location."""
+    if not current_user.location.address:
+        return redirect(url_for('location.edit'))
+
     return render_template('locations/mine.html',
                            location=current_user.location)
 

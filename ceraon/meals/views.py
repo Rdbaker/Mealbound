@@ -17,9 +17,9 @@ blueprint = Blueprint('meal', __name__, url_prefix='/meal',
 def create():
     """Create a new meal for the logged in user's location."""
     # redirect to location create form if the user doesn't have a location
-    if not current_user.location:
+    if not current_user.location.address:
         flash(Errors.LOCATION_NOT_CREATED_YET[1], 'error')
-        return redirect(url_for('location.create'))
+        return redirect(url_for('location.edit'))
 
     form = MealForm(request.form)
 
