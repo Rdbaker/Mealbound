@@ -4,6 +4,7 @@
     <h3>Upcoming Meals:</h3>
     <div class="container-narrow">
       {% for meal in location.meals %}
+      {% if meal.is_upcoming() %}
         <div>
           <div>Name: <b>{{ meal.name }}</b></div>
           <div>Description: <b>{{ meal.description }}</b></div>
@@ -21,6 +22,7 @@
             </form>
           {% endif %}
         </div>
+      {% endif %}
       {% endfor %}
     </div>
 {% endblock %}
