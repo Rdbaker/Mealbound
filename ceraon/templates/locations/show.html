@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Location:</h1>
-    <div class="container-narrow">
-      <h2>{{ location.name }}</h2>
-    </div>
+    <h1>{{ location.name }}</h1>
     <h3>Upcoming Meals:</h3>
     <div class="container-narrow">
       {% for meal in location.meals %}
