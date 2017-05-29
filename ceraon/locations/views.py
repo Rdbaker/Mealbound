@@ -32,24 +32,6 @@ def list():
     """List the locations near the user."""
     return search()
 
-
-@blueprint.route('/new', methods=['GET', 'POST'])
-@login_required
-def create():
-    """Create a new location."""
-    form = LocationForm(request.form)
-    if form.validate_on_submit():
-        location = Location.create(host=current_user, name=form.name.data,
-                                   address=form.address.data)
-        th = FlaskThread(target=location.update_coordinates)
-        th.start()
-        flash(Success.LOCATION_CREATED[1], 'success')
-        return redirect(url_for('location.mine'))
-    else:
-        flash_errors(form)
-    return render_template('locations/create.html', form=form)
-
-
 @blueprint.route('/mine', methods=['GET'])
 @login_required
 def mine():
