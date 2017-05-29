@@ -17,4 +17,11 @@
         {% endif %}
       </form>
     {% endif %}
+    {% if meal.is_host(current_user)  and meal.is_upcoming() %}
+      <a href="{{ url_for('meal.edit', uid=meal.id) }}">Edit Meal</a>
+      <form action="{{ url_for('meal.destroy', uid=meal.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="submit" clas="btn btn-sm btn-danger" value="Cancel Meal"/>
+      </form>
+    {% endif %}
 {% endblock %}
