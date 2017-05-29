@@ -1,12 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
       <div class="container">
-        <a class="btn btn-large btn-primary" href="{{ url_for('meal.create') }}">Schedule a meal</a>
-      </div>
-      <div class="container-narrow">
         <h2>{{ current_user.location.name }}</h2>
         <div>{{ current_user.location.address }}</div>
       </div>
+
+      <div class="container">
+        <a class="btn btn-large btn-primary" href="{{ url_for('meal.create') }}">Schedule a meal</a>
+        {% if location.meals|length > 0 %}
+        <h2>Hosted Meals</h2>
+        {% for meal in location.meals %}
+        <a href="{{ url_for('meal.show', uid=meal.id) }}"><b>{{ meal.name }}</b></a> {{ meal.scheduled_for }}
+        {% endfor %}
+        <br/>
+        <br/>
+        {% endif %}
+      </div>
+
       <div><a href="{{ url_for('location.show', uid=location.id) }}">Click here</a> to preview the location as a guest</div>
       <div><a href="{{ url_for('location.edit') }}">Click here</a> to edit your location</div>
 {% endblock %}
