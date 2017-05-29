@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Meal views."""
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from flask_login import login_required, current_user
 
 from ceraon.constants import Errors, Success
@@ -33,8 +33,27 @@ def create():
         flash_errors(form)
     return render_template('meals/create.html', form=form)
 
+@blueprint.route('/edit/<string:uid>', methods=['GET', 'POST'])
+@login_required
+def edit(uid):
+    """Edits a meal."""
+    meal = Meal.find(uid)
+    if not meal.host == current_user:
+        return abort(401)
+    
+    form = MealForm(name=meal.name, description=meal.description, scheduled_for=meal.scheduled_for, cost=meal.price)
 
-@blueprint.route('/<string:uid>', methods=['DELETE'])
+    if form.validate_on_submit():
+        flash(Success.MEAL_CREATED[1], 'success')
+        meal.update(name=form.name.data, description=form.description.data, 
+                    scheduled_for=form.scheduled_for.data, price=form.cost.data)
+        return redirect(url_for('location.mine'))
+    else:
+        flash_errors(form)
+    return render_template('meals/create.html', form=form)
+
+# Must use POST here - HTML forms don't support DELETE.
+@blueprint.route('/<string:uid>/delete', methods=['POST'])
 @login_required
 def destroy(uid):
     """Delete a meal."""
