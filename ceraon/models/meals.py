@@ -24,6 +24,9 @@ class Meal(UUIDModel):
 
     __tablename__ = 'meal'
 
+    name = Column(db.String(255), nullable=False)
+    description = Column(db.String(255), nullable=False)
+    
     # ALL TIMES ARE IN UTC
     scheduled_for = Column(db.DateTime, nullable=False,
                            default=dt.datetime.utcnow)
