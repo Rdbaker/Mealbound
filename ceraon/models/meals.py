@@ -54,10 +54,19 @@ class Meal(UUIDModel):
         """Decide whether or not the user can join the meal."""
         if not user.is_authenticated:
             return False
-        elif user is self.host:
+        elif self.is_host(user):
             return False
         elif self.joined(user):
             return False
         elif self.scheduled_for < dt.datetime.now():
             return False
         return True
+    
+    def is_host(self, user):
+        """Returns whether or not the given user is the host"""
+        return user is self.host
+
+    def is_upcoming(self):
+        """Returns whether or not the meal is upcoming"""
+        return self.scheduled_for >= dt.datetime.now()
+
