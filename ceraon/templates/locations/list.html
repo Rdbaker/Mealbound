@@ -5,12 +5,14 @@
     <div>{{ pagination.info }}
     <div>
     {% for location in locations %}
+      {% if location.address and not current_user.location == location %}
       <div class="row">
         <div class="container-narrow">
           <h2>{{ location.name }}</h2>
         </div>
         <div><a href="{{ url_for('location.show', uid=location.id) }}">Click here</a> to view the location</div>
       </div>
+      {% endif %}
     {% endfor %}
     </div>
     <div class="pagination btn-group">
