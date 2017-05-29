@@ -36,7 +36,7 @@ class Location(UUIDModel):
     longitude = Column(db.Float())
 
     # the address, as a string, of the location
-    address = Column(db.String(255), nullable=False)
+    address = Column(db.String(255), nullable=True)
 
     phone = Column(db.String(50))
 
