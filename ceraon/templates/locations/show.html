@@ -5,6 +5,8 @@
     <div class="container-narrow">
       {% for meal in location.meals %}
         <div>
+          <div>Name: <b>{{ meal.name }}</b></div>
+          <div>Description: <b>{{ meal.description }}</b></div>
           <div>Cost: <b>{{ meal.price }}</b></div>
           <div>Time: <b>{{ meal.scheduled_for }}</b></div>
 

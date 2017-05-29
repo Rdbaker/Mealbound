@@ -2,6 +2,8 @@
 {% block content %}
     <h1>Meal:</h1>
     <div class="container-narrow">
+      <p>Name: <b>{{ meal.name }}</b></p>
+      <p>Description: <b>{{ meal.description }}</b></p>
       <p>When: <b>{{ meal.scheduled_for }}</b></p>
       <p>Cost: <b>{{ meal.price }}</b></p>
     </div>
