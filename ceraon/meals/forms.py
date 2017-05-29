@@ -3,14 +3,17 @@
 from datetime import datetime as dt
 
 from flask_wtf import FlaskForm
-from wtforms import DateTimeField, DecimalField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms import DateTimeField, DecimalField, StringField
+from wtforms.validators import DataRequired, ValidationError, Length
 
 from ceraon.constants import Errors
 
 
 class MealForm(FlaskForm):
     """The form to save a meal."""
+
+    name = StringField('Meal name', validators=[DataRequired(), Length(min=3, max=128)])
+    description = StringField('Meal description', validators=[DataRequired(), Length(max=255)])
 
     scheduled_for = DateTimeField('Time', format='%m/%d/%Y %H:%M %p',
                                   validators=[DataRequired()])

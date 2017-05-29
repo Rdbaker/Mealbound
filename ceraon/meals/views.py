@@ -25,7 +25,8 @@ def create():
 
     if form.validate_on_submit():
         flash(Success.MEAL_CREATED[1], 'success')
-        Meal.create(scheduled_for=form.scheduled_for.data, price=form.cost.data,
+        Meal.create(name=form.name.data, description=form.description.data, 
+                    scheduled_for=form.scheduled_for.data, price=form.cost.data,
                     location=current_user.location)
         return redirect(url_for('location.mine'))
     else:
