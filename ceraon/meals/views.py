@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Meal views."""
-from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
+from flask import (Blueprint, render_template, request, flash, redirect,
+                   url_for, abort)
 from flask_login import login_required, current_user
+from flask_paginate import Pagination
 
 from ceraon.constants import Errors, Success
 from ceraon.meals.forms import MealForm
@@ -32,6 +34,22 @@ def create():
     else:
         flash_errors(form)
     return render_template('meals/create.html', form=form)
+
+
+@blueprint.route('/search', methods=['GET', 'POST'])
+def search():
+    """Search for a meal based on search parameters."""
+    page_num = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    page = Meal.breakfast_filter(Meal.upcoming()).order_by(Meal.scheduled_for)\
+        .paginate(page=page_num, per_page=per_page)
+    pagination = Pagination(page=page_num, per_page=per_page, search=True,
+                            found=(per_page * page.pages), bs_version=3,
+                            record_name='meals', outer_window=0,
+                            total=(per_page * page.pages))
+    return render_template('meals/list.html', meals=page.items,
+                           pagination=pagination)
+
 
 @blueprint.route('/edit/<string:uid>', methods=['GET', 'POST'])
 @login_required

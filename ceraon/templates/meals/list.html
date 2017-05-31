@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="wrapper">
+    <h1>Meals Near You</h1>
+    <div>{{ pagination.info }}
+    <div>
+    {% for meal in meals %}
+      {% if not meal.is_host(current_user) %}
+      <div class="row">
+        <div class="container-narrow">
+          <h2>{{ meal.name }}</h2>
+          <p>{{ meal.description }}</p>
+          <p>{{ meal.scheduled_for }}</p>
+          <div><a href="{{ url_for('meal.show', uid=meal.id) }}">Click here</a> to view the meal</div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+    <div class="pagination btn-group">
+      {{ pagination.links }}
+    </div>
+  </div>
+{% endblock %}

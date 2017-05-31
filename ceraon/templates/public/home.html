@@ -6,7 +6,7 @@
   <p><b>Welcome to Ceraon</b></p>
   <p class="text-center">Find a place to eat nearby</p>
 
-  <form class="form-inline" id="initial-search-bar" action="{{ url_for('location.search') }}" method="POST">
+  <form class="form-inline" id="initial-search-bar" action="{{ url_for('meal.search') }}" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="form-group">
       <label class="sr-only">location</label>
