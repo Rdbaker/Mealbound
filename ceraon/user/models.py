@@ -76,6 +76,30 @@ class User(UserMixin, SurrogatePK, Model):
         """Full user name."""
         return '{0} {1}'.format(self.first_name, self.last_name)
 
+    @property
+    def public_name(self):
+        """Try returning <first name> <last initial>, or default to username.
+
+        example usage:
+            >>> u = user(first_name='Ryan', last_name='Baker',
+                         username='rbaker')
+            >>> u.public_name
+            u'Ryan B.'
+            >>> u.last_name = None
+            >>> u.public_name
+            u'Ryan'
+            >>> u.first_name = None
+            >>> u.public_name
+            u'rbaker'
+        """
+        if self.first_name is None:
+            return self.username
+        else:
+            if self.last_name is not None and len(self.last_name) > 0:
+                return '{} {}.'.format(self.first_name, self.last_name[0])
+            else:
+                return self.first_name
+
     def __repr__(self):
         """Represent instance as a unique string."""
         return '<User({username!r})>'.format(username=self.username)

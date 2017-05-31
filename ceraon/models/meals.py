@@ -25,8 +25,8 @@ class Meal(UUIDModel):
     __tablename__ = 'meal'
 
     name = Column(db.String(255), nullable=False)
-    description = Column(db.String(255), nullable=False)
-    
+    description = Column(db.Text)
+
     # ALL TIMES ARE IN UTC
     scheduled_for = Column(db.DateTime, nullable=False,
                            default=dt.datetime.utcnow)
@@ -61,12 +61,45 @@ class Meal(UUIDModel):
         elif self.scheduled_for < dt.datetime.now():
             return False
         return True
-    
+
     def is_host(self, user):
-        """Returns whether or not the given user is the host"""
+        """Returns whether or not the given user is the host."""
         return user is self.host
 
     def is_upcoming(self):
-        """Returns whether or not the meal is upcoming"""
-        return self.scheduled_for >= dt.datetime.now()
+        """Returns whether or not the meal is upcoming."""
+        return self.scheduled_for >= dt.datetime.utcnow()
 
+    @classmethod
+    def upcoming(cls):
+        """Returns a query of the meals that have yet to happen."""
+        return cls.upcoming_filter(cls.query)
+
+    @classmethod
+    def breakfast(cls):
+        """Returns a query for breakfast."""
+        return cls.breakfast_filter(cls.query)
+
+    @classmethod
+    def upcoming_filter(cls, query):
+        """Apply an "after now" filter to the meal query that was passed in.
+
+        :param query flask_sqlalchemy.BaseQuery: The query to apply the filter
+            to.
+
+        :return flask_sqlalchemy.BaseQuery:
+        """
+        return query.filter(cls.scheduled_for >= dt.datetime.utcnow())
+
+    @classmethod
+    def breakfast_filter(cls, query):
+        """Apply a breakfast filter to the meal query that was passed in.
+
+        :param query flask_sqlalchemy.BaseQuery: The query to apply the filter
+            to.
+
+        :return flask_sqlalchemy.BaseQuery:
+        """
+        return query.filter(and_(
+            cast(cls.scheduled_for, Time) >= dt.time(5, 0, 0),
+            cast(cls.scheduled_for, Time) < dt.time(12, 0, 0)))

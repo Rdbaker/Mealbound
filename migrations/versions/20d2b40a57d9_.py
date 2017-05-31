@@ -1,4 +1,4 @@
-"""empty message
+"""Makes location.address a nullable column
 
 Revision ID: 20d2b40a57d9
 Revises: af956d77be6a

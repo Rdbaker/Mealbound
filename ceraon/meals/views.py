@@ -25,7 +25,7 @@ def create():
 
     if form.validate_on_submit():
         flash(Success.MEAL_CREATED[1], 'success')
-        Meal.create(name=form.name.data, description=form.description.data, 
+        Meal.create(name=form.name.data, description=form.description.data,
                     scheduled_for=form.scheduled_for.data, price=form.cost.data,
                     location=current_user.location)
         return redirect(url_for('location.mine'))
@@ -40,17 +40,19 @@ def edit(uid):
     meal = Meal.find(uid)
     if not meal.host == current_user:
         return abort(401)
-    
-    form = MealForm(name=meal.name, description=meal.description, scheduled_for=meal.scheduled_for, cost=meal.price)
+
+    form = MealForm(name=meal.name, description=meal.description,
+                    scheduled_for=meal.scheduled_for, cost=meal.price)
 
     if form.validate_on_submit():
         flash(Success.MEAL_CREATED[1], 'success')
-        meal.update(name=form.name.data, description=form.description.data, 
+        meal.update(name=form.name.data, description=form.description.data,
                     scheduled_for=form.scheduled_for.data, price=form.cost.data)
         return redirect(url_for('location.mine'))
     else:
         flash_errors(form)
     return render_template('meals/create.html', form=form)
+
 
 # Must use POST here - HTML forms don't support DELETE.
 @blueprint.route('/<string:uid>/delete', methods=['POST'])

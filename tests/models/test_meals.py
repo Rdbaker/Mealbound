@@ -10,7 +10,7 @@ class TestMeal:
 
     def test_get_by_id(self, location):
         """Get Meal by uuid."""
-        meal = Meal(location=location, price=0)
+        meal = Meal(location=location, price=0, name='my meal')
         meal.save()
 
         retrieved = Meal.find(meal.id)

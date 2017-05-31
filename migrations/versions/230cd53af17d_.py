@@ -1,4 +1,4 @@
-"""empty message
+"""Adds meal.name and meal.description columns
 
 Revision ID: 230cd53af17d
 Revises: 20d2b40a57d9

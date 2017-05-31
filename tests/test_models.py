@@ -65,3 +65,18 @@ class TestUser:
         user.roles.append(role)
         user.save()
         assert role in user.roles
+
+    def test_public_name_with_full_name(self):
+        """Test that the public name property works correctly with full name."""
+        user = UserFactory(first_name='Ryan', last_name='Baker')
+        assert user.public_name == 'Ryan B.'
+
+    def test_public_name_no_last_name(self):
+        """Test that public name works correctly with only first name."""
+        user = UserFactory(first_name='Ryan')
+        assert user.public_name == 'Ryan'
+
+    def test_public_name__name(self):
+        """Test that public name works correctly with no name."""
+        user = UserFactory()
+        assert user.public_name == user.username

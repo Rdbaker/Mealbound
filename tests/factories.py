@@ -53,6 +53,7 @@ class MealFactory(BaseFactory):
 
     price = round(float(random.random() * random.random() * 10), 2)
     scheduled_for = dt.now() + td(days=1)
+    name = Sequence(lambda n: 'meal {0}'.format(n))
 
     class Meta:
         """Factory configuration."""
