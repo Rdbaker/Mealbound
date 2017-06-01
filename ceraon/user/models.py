@@ -58,6 +58,7 @@ class User(UserMixin, SurrogatePK, Model):
 
     @classmethod
     def create(cls, **kwargs):
+        """Create the new user."""
         newUser = super(Model, cls).create(**kwargs)
         # Auto create location for user
         locations.Location.create(host=newUser, name=newUser.username)

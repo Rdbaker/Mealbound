@@ -32,6 +32,7 @@ def list():
     """List the locations near the user."""
     return search()
 
+
 @blueprint.route('/mine', methods=['GET'])
 @login_required
 def mine():
