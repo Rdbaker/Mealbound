@@ -15,6 +15,9 @@
           </div>
           <p>{{ meal.description }}</p>
           <div class="clearfix">
+            <div class="col-xs-4 mtile-detail-nugget">
+              <i class="fa fa-user"></i><span> {{ meal.num_guests }}</span>
+            </div>
             <div class="button-right">
               <a href="{{ url_for('meal.show', uid=meal.id )}}" class="btn btn-primary">Check it out</a>
             </div>

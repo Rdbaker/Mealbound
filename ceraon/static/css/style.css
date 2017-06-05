@@ -124,3 +124,26 @@ footer .footer-nav {
 .meal-tile .button-right {
   text-align: right
 }
+
+.meal-tile .mtile-detail-nugget {
+  color: #999999;
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  bottom: 5px;
+  padding-left: 5px;
+}
+
+.meal-tile .mtile-detail-nugget:hover {
+  text-decoration: none;
+  color: #777;
+}
+
+.meal-tile .mtile-detail-nugget i {
+  font-size: 18px;
+}
+
+.meal-tile .mtile-detail-nugget span {
+  padding-left: 5px;
+  font-size: 12px;
+}

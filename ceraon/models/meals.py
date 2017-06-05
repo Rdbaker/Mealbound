@@ -2,7 +2,7 @@
 """Models for meals."""
 import datetime as dt
 
-from sqlalchemy import and_, Date, Time, cast
+from sqlalchemy import and_, Time, cast
 
 from ceraon.database import (UUIDModel, Column, db, relationship, reference_col,
                              Model)
@@ -86,6 +86,16 @@ class Meal(UUIDModel):
         return cls.breakfast_filter(cls.query)
 
     @classmethod
+    def lunch(cls):
+        """Returns a query for lunch."""
+        return cls.lunch_filter(cls.query)
+
+    @classmethod
+    def dinner(cls):
+        """Returns a query for dinner."""
+        return cls.dinner_filter(cls.query)
+
+    @classmethod
     def upcoming_filter(cls, query):
         """Apply an "after now" filter to the meal query that was passed in.
 
@@ -108,3 +118,29 @@ class Meal(UUIDModel):
         return query.filter(and_(
             cast(cls.scheduled_for, Time) >= dt.time(5, 0, 0),
             cast(cls.scheduled_for, Time) < dt.time(12, 0, 0)))
+
+    @classmethod
+    def lunch_filter(cls, query):
+        """Apply a lunch filter to the meal query that was passed in.
+
+        :param query flask_sqlalchemy.BaseQuery: The query to apply the filter
+            to.
+
+        :return flask_sqlalchemy.BaseQuery:
+        """
+        return query.filter(and_(
+            cast(cls.scheduled_for, Time) >= dt.time(11, 0, 0),
+            cast(cls.scheduled_for, Time) < dt.time(15, 0, 0)))
+
+    @classmethod
+    def dinner_filter(cls, query):
+        """Apply a dinner filter to the meal query that was passed in.
+
+        :param query flask_sqlalchemy.BaseQuery: The query to apply the filter
+            to.
+
+        :return flask_sqlalchemy.BaseQuery:
+        """
+        return query.filter(and_(
+            cast(cls.scheduled_for, Time) >= dt.time(16, 0, 0),
+            cast(cls.scheduled_for, Time) < dt.time(23, 0, 0)))
