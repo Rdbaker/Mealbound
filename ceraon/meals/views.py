@@ -41,7 +41,7 @@ def search():
     """Search for a meal based on search parameters."""
     page_num = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
-    page = Meal.breakfast_filter(Meal.upcoming()).order_by(Meal.scheduled_for)\
+    page = Meal.upcoming().order_by(Meal.scheduled_for)\
         .paginate(page=page_num, per_page=per_page)
     pagination = Pagination(page=page_num, per_page=per_page, search=True,
                             found=(per_page * page.pages), bs_version=3,

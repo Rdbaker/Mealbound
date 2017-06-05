@@ -3,15 +3,22 @@
   <div class="wrapper">
     <h1>Meals Near You</h1>
     <div>{{ pagination.info }}
-    <div>
+    <div class="container" id="search-results-container">
     {% for meal in meals %}
       {% if not meal.is_host(current_user) %}
-      <div class="row">
-        <div class="container-narrow">
-          <h2>{{ meal.name }}</h2>
+      <div class="content-container meal-tile col-sm-3">
+        <div class="mtile-info">
+          <h3 class="text-center">{{ meal.name }}</h3>
+          <div class="clearfix">
+            <h5 class="mtile-icon pull-left"><i class="fa fa-calendar"></i>  {{ meal.scheduled_for }}</h5>
+            <h5 class="mtile-icon pull-right"><i class="fa fa-dollar"></i>  {{ meal.price }}</h5>
+          </div>
           <p>{{ meal.description }}</p>
-          <p>{{ meal.scheduled_for }}</p>
-          <div><a href="{{ url_for('meal.show', uid=meal.id) }}">Click here</a> to view the meal</div>
+          <div class="clearfix">
+            <div class="button-right">
+              <a href="{{ url_for('meal.show', uid=meal.id )}}" class="btn btn-primary">Check it out</a>
+            </div>
+          </div>
         </div>
       </div>
       {% endif %}
