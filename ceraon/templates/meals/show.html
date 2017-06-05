@@ -7,6 +7,16 @@
       <p>When: <b>{{ meal.scheduled_for }}</b></p>
       <p>Cost: <b>{{ meal.price }}</b></p>
     </div>
+    {% if current_user == meal.host %}
+    <div class="container-narrow">
+      <h3>Guests:</h3>
+      <ul>
+        {% for user_meal in meal.user_meals %}
+          <li>{{ user_meal.user.public_name }}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
     {% if meal.joined(current_user) or meal.user_can_join(current_user) %}
       <form action="{{ url_for('meal.join_or_leave_meal', uid=meal.id) }}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

@@ -43,6 +43,11 @@ class Meal(UUIDModel):
         """Get the host of the meal."""
         return self.location.host
 
+    @property
+    def num_guests(self):
+        """Get the count of the guests."""
+        return len(self.user_meals)
+
     def joined(self, user):
         """Return True if the given user has joined the meal already."""
         for um in self.user_meals:
