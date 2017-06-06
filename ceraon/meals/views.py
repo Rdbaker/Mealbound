@@ -8,7 +8,7 @@ from flask_paginate import Pagination
 from ceraon.constants import Errors, Success
 from ceraon.meals.forms import MealForm
 from ceraon.models.meals import Meal, UserMeal
-from ceraon.utils import flash_errors
+from ceraon.utils import flash_errors, friendly_arg_get
 
 blueprint = Blueprint('meal', __name__, url_prefix='/meal',
                       static_folder='../static')
@@ -39,9 +39,18 @@ def create():
 @blueprint.route('/search', methods=['GET', 'POST'])
 def search():
     """Search for a meal based on search parameters."""
-    page_num = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 10))
-    page = Meal.upcoming().order_by(Meal.scheduled_for)\
+    page_num = friendly_arg_get('page', 1, int)
+    per_page = friendly_arg_get('per_page', 10, int)
+    requested_meal = request.form.get('meal') or request.args.get('meal')
+    if requested_meal == 'breakfast':
+        query = Meal.breakfast()
+    elif requested_meal == 'lunch':
+        query = Meal.lunch()
+    elif requested_meal == 'dinner':
+        query = Meal.dinner()
+    else:
+        query = Meal.query
+    page = Meal.upcoming_filter(query).order_by(Meal.scheduled_for)\
         .paginate(page=page_num, per_page=per_page)
     pagination = Pagination(page=page_num, per_page=per_page, search=True,
                             found=(per_page * page.pages), bs_version=3,
