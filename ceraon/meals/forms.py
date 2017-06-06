@@ -12,10 +12,11 @@ from ceraon.constants import Errors
 class MealForm(FlaskForm):
     """The form to save a meal."""
 
-    name = StringField('Meal name', validators=[DataRequired(), Length(min=3, max=128)])
-    description = StringField('Meal description', validators=[DataRequired(), Length(max=255)])
-
-    scheduled_for = DateTimeField('Time', format='%m/%d/%Y %H:%M %p',
+    name = StringField('Meal name', validators=[DataRequired(),
+                                                Length(min=3, max=128)])
+    description = StringField('Meal description',
+                              validators=[DataRequired(), Length(max=255)])
+    scheduled_for = DateTimeField('Time', format='%m/%d/%Y %I:%M %p',
                                   validators=[DataRequired()])
     cost = DecimalField('Price')
 
