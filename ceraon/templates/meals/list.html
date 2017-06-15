@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div class="wrapper">
+  <div class="container wrapper module">
     <h1>Meals Near You</h1>
     <div>{{ pagination.info }}</div>
     <form class="search-bar form-inline form" method="GET" action="">
@@ -22,29 +22,14 @@
       </div>
       <button type="submit" class="btn btn-success">Search</button>
     </div>
-    <div class="container" id="search-results-container">
-    {% for meal in meals %}
-      {% if not meal.is_host(current_user) %}
-      <div class="content-container meal-tile col-sm-12">
-        <div class="mtile-info">
-          <h3 class="text-center">{{ meal.name }}</h3>
-          <div class="clearfix">
-            <h5 class="mtile-icon pull-left"><i class="fa fa-calendar"></i>  {{ meal.scheduled_for }}</h5>
-            <h5 class="mtile-icon pull-right"><i class="fa fa-dollar"></i>  {{ meal.price }}</h5>
-          </div>
-          <p>{{ meal.description }}</p>
-          <div class="clearfix">
-            <div class="col-xs-4 mtile-detail-nugget">
-              <i class="fa fa-user"></i><span> {{ meal.num_guests }}</span>
-            </div>
-            <div class="button-right">
-              <a href="{{ url_for('meal.show', uid=meal.id )}}" class="btn btn-primary">Check it out</a>
-            </div>
-          </div>
-        </div>
+    <div class="container">
+      <div class="module col-sm-12" id="search-results-container">
+        {% for meal in meals %}
+          {% if not meal.is_host(current_user) %}
+            {% include "meals/search-tile.html" %}
+          {% endif %}
+        {% endfor %}
       </div>
-      {% endif %}
-    {% endfor %}
     </div>
     <div class="pagination btn-group">
       {{ pagination.links }}

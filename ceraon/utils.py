@@ -79,16 +79,16 @@ class RESTBlueprint(Blueprint):
 
     def find(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['GET'])
+                                   methods=['GET'])
 
     def update(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['PATCH'])
+                                   methods=['PATCH'])
 
     def replace(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['PUT'])
+                                   methods=['PUT'])
 
     def destroy(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['DELETE'])
+                                   methods=['DELETE'])

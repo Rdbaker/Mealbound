@@ -8,6 +8,7 @@ from flask_paginate import Pagination
 from ceraon.constants import Errors, Success
 from ceraon.meals.forms import MealForm
 from ceraon.models.meals import Meal, UserMeal
+from ceraon.public.forms import LoginForm
 from ceraon.utils import flash_errors, friendly_arg_get
 
 blueprint = Blueprint('meal', __name__, url_prefix='/meal',
@@ -96,7 +97,9 @@ def destroy(uid):
 @blueprint.route('/<string:uid>', methods=['GET'])
 def show(uid):
     """Show the meal with the given UID."""
-    return render_template('meals/show.html', meal=Meal.find(uid))
+    form = LoginForm()
+    return render_template('meals/show.html', meal=Meal.find(uid),
+                           login_form=form, next_url=request.path)
 
 
 @blueprint.route('/<string:uid>/reservation', methods=['POST', 'DELETE'])
