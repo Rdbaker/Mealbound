@@ -1,0 +1,16 @@
+{
+  "name": "CeraonUI",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^2.3.4"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "redux": "^3.7.0",
+    "semantic-ui-react": "^0.68.5"
+  }
+}
