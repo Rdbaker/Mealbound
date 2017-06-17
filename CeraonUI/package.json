@@ -3,17 +3,23 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "clean_js": "rimraf lib && rimraf dist/js",
-    "clean_css": "rimraf lib/css && rimraf dist/css",
+    "clean_js": "rimraf lib && rimraf ../ceraon/static/ceraon/js",
+    "clean_css": "rimraf lib/css && rimraf ../ceraon/static/ceraon/css",
     "clean": "yarn run clean_js && yarn run clean_css",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "build_js": "yarn run clean_js && tsc",
-    "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss dist/css/Ceraon.css",
+    "build_js": "yarn run clean_js && tsc && yarn run bundle_js",
+    // Right now, we copy directly to the static dir for the backend project. We should consume the UI
+    // outputs explicitly from the backend project via some sort of dependency manager.
+    "bundle_js": "mkdirp ../ceraon/static/ceraon/js && browserify lib/Main.js > ../ceraon/static/ceraon/js/bundle.js",
+    "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss ../ceraon/static/ceraon/css/Ceraon.css",
     "build": "yarn run build_js && yarn run build_css"
   },
   "devDependencies": {
+    "@types/react": "^15.0.29",
+    "@types/react-dom": "^15.5.0",
     "browserify": "^14.4.0",
     "cpx": "^1.5.0",
+    "mkdirp": "^0.5.1",
     "node-sass": "^4.5.3",
     "rimraf": "^2.6.1",
     "tslint": "^5.4.3",
