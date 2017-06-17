@@ -22,3 +22,14 @@ assets = Environment()
 
 assets.register('js_all', js)
 assets.register('css_all', css)
+
+css_refactor = Bundle(
+    'ceraon/css/Ceraon.css'
+)
+
+js_refactor = Bundle(
+    'ceraon/js/bundle.js'
+)
+
+assets.register('refactor_js_all', js_refactor)
+assets.register('refactor_css_all', css_refactor)
