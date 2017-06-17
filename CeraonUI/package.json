@@ -1,8 +1,11 @@
 {
   "name": "CeraonUI",
   "version": "0.1.0",
-  "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "clean": "rimraf lib && rimraf dist",
+    "build": "yarn run clean && tsc"
+  },
   "devDependencies": {
     "cpx": "^1.5.0",
     "rimraf": "^2.6.1",
