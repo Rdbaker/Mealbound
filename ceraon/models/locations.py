@@ -21,7 +21,8 @@ class Location(UUIDModel):
     raw_yelp_data = Column(JSONB)
     yelp_id = Column(db.String(255), index=True, nullable=True, unique=True)
 
-    name = Column(db.String(255), nullable=False)
+    # an internal location doesn't need a name, as it's linked to a user
+    name = Column(db.String(255), nullable=True)
 
     # price_class is a rough estimate of the price, it's a scale from 1 to n
     # where 1 is "very inexpensive" and n is "you can't get more expensive"

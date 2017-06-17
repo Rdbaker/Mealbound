@@ -2,7 +2,15 @@
 """Helper utilities and decorators."""
 from threading import Thread
 
-from flask import flash, Blueprint, current_app
+from flask import flash, Blueprint, current_app, request
+
+
+def friendly_arg_get(key, default=None, type_cast=None):
+    """Same as request.args.get but returns default on ValueError."""
+    try:
+        return request.args.get(key, default=default, type=type_cast)
+    except:
+        return default
 
 
 class FlaskThread(Thread):
@@ -20,7 +28,8 @@ def flash_errors(form, category='warning'):
     """Flash all errors for a form."""
     for field, errors in form.errors.items():
         for error in errors:
-            flash('{0} - {1}'.format(getattr(form, field).label.text, error), category)
+            flash('{0} - {1}'.format(getattr(form, field).label.text, error),
+                  category)
 
 
 class RESTBlueprint(Blueprint):
@@ -70,16 +79,16 @@ class RESTBlueprint(Blueprint):
 
     def find(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['GET'])
+                                   methods=['GET'])
 
     def update(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['PATCH'])
+                                   methods=['PATCH'])
 
     def replace(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['PUT'])
+                                   methods=['PUT'])
 
     def destroy(self, *args, **kwargs):
         return self.flexible_route('/<string:uid>', *args, **kwargs,
-            methods=['DELETE'])
+                                   methods=['DELETE'])
