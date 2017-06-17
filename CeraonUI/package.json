@@ -13,6 +13,7 @@
     "build": "yarn run build_js && yarn run build_css"
   },
   "devDependencies": {
+    "@types/prop-types": "^15.5.1",
     "@types/react": "^15.0.29",
     "@types/react-dom": "^15.5.0",
     "browserify": "^14.4.0",
