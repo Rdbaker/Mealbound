@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
+    // TODO: Move this to gulp?
     "clean_js": "rimraf lib && rimraf ../ceraon/static/ceraon/js",
     "clean_css": "rimraf lib/css && rimraf ../ceraon/static/ceraon/css",
     "clean": "yarn run clean_js && yarn run clean_css",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build_js": "yarn run clean_js && tsc && yarn run bundle_js",
-    // Right now, we copy directly to the static dir for the backend project. We should consume the UI
+    // TODO: Right now, we copy directly to the static dir for the backend project. We should consume the UI
     // outputs explicitly from the backend project via some sort of dependency manager.
     "bundle_js": "mkdirp ../ceraon/static/ceraon/js && browserify lib/Main.js > ../ceraon/static/ceraon/js/bundle.js",
     "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss ../ceraon/static/ceraon/css/Ceraon.css",
