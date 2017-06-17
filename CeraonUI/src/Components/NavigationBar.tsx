@@ -16,7 +16,6 @@ class NavigationBar extends React.Component<NavigationBarProps, any> {
 	render() {
 		return (
 			<Menu>
-				{this.props.children}
 				<Menu.Item header>Ceraon</Menu.Item>
 				<Menu.Item>
 					<Input className="icon" icon="search" placeholder="Search..."/>
