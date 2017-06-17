@@ -5,6 +5,7 @@
   "scripts": {
     "clean_js": "rimraf lib && rimraf dist/js",
     "clean_css": "rimraf lib/css && rimraf dist/css",
+    "clean": "yarn run clean_js && yarn run clean_css",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build_js": "yarn run clean_js && tsc",
     "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss dist/css/Ceraon.css",
