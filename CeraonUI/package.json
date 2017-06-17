@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "clean_js": "rimraf lib && rimraf ../ceraon/static/ceraon/js",
-    "clean_css": "rimraf lib/css && rimraf ../ceraon/static/ceraon/css",
+    "clean_js": "rimraf lib && rimraf dist/js",
+    "clean_css": "rimraf lib/css && rimraf dist/css",
     "clean": "yarn run clean_js && yarn run clean_css",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build_js": "yarn run clean_js && tsc && yarn run bundle_js",
-    "bundle_js": "mkdirp ../ceraon/static/ceraon/js && browserify lib/Main.js > ../ceraon/static/ceraon/js/bundle.js",
-    "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss ../ceraon/static/ceraon/css/Ceraon.css",
+    "bundle_js": "mkdirp dist/js && browserify lib/Main.js > dist/js/bundle.js",
+    "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss dist/css/Ceraon.css",
     "build": "yarn run build_js && yarn run build_css"
   },
   "devDependencies": {

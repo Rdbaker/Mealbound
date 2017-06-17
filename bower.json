@@ -2,6 +2,7 @@
   "name": "ceraon",
   "dependencies": {
     "bootstrap": "~3.2.0",
+    "CeraonUI": "./CeraonUI",
     "select2": "^4.0.3",
     "moment": "^2.18.1",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
