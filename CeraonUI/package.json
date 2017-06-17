@@ -4,11 +4,14 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf lib && rimraf dist",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "yarn run clean && tsc"
   },
   "devDependencies": {
     "cpx": "^1.5.0",
     "rimraf": "^2.6.1",
+    "tslint": "^5.4.3",
+    "tslint-config-airbnb": "^5.1.2",
     "typescript": "^2.3.4"
   },
   "dependencies": {
