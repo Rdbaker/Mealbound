@@ -50,3 +50,5 @@ env/
 
 # ignore the bower installed files
 ceraon/static/libs/**/*
+
+node_modules
