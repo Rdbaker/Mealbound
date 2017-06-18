@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {Menu, Input} from 'semantic-ui-react';
 import UserSessionInfo from '../State/Identity/UserSessionInfo';
-import UserSessionAware, {UserSessionAwareProps} from './UserSessionAware';
 import NavigationBarState from '../State/NavigationBarState';
 
-export interface NavigationBarProps extends NavigationBarState, UserSessionAwareProps<NavigationBar> {
-
+export interface NavigationBarProps extends React.Props<NavigationBar> {
+	navigationBarState: NavigationBarState;
+	userSessionInfo: UserSessionInfo;
 }
 
-class NavigationBar extends React.Component<NavigationBarProps, any> {
+export default class NavigationBar extends React.Component<NavigationBarProps, any> {
 	constructor() {
 		super();
 	}
@@ -27,5 +27,3 @@ class NavigationBar extends React.Component<NavigationBarProps, any> {
 		)
 	}
 }
-
-export default UserSessionAware<NavigationBar, NavigationBarProps, any>(NavigationBar);

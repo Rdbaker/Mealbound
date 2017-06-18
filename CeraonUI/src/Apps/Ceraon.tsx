@@ -3,7 +3,6 @@ import * as React from 'react';
 import CeraonStore from '../Store/CeraonStore';
 import CeraonState from '../State/CeraonState';
 import NavigationBar from '../Components/NavigationBar';
-import UserSessionProvider from '../Components/UserSessionProvider';
 
 export default class Ceraon extends React.Component<{}, CeraonState> {
 	constructor() {
@@ -20,9 +19,7 @@ export default class Ceraon extends React.Component<{}, CeraonState> {
 
 	render() {
 		return (
-			<UserSessionProvider userSessionInfo={this.state.userSessionInfo}>
-				<NavigationBar {...this.state.navigationBarState}/>
-			</UserSessionProvider>
+			<NavigationBar navigationBarState={this.state.navigationBarState} userSessionInfo={this.state.userSessionInfo}/>
 		)
 	}
 
