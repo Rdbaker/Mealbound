@@ -1,5 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Ceraon from './Apps/Ceraon';
+import Ceraon from './Ceraon';
 
 ReactDOM.render(<Ceraon/>, document.getElementById('react-root'));
