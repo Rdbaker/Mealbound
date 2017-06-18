@@ -2,6 +2,7 @@
 """User models."""
 import datetime as dt
 
+from flask import current_app
 from flask_login import UserMixin
 from sqlalchemy.orm import backref
 
@@ -10,6 +11,8 @@ from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,
 from ceraon.extensions import bcrypt
 from ceraon.models import locations
 
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 
 class Role(SurrogatePK, Model):
     """A role for a user."""
@@ -71,6 +74,26 @@ class User(UserMixin, SurrogatePK, Model):
     def check_password(self, value):
         """Check password."""
         return bcrypt.check_password_hash(self.password, value)
+
+
+    # Adapted from https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
+    def get_auth_token(self, expiration = 600):
+        """Retrieve a signed auth token for the user"""
+        serializer = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return serializer.dumps({'userId': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        """Check an auth token to see if it is valid, and if so returns the token's user"""
+        serializer = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            tokenData = serializer.loads(token)
+        except SignatureExpired:
+            return None
+        except BadSignature:
+            return None
+        user = User.get_by_id(tokenData['userId'])
+        return user
 
     @property
     def full_name(self):
