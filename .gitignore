@@ -48,5 +48,7 @@ env/
 # py.test cache
 .cache
 
-# ignore bower files
-ceraon/static/libs/*
+# ignore the bower installed files
+ceraon/static/libs/**/*
+
+node_modules
