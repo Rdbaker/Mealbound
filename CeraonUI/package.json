@@ -10,7 +10,8 @@
     "build_js": "yarn run clean_js && tsc && yarn run bundle_js",
     "bundle_js": "mkdirp dist/js && browserify lib/Main.js > dist/js/bundle.js",
     "build_css": "yarn run clean_css && node-sass src/Styling/Ceraon.scss dist/css/Ceraon.css",
-    "build": "yarn run build_js && yarn run build_css"
+    "build": "yarn run build_js && yarn run build_css",
+    "dist": "cpx 'dist/**/*' ../ceraon/static/libs/CeraonUI/dist"
   },
   "devDependencies": {
     "@types/prop-types": "^15.5.1",
