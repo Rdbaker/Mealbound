@@ -18,6 +18,7 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
     this.state = {username: '', password: '', isSubmitEnabled: false};
     this.onUsernameChanged = this.onUsernameChanged.bind(this);
     this.onPasswordChanged = this.onPasswordChanged.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onUsernameChanged(event: any) {
@@ -34,25 +35,30 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
     this.setState({password: password, isSubmitEnabled: isSubmitEnabled});
   }
 
+  onSubmit() {
+    this.props.onLogin(this.state.username, this.state.password);
+    this.setState({username:'', password:'', isSubmitEnabled: false});
+  }
+
   render() {
     if (this.props.direction == 'horizontal') {
       return (
         <div className="ui form">
           <Form.Group widths='equal' className='no-margin'>
-            <Form.Input placeholder="Username" onChange={this.onUsernameChanged}/>
-            <Form.Input type="password" placeholder="Password" onChange={this.onPasswordChanged}/>
+            <Form.Input placeholder="Username" onChange={this.onUsernameChanged} value={this.state.username}/>
+            <Form.Input type="password" placeholder="Password" onChange={this.onPasswordChanged} value={this.state.password}/>
             <Form.Button disabled={!this.state.isSubmitEnabled}
-              onClick={() => this.props.onLogin(this.state.username, this.state.password)}>Submit</Form.Button>
+              onClick={this.onSubmit} >Submit</Form.Button>
           </Form.Group>
         </div>
       );
     } else {
       return (
        <div className="ui form">
-          <Form.Input placeholder="Username" onChange={this.onUsernameChanged}/>
-          <Form.Input type="password" label="" placeholder="Password" onChange={this.onPasswordChanged}/>
+          <Form.Input placeholder="Username" onChange={this.onUsernameChanged} value={this.state.username}/>
+          <Form.Input type="password" label="" placeholder="Password" onChange={this.onPasswordChanged} value={this.state.password}/>
           <Form.Button disabled={!this.state.isSubmitEnabled}
-            onClick={() => this.props.onLogin(this.state.username, this.state.password)}>Submit</Form.Button>
+            onClick={this.onSubmit}>Submit</Form.Button>
         </div>
       );
     }
