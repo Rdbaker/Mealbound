@@ -51,6 +51,8 @@ def register_blueprints(app):
 
     from ceraon.api.v1.locations import views as locations_views
     app.register_blueprint(locations_views.blueprint)
+    from ceraon.api.v1.token import views as token_views
+    app.register_blueprint(token_views.blueprint)
     return None
 
 
