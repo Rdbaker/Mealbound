@@ -31,6 +31,7 @@ jsmin>=2.0.11
 # Auth
 Flask-Login==0.4.0
 Flask-Bcrypt==0.7.1
+Flask-HTTPAuth==3.2.3
 
 # Caching
 Flask-Caching>=1.0.0
