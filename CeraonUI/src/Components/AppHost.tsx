@@ -7,7 +7,9 @@ export default class AppHost extends React.Component<any, any> {
 
   render() {
     return (
-      React.Children.only(this.props.children)
+      <div>
+        {this.props.children}
+      </div>
     );
   }
 }
