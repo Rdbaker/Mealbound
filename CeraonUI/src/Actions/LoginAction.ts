@@ -10,6 +10,6 @@ export default function createLoginAction(username: string, password: string) : 
   return {
     type: CeraonActionType.Login,
     username: username,
-    password: password
-  }
+    password: password,
+  };
 }

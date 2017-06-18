@@ -5,7 +5,7 @@ import CeraonPage from '../../State/CeraonPage';
 
 export default function ceraonReducer(state: CeraonState, action: CeraonAction) : CeraonState {
 
-  if (action.type == CeraonActionType.Login) {
+  if (action.type === CeraonActionType.Login) {
     state.activePage = CeraonPage.Loading;
     state.loadingPageState.loadingStatusMessage = 'Logging you in...';
   }

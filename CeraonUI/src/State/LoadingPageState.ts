@@ -3,7 +3,7 @@ interface LoadingPageState {
 }
 
 export const DEFAULT_LOADING_PAGE_STATE: LoadingPageState = {
-  loadingStatusMessage: ''
+  loadingStatusMessage: '',
 };
 
 export default LoadingPageState;
