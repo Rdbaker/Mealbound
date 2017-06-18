@@ -20,19 +20,19 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
     if (this.props.direction == 'horizontal') {
       return (
         <Form>
-          <Form.Group widths='equal'>
-            <Form.Field control={Input} label="" placeholder="Username"/>
-            <Form.Field control={Input} label="" placeholder="Password"/>
-            <Form.Field control={Button}>Submit</Form.Field>
+          <Form.Group widths='equal' className='no-margin'>
+            <Form.Input placeholder="Username"/>
+            <Form.Input type="password" placeholder="Password"/>
+            <Form.Button>Submit</Form.Button>
           </Form.Group>
         </Form>
       );
     } else {
       return (
        <Form>
-          <Form.Field control={Input} label="" placeholder="Username"/>
-          <Form.Field control={Input} label="" placeholder="Password"/>
-          <Form.Field control={Button}>Submit</Form.Field>
+          <Form.Input placeholder="Username"/>
+          <Form.Input type="password" label="" placeholder="Password"/>
+          <Form.Button>Submit</Form.Button>
         </Form>
       );
     }
