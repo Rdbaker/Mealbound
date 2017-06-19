@@ -4,6 +4,7 @@ import AppHost from './Components/AppHost';
 import CeraonPage from './State/CeraonPage';
 import CeraonStore from './Store/CeraonStore';
 import CeraonState from './State/CeraonState';
+import HomePage from './Pages/HomePage';
 import LoadingPage from './Pages/LoadingPage';
 import NavigationBar from './Components/NavigationBar';
 
@@ -28,7 +29,8 @@ export default class Ceraon extends React.Component<{}, CeraonState> {
         appContent = <LoadingPage {...this.state.loadingPageState}/>
         break;
       case CeraonPage.Home:
-      appContent = <div>Hello World</div>
+        appContent = <HomePage {...this.state.homePageState}/>
+        break;
     }
 
     return (
