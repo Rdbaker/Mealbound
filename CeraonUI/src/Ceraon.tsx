@@ -4,7 +4,7 @@ import AppHost from './Components/AppHost';
 import CeraonPage from './State/CeraonPage';
 import CeraonStore from './Store/CeraonStore';
 import CeraonState from './State/CeraonState';
-import LoadingPage from './Apps/LoadingPage';
+import LoadingPage from './Pages/LoadingPage';
 import NavigationBar from './Components/NavigationBar';
 
 export default class Ceraon extends React.Component<{}, CeraonState> {
