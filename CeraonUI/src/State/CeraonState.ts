@@ -1,6 +1,6 @@
 import UserSessionInfo, { DEFAULT_USER_SESSION_INFO } from './Identity/UserSessionInfo';
 import NavigationBarState, { DEFAULT_NAVIGATION_BAR_STATE } from './NavigationBarState';
-import LoadingPageState, { DEFAULT_LOADING_PAGE_STATE } from './LoadingPageState';
+import LoadingPageState, { DEFAULT_LOADING_PAGE_STATE } from './Pages/LoadingPageState';
 import CeraonPage from './CeraonPage';
 
 interface CeraonState {
