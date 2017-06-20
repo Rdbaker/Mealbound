@@ -10,13 +10,13 @@ export enum MealSearchActionType {
 
 export interface MealSearchAction extends CeraonAction {
   searchActionType: MealSearchActionType;
-  filters: MealSearchFilter[];
+  filter: MealSearchFilter;
 }
 
-export default function createMealSearchAction(actionType: MealSearchActionType, mealSearchFilters: MealSearchFilter[]) : MealSearchAction {
+export default function createMealSearchAction(actionType: MealSearchActionType, mealSearchFilter: MealSearchFilter) : MealSearchAction {
   return {
     type: CeraonActionType.MealSearch,
     searchActionType: actionType,
-    filters: mealSearchFilters,
+    filter: mealSearchFilter,
   };
 }
