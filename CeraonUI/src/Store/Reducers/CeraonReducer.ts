@@ -24,7 +24,7 @@ export default function ceraonReducer(state: CeraonState, action: CeraonAction) 
 
 function loginReducer(state: CeraonState, action: CeraonAction) : CeraonState {
   // TODO: Login will likely have to refresh the page because we are doing session-based auth
-  let newState = resetOtherPageState(state, CeraonPage.Loading);
+  const newState = resetOtherPageState(state, CeraonPage.Loading);
   newState.activePage = CeraonPage.Loading;
   newState.loadingPageState.loadingStatusMessage = 'Logging you in...';
 
@@ -32,28 +32,28 @@ function loginReducer(state: CeraonState, action: CeraonAction) : CeraonState {
 }
 
 function mealSearchReducer(state: CeraonState, action: MealSearchAction) : CeraonState {
-  let newState = resetOtherPageState(state, CeraonPage.Search);
+  const newState = resetOtherPageState(state, CeraonPage.Search);
   newState.activePage = CeraonPage.Search;
 
   newState.navigationBarState.showSearchBox = false;
 
-  if (action.searchActionType == MealSearchActionType.AddFilter) {
+  if (action.searchActionType === MealSearchActionType.AddFilter) {
     newState.searchPageState.filters.push(action.filter);
-  } else if (action.searchActionType == MealSearchActionType.RemoveFilter) {
+  } else if (action.searchActionType === MealSearchActionType.RemoveFilter) {
     newState.searchPageState.filters = newState.searchPageState.filters.filter((filter) => {
       return !action.filter.equals(filter);
     });
   }
 
-  let mockLocation = {
+  const mockLocation = {
     name:'Mock Location',
     numDollarSigns: 5,
     rating: 4,
     latitude: 0,
     longitude: 0,
     address: '',
-    phone: ''
-  }
+    phone: '',
+  };
 
   newState.searchPageState.totalResults = 3;
   newState.searchPageState.currentResultsStartingIndex = 0;
@@ -63,30 +63,30 @@ function mealSearchReducer(state: CeraonState, action: MealSearchAction) : Cerao
       description: 'Meal 1 description',
       scheduled_for: 0,
       price: 7.99,
-      location: mockLocation
+      location: mockLocation,
     },
     {
       name: 'Meal 3',
       description: 'Meal 3 description',
       scheduled_for: 0,
       price: 3.99,
-      location: mockLocation
+      location: mockLocation,
     },
     {
       name: 'Meal 2',
       description: 'Meal 2 description',
       scheduled_for: 0,
       price: 12.37,
-      location: mockLocation
+      location: mockLocation,
     },
-  ]
+  ];
 
 
   return newState;
 }
 
 function goHomeReducer(state: CeraonState) : CeraonState {
-  let newState = resetOtherPageState(state, CeraonPage.Home);
+  const newState = resetOtherPageState(state, CeraonPage.Home);
 
   newState.activePage = CeraonPage.Home;
   newState.navigationBarState.showSearchBox = true;
@@ -95,17 +95,17 @@ function goHomeReducer(state: CeraonState) : CeraonState {
 }
 
 function resetOtherPageState(state: CeraonState, currentPage: CeraonPage) : CeraonState {
-  let newState = state;
+  const newState = state;
 
-  if (currentPage != CeraonPage.Home) {
+  if (currentPage !== CeraonPage.Home) {
     newState.homePageState = DEFAULT_HOME_PAGE_STATE;
   }
 
-  if (currentPage != CeraonPage.Loading) {
+  if (currentPage !== CeraonPage.Loading) {
     newState.loadingPageState = DEFAULT_LOADING_PAGE_STATE;
   }
 
-  if (currentPage != CeraonPage.Search) {
+  if (currentPage !== CeraonPage.Search) {
     newState.searchPageState = DEFAULT_SEARCH_PAGE_STATE;
   }
 

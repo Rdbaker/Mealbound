@@ -7,8 +7,8 @@ export enum MealTime {
   Dinner = 4,
 }
 
-export function MealTimeToString(mealTime: MealTime) : string {
-  switch(mealTime) {
+export function mealTimeToString(mealTime: MealTime) : string {
+  switch (mealTime) {
     case MealTime.Any:
       return 'Any Meal';
     case MealTime.Breakfast:
@@ -32,7 +32,6 @@ export class MealTimeFilter extends MealSearchFilter {
   }
 
   getFriendlyDescription() : string {
-    return 'Meal Time: ' + MealTimeToString(this.mealTime);
+    return 'Meal Time: ' + mealTimeToString(this.mealTime);
   }
-  
 }

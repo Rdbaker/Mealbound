@@ -24,10 +24,10 @@ exports.default = createGoHomeAction;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var CeraonActionType_1 = require("./CeraonActionType");
-function createLoginAction(username, password) {
+function createLoginAction(email, password) {
     return {
         type: CeraonActionType_1.default.Login,
-        username: username,
+        email: email,
         password: password,
     };
 }
@@ -157,37 +157,37 @@ var LoginForm = (function (_super) {
     __extends(LoginForm, _super);
     function LoginForm() {
         var _this = _super.call(this) || this;
-        _this.state = { username: '', password: '', isSubmitEnabled: false };
+        _this.state = { email: '', password: '', isSubmitEnabled: false };
         _this.onUsernameChanged = _this.onUsernameChanged.bind(_this);
         _this.onPasswordChanged = _this.onPasswordChanged.bind(_this);
         _this.onSubmit = _this.onSubmit.bind(_this);
         return _this;
     }
     LoginForm.prototype.onUsernameChanged = function (event) {
-        var username = event.target.value;
-        var isSubmitEnabled = username.length > 0 && this.state.password.length > 0;
-        this.setState({ username: username, isSubmitEnabled: isSubmitEnabled });
+        var email = event.target.value;
+        var isSubmitEnabled = email.length > 0 && this.state.password.length > 0;
+        this.setState({ email: email, isSubmitEnabled: isSubmitEnabled });
     };
     LoginForm.prototype.onPasswordChanged = function (event) {
         var password = event.target.value;
-        var isSubmitEnabled = password.length > 0 && this.state.username.length > 0;
+        var isSubmitEnabled = password.length > 0 && this.state.email.length > 0;
         this.setState({ password: password, isSubmitEnabled: isSubmitEnabled });
     };
     LoginForm.prototype.onSubmit = function () {
-        this.props.onLogin(this.state.username, this.state.password);
-        this.setState({ username: '', password: '', isSubmitEnabled: false });
+        this.props.onLogin(this.state.email, this.state.password);
+        this.setState({ email: '', password: '', isSubmitEnabled: false });
     };
     LoginForm.prototype.render = function () {
         if (this.props.direction == 'horizontal') {
             return (React.createElement("div", { className: "ui form" },
                 React.createElement(semantic_ui_react_1.Form.Group, { widths: 'equal', className: 'no-margin' },
-                    React.createElement(semantic_ui_react_1.Form.Input, { placeholder: "Username", onChange: this.onUsernameChanged, value: this.state.username }),
+                    React.createElement(semantic_ui_react_1.Form.Input, { placeholder: "Username", onChange: this.onUsernameChanged, value: this.state.email }),
                     React.createElement(semantic_ui_react_1.Form.Input, { type: "password", placeholder: "Password", onChange: this.onPasswordChanged, value: this.state.password }),
                     React.createElement(semantic_ui_react_1.Form.Button, { disabled: !this.state.isSubmitEnabled, onClick: this.onSubmit }, "Login"))));
         }
         else {
             return (React.createElement("div", { className: "ui form" },
-                React.createElement(semantic_ui_react_1.Form.Input, { placeholder: "Username", onChange: this.onUsernameChanged, value: this.state.username }),
+                React.createElement(semantic_ui_react_1.Form.Input, { placeholder: "Username", onChange: this.onUsernameChanged, value: this.state.email }),
                 React.createElement(semantic_ui_react_1.Form.Input, { type: "password", label: "", placeholder: "Password", onChange: this.onPasswordChanged, value: this.state.password }),
                 React.createElement(semantic_ui_react_1.Form.Button, { disabled: !this.state.isSubmitEnabled, onClick: this.onSubmit }, "Login")));
         }
@@ -262,7 +262,7 @@ var MealSearchDropdown = (function (_super) {
     }
     MealSearchDropdown.prototype.getDropdownOptions = function () {
         return this.props.mealTimeOptions.map(function (option) {
-            return { text: MealTime_1.MealTimeToString(option), value: option };
+            return { text: MealTime_1.mealTimeToString(option), value: option };
         });
     };
     MealSearchDropdown.prototype.onSelectionChanged = function (event, data) {
@@ -326,8 +326,8 @@ var NavigationBar = (function (_super) {
     NavigationBar.prototype.onGoHome = function () {
         CeraonDispatcher_1.default(GoHomeAction_1.default());
     };
-    NavigationBar.prototype.onLogin = function (username, password) {
-        CeraonDispatcher_1.default(LoginAction_1.default(username, password));
+    NavigationBar.prototype.onLogin = function (email, password) {
+        CeraonDispatcher_1.default(LoginAction_1.default(email, password));
     };
     NavigationBar.prototype.render = function () {
         return (React.createElement(semantic_ui_react_1.Menu, { fixed: "top" },
@@ -557,10 +557,10 @@ var MealSearchFilter = (function () {
     function MealSearchFilter() {
     }
     MealSearchFilter.prototype.equals = function (otherFilter) {
-        if (otherFilter.getFilterType() != this.getFilterType()) {
+        if (otherFilter.getFilterType() !== this.getFilterType()) {
             return false;
         }
-        return otherFilter.getFriendlyDescription() == this.getFriendlyDescription();
+        return otherFilter.getFriendlyDescription() === this.getFriendlyDescription();
     };
     return MealSearchFilter;
 }());
@@ -587,7 +587,7 @@ var MealTime;
     MealTime[MealTime["Lunch"] = 3] = "Lunch";
     MealTime[MealTime["Dinner"] = 4] = "Dinner";
 })(MealTime = exports.MealTime || (exports.MealTime = {}));
-function MealTimeToString(mealTime) {
+function mealTimeToString(mealTime) {
     switch (mealTime) {
         case MealTime.Any:
             return 'Any Meal';
@@ -600,7 +600,7 @@ function MealTimeToString(mealTime) {
     }
     return 'Unknown Meal Time!';
 }
-exports.MealTimeToString = MealTimeToString;
+exports.mealTimeToString = mealTimeToString;
 var MealTimeFilter = (function (_super) {
     __extends(MealTimeFilter, _super);
     function MealTimeFilter(mealTime) {
@@ -612,7 +612,7 @@ var MealTimeFilter = (function (_super) {
         return MealSearchFilter_1.MealSearchFilterType.Time;
     };
     MealTimeFilter.prototype.getFriendlyDescription = function () {
-        return 'Meal Time: ' + MealTimeToString(this.mealTime);
+        return 'Meal Time: ' + mealTimeToString(this.mealTime);
     };
     return MealTimeFilter;
 }(MealSearchFilter_1.default));
@@ -708,10 +708,10 @@ function mealSearchReducer(state, action) {
     var newState = resetOtherPageState(state, CeraonPage_1.default.Search);
     newState.activePage = CeraonPage_1.default.Search;
     newState.navigationBarState.showSearchBox = false;
-    if (action.searchActionType == MealSearchAction_1.MealSearchActionType.AddFilter) {
+    if (action.searchActionType === MealSearchAction_1.MealSearchActionType.AddFilter) {
         newState.searchPageState.filters.push(action.filter);
     }
-    else if (action.searchActionType == MealSearchAction_1.MealSearchActionType.RemoveFilter) {
+    else if (action.searchActionType === MealSearchAction_1.MealSearchActionType.RemoveFilter) {
         newState.searchPageState.filters = newState.searchPageState.filters.filter(function (filter) {
             return !action.filter.equals(filter);
         });
@@ -723,7 +723,7 @@ function mealSearchReducer(state, action) {
         latitude: 0,
         longitude: 0,
         address: '',
-        phone: ''
+        phone: '',
     };
     newState.searchPageState.totalResults = 3;
     newState.searchPageState.currentResultsStartingIndex = 0;
@@ -733,21 +733,21 @@ function mealSearchReducer(state, action) {
             description: 'Meal 1 description',
             scheduled_for: 0,
             price: 7.99,
-            location: mockLocation
+            location: mockLocation,
         },
         {
             name: 'Meal 3',
             description: 'Meal 3 description',
             scheduled_for: 0,
             price: 3.99,
-            location: mockLocation
+            location: mockLocation,
         },
         {
             name: 'Meal 2',
             description: 'Meal 2 description',
             scheduled_for: 0,
             price: 12.37,
-            location: mockLocation
+            location: mockLocation,
         },
     ];
     return newState;
@@ -760,13 +760,13 @@ function goHomeReducer(state) {
 }
 function resetOtherPageState(state, currentPage) {
     var newState = state;
-    if (currentPage != CeraonPage_1.default.Home) {
+    if (currentPage !== CeraonPage_1.default.Home) {
         newState.homePageState = HomePageState_1.DEFAULT_HOME_PAGE_STATE;
     }
-    if (currentPage != CeraonPage_1.default.Loading) {
+    if (currentPage !== CeraonPage_1.default.Loading) {
         newState.loadingPageState = LoadingPageState_1.DEFAULT_LOADING_PAGE_STATE;
     }
-    if (currentPage != CeraonPage_1.default.Search) {
+    if (currentPage !== CeraonPage_1.default.Search) {
         newState.searchPageState = SearchPageState_1.DEFAULT_SEARCH_PAGE_STATE;
     }
     return newState;

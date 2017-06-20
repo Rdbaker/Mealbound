@@ -1,11 +1,11 @@
 import CeraonAction from './CeraonAction';
 import CeraonActionType from './CeraonActionType';
-import {MealTime} from '../State/Meal/Filters/MealTime';
+import { MealTime } from '../State/Meal/Filters/MealTime';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
 
 export enum MealSearchActionType {
   AddFilter,
-  RemoveFilter
+  RemoveFilter,
 }
 
 export interface MealSearchAction extends CeraonAction {
@@ -13,7 +13,9 @@ export interface MealSearchAction extends CeraonAction {
   filter: MealSearchFilter;
 }
 
-export default function createMealSearchAction(actionType: MealSearchActionType, mealSearchFilter: MealSearchFilter) : MealSearchAction {
+export default function createMealSearchAction(actionType: MealSearchActionType,
+                                               mealSearchFilter: MealSearchFilter) 
+                                               : MealSearchAction {
   return {
     type: CeraonActionType.MealSearch,
     searchActionType: actionType,

@@ -1,4 +1,4 @@
-import {MealTime} from '../Meal/Filters/MealTime';
+import { MealTime } from '../Meal/Filters/MealTime';
 
 
 interface HomePageState {

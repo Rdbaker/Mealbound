@@ -9,10 +9,10 @@ export default abstract class MealSearchFilter {
   abstract getFilterType(): MealSearchFilterType;
   
   equals(otherFilter: MealSearchFilter): boolean {
-    if (otherFilter.getFilterType() != this.getFilterType()) {
+    if (otherFilter.getFilterType() !== this.getFilterType()) {
       return false;
     }
 
-    return otherFilter.getFriendlyDescription() == this.getFriendlyDescription();
+    return otherFilter.getFriendlyDescription() === this.getFriendlyDescription();
   }
 }

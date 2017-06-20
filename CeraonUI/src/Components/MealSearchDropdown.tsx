@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {MealTime, MealTimeToString} from '../State/Meal/Filters/MealTime';
+import {MealTime, mealTimeToString} from '../State/Meal/Filters/MealTime';
 import { Button, Dropdown } from 'semantic-ui-react';
 
 interface MealSearchDropdownProps extends React.Props<MealSearchDropdown> {
@@ -22,7 +22,7 @@ export default class MealSearchDropdown extends React.Component<MealSearchDropdo
 
   getDropdownOptions() : object[] {
     return this.props.mealTimeOptions.map((option: MealTime) => {
-      return { text: MealTimeToString(option), value: option }
+      return { text: mealTimeToString(option), value: option }
     });
   }
 
