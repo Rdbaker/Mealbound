@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {Segment, Header, Icon} from 'semantic-ui-react';
+import { Header, Icon} from 'semantic-ui-react';
 import HomePageState from '../State/Pages/HomePageState';
 import MealSearchDropdown from '../Components/MealSearchDropdown';
 import { MealTime, MealTimeFilter } from '../State/Meal/Filters/MealTime';
@@ -19,7 +19,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
 
   onMealSearch(mealTime: MealTime) {
     CeraonDispatcher(CreateMealSearchAction(MealSearchActionType.AddFilter,
-      [new MealTimeFilter(mealTime)]));
+      new MealTimeFilter(mealTime)));
   }
 
   render() {
