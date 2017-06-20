@@ -16,6 +16,7 @@
   </title>
   <meta name="description" content="{% block meta_description %}{% endblock %}">
   <meta name="author" content="{% block meta_author %}{% endblock %}">
+  <meta name="fb-app-id" content="{{ fb_app_id }}">
 
   <!-- Mobile viewport optimized: h5bp.com/viewport -->
   <meta name="viewport" content="width=device-width">
@@ -30,6 +31,7 @@
 
 </head>
 <body class="{% block body_class %}{% endblock %}">
+{% block fblogin %}{% endblock %}
 {% block body %}
 {% with form=form  %}
 {% include "nav.html" %}
@@ -64,6 +66,18 @@
 <!-- JavaScript at the bottom for fast page loading -->
 {% assets "js_all" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    <script type="text/javascript">
+      var csrf_token = "{{ csrf_token() }}";
+
+      $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+          if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            xhr.setRequestHeader("Content-Type", "application/json");
+          }
+        }
+      });
+    </script>
 {% endassets %}
 {% block js %}{% endblock %}
 <!-- end scripts -->

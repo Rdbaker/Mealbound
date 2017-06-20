@@ -26,6 +26,11 @@ def create_app(config_object=ProdConfig):
     register_errorhandlers(app)
     register_shellcontext(app)
     register_commands(app)
+
+    @app.context_processor
+    def inject_fb_app_ID():
+        return dict(fb_app_id=app.config['FB_APP_ID'])
+
     return app
 
 
@@ -53,6 +58,8 @@ def register_blueprints(app):
     app.register_blueprint(locations_views.blueprint)
     from ceraon.api.v1.token import views as token_views
     app.register_blueprint(token_views.blueprint)
+    from ceraon.api.v1.sessions import views as sessions_views
+    app.register_blueprint(sessions_views.blueprint)
     return None
 
 

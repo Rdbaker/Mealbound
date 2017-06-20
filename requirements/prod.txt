@@ -47,3 +47,6 @@ geopy==1.11.0
 
 # pagination
 flask-paginate==0.4.6
+
+# facebook integration
+git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
