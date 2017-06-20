@@ -26,8 +26,8 @@ export default class MealSearchDropdown extends React.Component<MealSearchDropdo
     });
   }
 
-  onSelectionChanged(event: any) {
-    let mealTime = event.target.value;
+  onSelectionChanged(event: any, data: any) {
+    let mealTime = data.value;
     this.setState({selectedMealTime: mealTime});
 
     if (!this.props.showSubmitButton) {
