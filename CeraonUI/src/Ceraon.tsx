@@ -6,6 +6,7 @@ import CeraonStore from './Store/CeraonStore';
 import CeraonState from './State/CeraonState';
 import HomePage from './Pages/HomePage';
 import LoadingPage from './Pages/LoadingPage';
+import SearchPage from './Pages/SearchPage';
 import NavigationBar from './Components/NavigationBar';
 
 export default class Ceraon extends React.Component<{}, CeraonState> {
@@ -31,6 +32,8 @@ export default class Ceraon extends React.Component<{}, CeraonState> {
       case CeraonPage.Home:
         appContent = <HomePage {...this.state.homePageState}/>
         break;
+      case CeraonPage.Search:
+        appContent = <SearchPage {...this.state.searchPageState}/>
     }
 
     return (
