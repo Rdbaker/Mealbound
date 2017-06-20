@@ -21,7 +21,7 @@ export default class MealCard extends React.Component<MealCardProps, any> {
             <Card.Description>{this.props.meal.description}</Card.Description>
           </Card.Content>
           <Card.Content extra>
-            <Rating icon='star' rating={this.props.meal.location.rating} disabled/>
+            <Rating icon='star' rating={this.props.meal.location.rating} maxRating={5} disabled/>
           </Card.Content>
         </Card>
       </Card.Group>
