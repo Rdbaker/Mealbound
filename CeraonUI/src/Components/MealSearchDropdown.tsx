@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {MealTime, MealTimeToString} from '../State/Meal/Filters/MealTime';
-import { Dropdown} from 'semantic-ui-react';
+import { Button, Dropdown } from 'semantic-ui-react';
 
 interface MealSearchDropdownProps extends React.Props<MealSearchDropdown> {
   mealTimeOptions: MealTime[];
