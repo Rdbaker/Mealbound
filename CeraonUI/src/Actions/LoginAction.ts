@@ -2,14 +2,14 @@ import CeraonAction from './CeraonAction';
 import CeraonActionType from './CeraonActionType';
 
 export interface LoginAction extends CeraonAction {
-  username: string;
+  email: string;
   password: string;
 }
 
-export default function createLoginAction(username: string, password: string) : LoginAction {
+export default function createLoginAction(email: string, password: string) : LoginAction {
   return {
     type: CeraonActionType.Login,
-    username: username,
+    email: email,
     password: password,
   };
 }

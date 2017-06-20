@@ -26,8 +26,8 @@ export default class NavigationBar extends React.Component<NavigationBarProps, a
 
   }
 
-  onLogin(username: string, password: string) {
-    CeraonDispatcher(CreateLoginAction(username, password));
+  onLogin(email: string, password: string) {
+    CeraonDispatcher(CreateLoginAction(email, password));
   }
 
   render() {
