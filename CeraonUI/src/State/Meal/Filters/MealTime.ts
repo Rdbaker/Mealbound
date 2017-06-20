@@ -1,4 +1,4 @@
-import MealSearchFilter from './MealSearchFilter';
+import MealSearchFilter, { MealSearchFilterType } from './MealSearchFilter';
 
 export enum MealTime {
   Any = 1,
@@ -23,12 +23,16 @@ export function MealTimeToString(mealTime: MealTime) : string {
 }
 
 export class MealTimeFilter extends MealSearchFilter {
-  constructor(private _mealTime: MealTime) {
+  constructor(public mealTime: MealTime) {
     super();
   }
 
+  getFilterType() : MealSearchFilterType {
+    return MealSearchFilterType.Time;
+  }
+
   getFriendlyDescription() : string {
-    return 'Meal Time: ' + MealTimeToString(this._mealTime);
+    return 'Meal Time: ' + MealTimeToString(this.mealTime);
   }
   
 }
