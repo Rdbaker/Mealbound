@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Form, Input, Button} from 'semantic-ui-react';
+import { Form, Input, Button } from 'semantic-ui-react';
 
 interface LoginFormProps extends React.Props<LoginForm> {
   direction: 'vertical'|'horizontal';
