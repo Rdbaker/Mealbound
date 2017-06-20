@@ -162,3 +162,13 @@ footer .footer-nav {
   padding-left: 5px;
   font-size: 12px;
 }
+
+/* oauth login stylings */
+
+#oauth-login-container {
+  padding-top: 10px;
+  border-top: solid #8080804d 1px;
+  text-align: center;
+  border-bottom: solid #8080804d 1px;
+  padding-bottom: 10px;
+}

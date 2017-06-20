@@ -12,14 +12,16 @@ from .models import User
 class RegisterForm(Form):
     """Register form."""
 
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=3, max=25)])
     email = StringField('Email',
-                        validators=[DataRequired(), Email(), Length(min=6, max=40)])
+                        validators=[DataRequired(), Email(),
+                                    Length(min=6, max=40)])
     password = PasswordField('Password',
-                             validators=[DataRequired(), Length(min=6, max=40)])
+                             validators=[DataRequired(),
+                                         Length(min=6, max=40)])
     confirm = PasswordField('Verify password',
-                            [DataRequired(), EqualTo('password', message='Passwords must match')])
+                            [DataRequired(),
+                             EqualTo('password',
+                                     message='Passwords must match')])
 
     def __init__(self, *args, **kwargs):
         """Create instance."""
@@ -31,10 +33,6 @@ class RegisterForm(Form):
         initial_validation = super(RegisterForm, self).validate()
         if not initial_validation:
             return False
-        user = User.query.filter_by(username=self.username.data).first()
-        if user:
-            self.username.errors.append('Username already registered')
-            return False
         user = User.query.filter_by(email=self.email.data).first()
         if user:
             self.email.errors.append('Email already registered')
@@ -45,8 +43,6 @@ class RegisterForm(Form):
 class EditProfileForm(Form):
     """Form for the user to edit their profile."""
 
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=3, max=25)])
     email = StringField('Email',
                         validators=[DataRequired(), Email(),
                                     Length(min=6, max=40)])
@@ -89,13 +85,6 @@ class EditProfileForm(Form):
 
         if not initial_validation:
             return False
-        if self.user.username != self.username.data:
-            taken_user = User.query.filter_by(username=self.username.data)\
-                .first()
-            if taken_user:
-                self.username.errors.append('Username already registered')
-                return False
-
         if self.user.email != self.email.data:
             taken_user = User.query.filter_by(email=self.email.data)\
                 .first()
@@ -106,5 +95,5 @@ class EditProfileForm(Form):
         if not self.user.location and self.address.data:
             # don't throw an error, create a new location for the user behind
             # the scenes
-            Location.create(host=self.user, name=self.user.username)
+            Location.create(host=self.user, name=self.user.public_name)
         return True

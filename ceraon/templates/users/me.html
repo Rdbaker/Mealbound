@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
   <div class="module">
-    <h1>Welcome {{ current_user.username }}</h1>
+    <h1>Welcome {{ current_user.public_name }}</h1>
     <div class="container-narrow">
         <a href="{{ url_for('user.edit_profile')}}">Edit my profile.</a>
         <br/>
