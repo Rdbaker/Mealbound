@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Loader, Dimmer } from 'semantic-ui-react';
-import LoadingPageState from '../State/LoadingPageState';
+import LoadingPageState from '../State/Pages/LoadingPageState';
 
 export interface LoadingPageProps extends LoadingPageState, React.Props<LoadingPage> {
   

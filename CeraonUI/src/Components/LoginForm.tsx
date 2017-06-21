@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Form, Input, Button} from 'semantic-ui-react';
+import { Form, Input, Button } from 'semantic-ui-react';
 
 interface LoginFormProps extends React.Props<LoginForm> {
   direction: 'vertical'|'horizontal';
@@ -48,7 +48,7 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
             <Form.Input placeholder="Username" onChange={this.onUsernameChanged} value={this.state.email}/>
             <Form.Input type="password" placeholder="Password" onChange={this.onPasswordChanged} value={this.state.password}/>
             <Form.Button disabled={!this.state.isSubmitEnabled}
-              onClick={this.onSubmit} >Submit</Form.Button>
+              onClick={this.onSubmit}>Login</Form.Button>
           </Form.Group>
         </div>
       );
@@ -58,7 +58,7 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
           <Form.Input placeholder="Username" onChange={this.onUsernameChanged} value={this.state.email}/>
           <Form.Input type="password" label="" placeholder="Password" onChange={this.onPasswordChanged} value={this.state.password}/>
           <Form.Button disabled={!this.state.isSubmitEnabled}
-            onClick={this.onSubmit}>Submit</Form.Button>
+            onClick={this.onSubmit}>Login</Form.Button>
         </div>
       );
     }

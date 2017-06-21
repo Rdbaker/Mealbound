@@ -5,6 +5,7 @@ import NavigationBarState from '../State/NavigationBarState';
 import LoginForm from './LoginForm';
 import CeraonDispatcher from '../Store/CeraonDispatcher';
 import CreateLoginAction from '../Actions/LoginAction';
+import CreateGoHomeAction from '../Actions/GoHomeAction';
 
 export interface NavigationBarProps extends NavigationBarState, React.Props<NavigationBar> {
 }
@@ -16,6 +17,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps, a
     this.onCreateAccount = this.onCreateAccount.bind(this);
     this.onSearchTextInput = this.onSearchTextInput.bind(this);
     this.onLogin = this.onLogin.bind(this);
+    this.onGoHome = this.onGoHome.bind(this);
   }
 
   onCreateAccount() {
@@ -26,6 +28,10 @@ export default class NavigationBar extends React.Component<NavigationBarProps, a
 
   }
 
+  onGoHome() {
+    CeraonDispatcher(CreateGoHomeAction());
+  }
+
   onLogin(email: string, password: string) {
     CeraonDispatcher(CreateLoginAction(email, password));
   }
@@ -33,7 +39,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps, a
   render() {
     return (
       <Menu fixed="top">
-        <Menu.Item header>{this.props.navigationTitle}</Menu.Item>
+        <Menu.Item header onClick={this.onGoHome}>{this.props.navigationTitle}</Menu.Item>
         { this.props.showSearchBox ? (
           <Menu.Item>
             <Input className='icon' icon='search' placeholder='Search...' onChange={this.onSearchTextInput}/>
