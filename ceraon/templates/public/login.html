@@ -16,14 +16,13 @@
   };
 
   function communicateStatus(response) {
-    return $.post('/api/v1/sessions/facebook', JSON.stringify(response))
-      .done(function(res) { console.log(res); });
+    return $.post('/api/v1/sessions/facebook', JSON.stringify(response)).
+      done(function(res) { location.href = res;});
   }
 
   function loginSuccess() {
     return FB.getLoginStatus(communicateStatus);
   }
-
 
   (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];

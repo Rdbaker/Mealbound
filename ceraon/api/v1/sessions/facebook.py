@@ -3,7 +3,6 @@
 
 import facebook
 from flask import request, current_app
-from werkzeug.exceptions import Forbidden, Unauthorized
 
 from ceraon.user.models import User
 
@@ -25,8 +24,7 @@ def get_fb_user_from_cookie():
 
     # if the user is not logged in
     if not access_token:
-        # TODO: raise an APIError instead of a werkzeug error
-        raise Unauthorized('You must be logged in to Facebook')
+        return None
 
     # create the API connection
     graph = facebook.GraphAPI(access_token=access_token['access_token'],
@@ -75,8 +73,6 @@ def resolve_user_from_fb_response(user_from_fb):
         # TODO: for new, we'll require that they give email access -- we should
         # TODO: fix this later if they don't want to give that to us
         # TODO: (uncomment) user_from_db = User.create(**user_from_fb)
-
-        # TODO: make this raise an APIError or some class of that later
-        raise Forbidden('email is required')
+        return None
 
     return user_from_db

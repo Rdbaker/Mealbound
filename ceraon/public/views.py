@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 
 from ceraon.extensions import login_manager
 from ceraon.public.forms import LoginForm
@@ -16,10 +16,6 @@ blueprint = Blueprint('public', __name__, static_folder='../static')
 def load_user(user_id):
     """Load user by ID."""
     user = User.get_by_id(int(user_id))
-    # try to get the user from facebook if we couldn't get it from the database
-    if user is None:
-        user = User()
-        user.is_active = True
     return user
 
 
@@ -43,6 +39,9 @@ def home():
 def login():
     """Login."""
     form = LoginForm(request.form)
+    if current_user.is_authenticated:
+        redirect_url = request.args.get('next') or url_for('user.me')
+        return redirect(redirect_url)
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():
