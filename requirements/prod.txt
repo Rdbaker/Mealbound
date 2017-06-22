@@ -50,3 +50,6 @@ flask-paginate==0.4.6
 
 # facebook integration
 git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
+
+# use SSL in production (heroku only)
+Flask-SSLify==0.1.5
