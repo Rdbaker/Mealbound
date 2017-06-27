@@ -3,6 +3,17 @@
 from threading import Thread
 
 from flask import flash, Blueprint, current_app, request
+import requests
+
+
+def get_fb_access_token():
+    """Get an access token from facebook for graph API calls."""
+    base_url = 'https://graph.facebook.com/oauth/access_token?' \
+        'grant_type=client_credentials'
+    res = requests.get(
+        base_url + '&client_id={}'.format(current_app.config['FB_APP_ID']) +
+        '&client_secret={}'.format(current_app.config['FB_APP_SECRET']))
+    return res.json().get('access_token')
 
 
 def friendly_arg_get(key, default=None, type_cast=None):
@@ -63,32 +74,36 @@ class RESTBlueprint(Blueprint):
     parameter called `uid` to your route. Make sure to correctly resolve that to
     your entity's ID.
     """
+
     def __init__(self, blueprint_name, name, version):
         return super(RESTBlueprint, self).__init__(
             'api.{}.{}'.format(version, blueprint_name),
             name, url_prefix='/api/{}/{}'.format(version, blueprint_name))
 
     def flexible_route(self, *args, **kwargs):
-        return self.route(*args, **kwargs, strict_slashes=False)
+        kwargs.update({'strict_slashes': False})
+        return self.route(*args, **kwargs)
 
     def create(self, *args, **kwargs):
-        return self.flexible_route('/', *args, **kwargs, methods=['POST'])
+        kwargs.update({'methods': ['POST']})
+        return self.flexible_route('/', *args, **kwargs)
 
     def list(self, *args, **kwargs):
-        return self.flexible_route('/', *args, **kwargs, methods=['GET'])
+        kwargs.update({'methods': ['GET']})
+        return self.flexible_route('/', *args, **kwargs)
 
     def find(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['GET'])
+        kwargs.update({'methods': ['GET']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
 
     def update(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['PATCH'])
+        kwargs.update({'methods': ['PATCH']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
 
     def replace(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['PUT'])
+        kwargs.update({'methods': ['PUT']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
 
     def destroy(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['DELETE'])
+        kwargs.update({'methods': ['DELETE']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)

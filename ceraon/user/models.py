@@ -2,17 +2,18 @@
 """User models."""
 import datetime as dt
 
+from facebook import GraphAPI
 from flask import current_app
 from flask_login import UserMixin
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 from sqlalchemy.orm import backref
 
 from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,
                              relationship)
 from ceraon.extensions import bcrypt
 from ceraon.models import locations
-
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
+from ceraon.utils import get_fb_access_token
 
 
 class Role(SurrogatePK, Model):
@@ -130,6 +131,15 @@ class User(UserMixin, SurrogatePK, Model):
             return '{} {}.'.format(self.first_name, self.last_name[0])
         else:
             return self.first_name
+
+    @property
+    def image_url(self):
+        """Get the image url from facebook if available."""
+        if not self.facebook_id:
+            return None
+        fb = GraphAPI(access_token=get_fb_access_token(), version='2.9')
+        res = fb.get_object(id=self.facebook_id, fields='picture')
+        return res.get('picture', {}).get('data', {}).get('url')
 
     def __repr__(self):
         """Represent instance as a unique string."""

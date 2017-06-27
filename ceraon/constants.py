@@ -18,6 +18,9 @@ class Errors(object):
     MEAL_NEEDS_COST = ('meal-needs-cost', 'The meal needs a cost (even $0)')
     NON_NEGATIVE = ('non-negative', 'This can\'t be negative')
     CANNOT_JOIN_MEAL = ('cannot-join-meal', 'You can\'t join that meal')
+    MEAL_NAME_MISSING = ('meal-name-missing', 'That meal needs a name')
+    MEAL_PRICE_MISSING = ('meal-price-missing', 'That meal needs a price')
+    MEAL_PRICE_NEGATIVE = ('meal-price-negative', 'A price cannot be negative')
 
 
 class Success(object):
