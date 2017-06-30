@@ -6,6 +6,7 @@ from datetime import datetime as dt, timedelta as td
 
 import pytest
 
+from ceraon.models.meals import Meal
 from tests.utils import BaseViewTest
 
 
@@ -214,3 +215,35 @@ class TestReplaceMeal(BaseViewTest):
                                {'price': 4.00}, status=422)
         assert res.status_code == 422
         assert 'name' in res.json['error_message']
+
+
+@pytest.mark.usefixtures('db')
+class TestDestroyMeal(BaseViewTest):
+    """Test DELETE /api/v1/meals/UUID."""
+
+    base_url = '/api/v1/meals/{}'
+
+    def test_unauthenticated(self, testapp, meal):
+        """Test that unauthenticated gets a 401."""
+        res = testapp.delete(self.base_url.format(meal.id), status=401)
+        assert res.status_code == 401
+
+    def test_meal_not_found(self, testapp, user):
+        """Test that a meal not found gets a 404."""
+        self.login(user, testapp)
+        res = testapp.delete(self.base_url.format(uuid.uuid4()), status=404)
+        assert res.status_code == 404
+
+    def test_not_meal_host(self, testapp, guest, guest_location, meal):
+        """Test that not being meal owner gets a 403."""
+        self.login(guest, testapp)
+        res = testapp.delete(self.base_url.format(meal.id), status=403)
+        assert res.status_code == 403
+
+    def test_meal_deleted(self, testapp, host, hosted_location, meal):
+        """Test that host can delete a meal."""
+        self.login(host, testapp)
+        res = testapp.delete(self.base_url.format(meal.id))
+        assert res.status_code == 204
+        try_find_meal = Meal.find(meal.id)
+        assert try_find_meal is None

@@ -112,3 +112,17 @@ def replace_meal(uid):
     """Replace a meal."""
     return jsonify(data=update_or_replace_meal(uid, request.json, True),
                    message=Success.MEAL_UPDATED), 202
+
+
+@blueprint.destroy()
+@login_required
+def destroy_meal(uid):
+    """Destroy a meal."""
+    meal = Meal.find(uid)
+    if meal is None:
+        raise NotFound(Errors.MEAL_NOT_FOUND)
+    if current_user.id != meal.host.id:
+        raise Forbidden(Errors.NOT_YOUR_MEAL)
+    meal.delete()
+    # TODO: should we have logic to refund or make sure there are no guests?
+    return jsonify(data=None, message=Success.MEAL_DELETED), 204

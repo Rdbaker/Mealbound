@@ -38,3 +38,4 @@ class Success(object):
     MEAL_UPDATED = ('meal-updated', 'You updated your meal!')
     MEAL_WAS_JOINED = ('meal-joined', 'You successfully joined a meal!')
     MEAL_WAS_LEFT = ('meal-left', 'Reservation successfully canceled')
+    MEAL_DELETED = ('meal-deleted', 'Meal successfully canceled')
