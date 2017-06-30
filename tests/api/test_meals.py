@@ -2,6 +2,7 @@
 """Test the views at /api/v1/meals."""
 
 import uuid
+from datetime import datetime as dt, timedelta as td
 
 import pytest
 
@@ -40,8 +41,14 @@ class TestCreateMeal(BaseViewTest):
 
     base_url = '/api/v1/meals'
 
-    valid_data = {
-    }
+    def setup_method(self, method):
+        """Set up the test class. Pytest will call this for us."""
+        self.valid_data = {
+            'scheduled_for': (dt.now() + td(days=1)).isoformat(),
+            'name': 'some new meal',
+            'description': 'this is my description',
+            'price': 7.00,
+        }
 
     def test_unauthenticated_create(self, testapp):
         """Test that we get a 401 if the user is not authenticated."""
@@ -53,3 +60,157 @@ class TestCreateMeal(BaseViewTest):
         self.login(user, testapp)
         res = testapp.post_json(self.base_url, self.valid_data, status=428)
         assert res.status_code == 428
+
+    def test_meal_needs_name(self, testapp, host, hosted_location):
+        """Test that a meal needs a name."""
+        del self.valid_data['name']
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, self.valid_data, status=422)
+        assert 'name' in res.json['error_message']
+
+    def test_meal_needs_price(self, testapp, host, hosted_location):
+        """Test that a meal needs a price."""
+        del self.valid_data['price']
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, self.valid_data, status=422)
+        assert 'price' in res.json['error_message']
+
+    def test_meal_price_positive(self, testapp, host, hosted_location):
+        """Test that a meal needs a positive price."""
+        self.valid_data['price'] = -1.50
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, self.valid_data, status=422)
+        assert 'price' in res.json['error_message']
+
+    def test_meal_needs_scheduled_for(self, testapp, host, hosted_location):
+        """Test that a meal needs a scheduled_for."""
+        del self.valid_data['scheduled_for']
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, self.valid_data, status=422)
+        assert 'scheduled_for' in res.json['error_message']
+
+    def test_meal_scheduled_for_past(self, testapp, host, hosted_location):
+        """Test that a meal needs a scheduled_for in the future."""
+        self.valid_data['scheduled_for'] = (dt.utcnow() - td(days=1))\
+            .isoformat()
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, self.valid_data, status=422)
+        assert 'scheduled_for' in res.json['error_message']
+
+    def test_user_meal_create_successful(self, testapp, host, hosted_location):
+        """Test that a user can create a meal."""
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, self.valid_data)
+        assert res.status_code == 201
+        assert 'message' in res.json
+        data = res.json['data']
+        assert data['price'] == self.valid_data['price']
+        assert data['name'] == self.valid_data['name']
+        assert data['description'] == self.valid_data['description']
+        # we didn't add the tz, so the server inferred it as UTC
+        assert data['scheduled_for'] == \
+            self.valid_data['scheduled_for'] + '+00:00'
+
+
+@pytest.mark.usefixtures('db')
+class TestUpdateMeal(BaseViewTest):
+    """Test PATCH /api/v1/meals/UUID."""
+
+    base_url = '/api/v1/meals/{}'
+
+    def setup_method(self, method):
+        """Set up the test class. Pytest will call this for us."""
+        self.valid_data = {
+            'scheduled_for': (dt.now() + td(days=3)).isoformat(),
+            'name': 'some new meal name',
+            'description': 'this is my new description',
+            'price': 7.80,
+        }
+
+    def test_unauthenticated(self, testapp, meal):
+        """Test that unauthenticated gets a 401."""
+        res = testapp.patch_json(self.base_url.format(meal.id),
+                                 self.valid_data, status=401)
+        assert res.status_code == 401
+
+    def test_no_meal_found(self, testapp, guest, guest_location):
+        """Test that a nonexistent meal gets a 404."""
+        self.login(guest, testapp)
+        res = testapp.patch_json(self.base_url.format(uuid.uuid4()),
+                                 self.valid_data, status=404)
+        assert res.status_code == 404
+
+    def test_unauthorized(self, testapp, meal, guest, guest_location):
+        """Test that unauthorized gets a 403."""
+        self.login(guest, testapp)
+        res = testapp.patch_json(self.base_url.format(meal.id),
+                                 self.valid_data, status=403)
+        assert res.status_code == 403
+
+    def test_update_works(self, testapp, host, hosted_location, meal):
+        """Test that updating a meal works."""
+        self.login(host, testapp)
+        res = testapp.patch_json(self.base_url.format(meal.id),
+                                 self.valid_data)
+        assert res.status_code == 202
+        assert meal.price == self.valid_data['price']
+
+    def test_partial_update_works(self, testapp, host, hosted_location, meal):
+        """Test that only partially updating a meal works."""
+        self.login(host, testapp)
+        res = testapp.patch_json(self.base_url.format(meal.id),
+                                 {'price': 4.00})
+        assert res.status_code == 202
+        assert meal.price == 4.00
+
+
+@pytest.mark.usefixtures('db')
+class TestReplaceMeal(BaseViewTest):
+    """Test PUT /api/v1/meals/UUID."""
+
+    base_url = '/api/v1/meals/{}'
+
+    def setup_method(self, method):
+        """Set up the test class. Pytest will call this for us."""
+        self.valid_data = {
+            'scheduled_for': (dt.now() + td(days=3)).isoformat(),
+            'name': 'some new meal name',
+            'description': 'this is my new description',
+            'price': 7.80,
+        }
+
+    def test_unauthenticated(self, testapp, meal):
+        """Test that unauthenticated gets a 401."""
+        res = testapp.put_json(self.base_url.format(meal.id),
+                               self.valid_data, status=401)
+        assert res.status_code == 401
+
+    def test_no_meal_found(self, testapp, guest, guest_location):
+        """Test that a nonexistent meal gets a 404."""
+        self.login(guest, testapp)
+        res = testapp.put_json(self.base_url.format(uuid.uuid4()),
+                               self.valid_data, status=404)
+        assert res.status_code == 404
+
+    def test_unauthorized(self, testapp, meal, guest, guest_location):
+        """Test that unauthorized gets a 403."""
+        self.login(guest, testapp)
+        res = testapp.put_json(self.base_url.format(meal.id),
+                               self.valid_data, status=403)
+        assert res.status_code == 403
+
+    def test_replace_works(self, testapp, host, hosted_location, meal):
+        """Test that replacing a meal works."""
+        self.login(host, testapp)
+        res = testapp.put_json(self.base_url.format(meal.id),
+                               self.valid_data)
+        assert res.status_code == 202
+        assert meal.price == self.valid_data['price']
+
+    def test_partial_replace_fails(self, testapp, host, hosted_location, meal):
+        """Test that only partially replacing a meal fails."""
+        self.login(host, testapp)
+        res = testapp.put_json(self.base_url.format(meal.id),
+                               {'price': 4.00}, status=422)
+        assert res.status_code == 422
+        assert 'name' in res.json['error_message']

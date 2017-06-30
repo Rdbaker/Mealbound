@@ -32,6 +32,12 @@ class BadRequest(APIException):
     """A plain old 400."""
 
 
+class Forbidden(APIException):
+    """APIException for a 403."""
+
+    status_code = 403
+
+
 class NotFound(APIException):
     """APIException for a 404."""
 

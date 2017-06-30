@@ -56,7 +56,7 @@ def user(db):
 @pytest.fixture
 def host(db):
     """A user to host the location and meal."""
-    user = UserFactory(password='myprecious')
+    user = UserFactory()
     db.session.commit()
     return user
 
@@ -100,3 +100,13 @@ def guest(user, meal):
     um = UserMeal(user=user, meal=meal)
     um.save()
     return user
+
+
+@pytest.fixture
+def guest_location(guest):
+    """A location for the guest."""
+    location = LocationFactory()
+    location.save()
+    guest.location = location
+    guest.save()
+    return location

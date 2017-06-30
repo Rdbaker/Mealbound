@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 """Meal schema."""
-from marshmallow import Schema, fields, validates
+from datetime import datetime as dt
+
+from marshmallow import Schema, ValidationError, fields, validates
 
 from ceraon.api.v1.users.schema import UserSchema
 from ceraon.constants import Errors
-from ceraon.errors import UnprocessableEntity
 
 
 class MealSchema(Schema):
+    """A schema for a Meal model."""
+
     id = fields.UUID(dump_only=True)
     name = fields.String(required=True)
     description = fields.String()
@@ -16,21 +19,27 @@ class MealSchema(Schema):
     host = fields.Nested(UserSchema, dump_only=True)
 
     class Meta:
+        """Meta class for Meal schema."""
+
         type_ = 'meal'
         strict = True
 
     @validates('name')
     def validate_name(self, value):
+        """Validate the name field."""
         if not value:
-            raise UnprocessableEntity(Errors.MEAL_NAME_MISSING)
+            raise ValidationError(Errors.MEAL_NAME_MISSING[1])
 
     @validates('price')
     def validate_price(self, value):
+        """Validate the price field."""
         if not value:
-            raise UnprocessableEntity(Errors.MEAL_PRICE_MISSING)
+            raise ValidationError(Errors.MEAL_PRICE_MISSING[1])
         if value < 0:
-            raise UnprocessableEntity(Errors.MEAL_PRICE_NEGATIVE)
+            raise ValidationError(Errors.MEAL_PRICE_NEGATIVE[1])
 
     @validates('scheduled_for')
     def validate_scheduled_for(self, value):
-        pass
+        """Validate the scheduled_for field."""
+        if value <= dt.utcnow():
+            raise ValidationError(Errors.MEAL_CREATE_IN_PAST[1])
