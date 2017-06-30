@@ -1,9 +1,10 @@
 """API routes for meals."""
 
 from flask import jsonify, request
+from flask_login import current_user, login_required
 
 from ceraon.constants import Errors
-from ceraon.errors import NotFound
+from ceraon.errors import NotFound, PreconditionRequired
 from ceraon.models.meals import Meal
 from ceraon.utils import RESTBlueprint, friendly_arg_get
 
@@ -59,3 +60,12 @@ def list_meals():
 
     return jsonify(data=MEAL_SCHEMA.dump(page.items, many=True).data,
                    meta={'pagination': meta_pagination})
+
+
+@blueprint.create()
+@login_required
+def create_meal():
+    """Create a new meal."""
+    if current_user.location is None:
+        raise PreconditionRequired(Errors.LOCATION_NOT_CREATED_YET)
+    MEAL_SCHEMA.load(request.json)

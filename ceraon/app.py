@@ -2,17 +2,19 @@
 """The app module, containing the app factory function."""
 import os
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify, render_template
 from flask_sslify import SSLify
+from marshmallow.exceptions import ValidationError
 
 from ceraon import commands, public, user
 from ceraon.assets import assets
 from ceraon.errors import APIException
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
                                login_manager, migrate)
-from ceraon.models import locations as locations_models, meals as meals_models # noqa
 from ceraon.locations.views import blueprint as location_blueprint
 from ceraon.meals.views import blueprint as meal_blueprint
+from ceraon.models import locations as locations_models  # noqa
+from ceraon.models import meals as meals_models
 from ceraon.settings import ProdConfig
 
 
@@ -76,6 +78,13 @@ def register_blueprints(app):
 
 def register_errorhandlers(app):
     """Register error handlers."""
+    @app.errorhandler(ValidationError)
+    def handle_marshmallow_validation_error(ex):
+        response = jsonify(error_code="data-validation-error",
+                           error_message=ex.messages)
+        response.status_code = 422
+        return response
+
     @app.errorhandler(APIException)
     def handle_api_error(err):
         """Handle an APIException."""

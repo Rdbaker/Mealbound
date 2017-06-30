@@ -5,8 +5,8 @@ import datetime as dt
 from facebook import GraphAPI
 from flask import current_app
 from flask_login import UserMixin
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import BadSignature, SignatureExpired
 from sqlalchemy.orm import backref
 
 from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,

@@ -16,10 +16,10 @@ class TestLoggingIn:
     def test_can_log_in_returns_200(self, user, testapp):
         """Login successful."""
         # Goes to homepage
-        res = testapp.get('/')
+        res = testapp.get('/login')
         # Fills out login form in navbar
         form = res.forms['loginForm']
-        form['username'] = user.username
+        form['email'] = user.email
         form['password'] = 'myprecious'
         # Submits
         res = form.submit().follow()
@@ -27,10 +27,10 @@ class TestLoggingIn:
 
     def test_sees_alert_on_log_out(self, user, testapp):
         """Show alert on logout."""
-        res = testapp.get('/')
+        res = testapp.get('/login')
         # Fills out login form in navbar
         form = res.forms['loginForm']
-        form['username'] = user.username
+        form['email'] = user.email
         form['password'] = 'myprecious'
         # Submits
         res = form.submit().follow()
@@ -41,28 +41,29 @@ class TestLoggingIn:
     def test_sees_error_message_if_password_is_incorrect(self, user, testapp):
         """Show error if password is incorrect."""
         # Goes to homepage
-        res = testapp.get('/')
+        res = testapp.get('/login')
         # Fills out login form, password incorrect
         form = res.forms['loginForm']
-        form['username'] = user.username
+        form['email'] = user.email
         form['password'] = 'wrong'
         # Submits
         res = form.submit()
         # sees error
         assert 'Invalid password' in res
 
-    def test_sees_error_message_if_username_doesnt_exist(self, user, testapp):
-        """Show error if username doesn't exist."""
+    def test_sees_error_message_if_email_doesnt_exist(self, user, testapp):
+        """Show error if email doesn't exist."""
         # Goes to homepage
-        res = testapp.get('/')
+        res = testapp.get('/login')
         # Fills out login form, password incorrect
         form = res.forms['loginForm']
-        form['username'] = 'unknown'
+        form['email'] = 'unknown@fake.com'
         form['password'] = 'myprecious'
         # Submits
         res = form.submit()
         # sees error
-        assert 'Unknown user' in res
+        print(res)
+        assert 'Unknown email' in res
 
 
 class TestRegistering:
@@ -71,13 +72,12 @@ class TestRegistering:
     def test_can_register(self, user, testapp):
         """Register a new user."""
         old_count = len(User.query.all())
-        # Goes to homepage
-        res = testapp.get('/')
-        # Clicks Create Account button
-        res = res.click('Create account')
+        # Goes to registration page
+        res = testapp.get('/register/')
         # Fills out the form
         form = res.forms['registerForm']
-        form['username'] = 'foobar'
+        form['first_name'] = 'foo'
+        form['last_name'] = 'foo'
         form['email'] = 'foo@bar.com'
         form['password'] = 'secret'
         form['confirm'] = 'secret'
@@ -93,7 +93,8 @@ class TestRegistering:
         res = testapp.get(url_for('public.register'))
         # Fills out form, but passwords don't match
         form = res.forms['registerForm']
-        form['username'] = 'foobar'
+        form['first_name'] = 'foo'
+        form['last_name'] = 'foo'
         form['email'] = 'foo@bar.com'
         form['password'] = 'secret'
         form['confirm'] = 'secrets'
@@ -108,13 +109,14 @@ class TestRegistering:
         user.save()
         # Goes to registration page
         res = testapp.get(url_for('public.register'))
-        # Fills out form, but username is already registered
+        # Fills out form, but email is already registered
         form = res.forms['registerForm']
-        form['username'] = user.username
-        form['email'] = 'foo@bar.com'
+        form['first_name'] = 'foo'
+        form['last_name'] = 'foo'
+        form['email'] = user.email
         form['password'] = 'secret'
         form['confirm'] = 'secret'
         # Submits
         res = form.submit()
         # sees error
-        assert 'Username already registered' in res
+        assert 'Email already registered' in res

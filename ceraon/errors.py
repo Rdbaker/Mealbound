@@ -42,3 +42,9 @@ class UnprocessableEntity(APIException):
     """A 422 code."""
 
     status_code = 422
+
+
+class PreconditionRequired(APIException):
+    """A 428 code."""
+
+    status_code = 428

@@ -2,8 +2,8 @@
 """Helper utilities and decorators."""
 from threading import Thread
 
-from flask import flash, Blueprint, current_app, request
 import requests
+from flask import Blueprint, current_app, flash, request
 
 
 def get_fb_access_token():

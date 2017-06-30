@@ -2,10 +2,10 @@
 """Models for meals."""
 import datetime as dt
 
-from sqlalchemy import and_, Time, cast
+from sqlalchemy import Time, and_, cast
 
-from ceraon.database import (UUIDModel, Column, db, relationship, reference_col,
-                             Model)
+from ceraon.database import (Column, Model, UUIDModel, db, reference_col,
+                             relationship)
 
 
 class UserMeal(Model):

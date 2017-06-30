@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Meal views."""
-from flask import (Blueprint, render_template, request, flash, redirect,
-                   url_for, abort)
-from flask_login import login_required, current_user
+from flask import (Blueprint, abort, flash, redirect, render_template, request,
+                   url_for)
+from flask_login import current_user, login_required
 from flask_paginate import Pagination
 
 from ceraon.constants import Errors, Success

@@ -3,6 +3,8 @@
 
 
 class Errors(object):
+    """Contansts for errors in the form of: (code, message)."""
+
     BAD_GUID = ('bad-guid', 'We couldn\'t understand the format of the ID.')
     LOCATION_NAME_MISSING = ('location-name-missing', 'We require a name.')
     LOCATION_NOT_FOUND = ('location-not-found',
@@ -21,9 +23,13 @@ class Errors(object):
     MEAL_NAME_MISSING = ('meal-name-missing', 'That meal needs a name')
     MEAL_PRICE_MISSING = ('meal-price-missing', 'That meal needs a price')
     MEAL_PRICE_NEGATIVE = ('meal-price-negative', 'A price cannot be negative')
+    MEAL_NOT_FOUND = ('meal-not-found',
+                      'We couldn\'t find that meal, sorry about that')
 
 
 class Success(object):
+    """Contansts for successes in the form of: (code, message)."""
+
     LOCATION_CREATED = ('location-created', 'You created your location!')
     LOCATION_UPDATED = ('location-updated', 'You updated your location!')
     MEAL_CREATED = ('meal-created', 'You scheduled a new meal!')

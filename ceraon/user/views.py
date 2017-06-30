@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """User views."""
-from flask import Blueprint, render_template, request, flash, url_for, redirect
-from flask_login import login_required, current_user
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 
-from ceraon.models.meals import UserMeal, Meal
+from ceraon.models.meals import Meal, UserMeal
 from ceraon.utils import flash_errors
 
 from .forms import EditProfileForm

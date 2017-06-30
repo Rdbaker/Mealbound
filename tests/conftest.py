@@ -10,7 +10,7 @@ from ceraon.database import db as _db
 from ceraon.models.meals import UserMeal
 from ceraon.settings import TestConfig
 
-from .factories import UserFactory, LocationFactory, MealFactory
+from .factories import LocationFactory, MealFactory, UserFactory
 
 
 @pytest.yield_fixture(scope='function')
@@ -48,7 +48,7 @@ def db(app):
 @pytest.fixture
 def user(db):
     """A user for the tests."""
-    user = UserFactory(password='myprecious')
+    user = UserFactory()
     db.session.commit()
     return user
 
