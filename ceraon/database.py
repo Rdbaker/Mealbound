@@ -92,6 +92,11 @@ class SurrogatePK(object):
             return cls.query.get(int(record_id))
         return None
 
+    @classmethod
+    def find(cls, record_id):
+        """Alias for get_by_id."""
+        return cls.get_by_id(record_id)
+
 
 class UUIDMixin(object):
     """A mixin that is like SurrogatePK mixin, but uses PostgreSQL's UUID type

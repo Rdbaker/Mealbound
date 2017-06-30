@@ -27,6 +27,9 @@ class Errors(object):
                            'You can\'t create a meal in the past!')
     NOT_YOUR_MEAL = ('not-your-meal', 'You can\'t do that to somebody else\'s'
                                       ' meal!')
+    USER_NOT_FOUND = ('user-not-found', 'That user doesn\'t exist')
+    PASSWORD_CONFIRM_MATCH = ('password-confirm-match',
+                              'Password and confirm fields must match')
 
 
 class Success(object):
@@ -39,3 +42,4 @@ class Success(object):
     MEAL_WAS_JOINED = ('meal-joined', 'You successfully joined a meal!')
     MEAL_WAS_LEFT = ('meal-left', 'Reservation successfully canceled')
     MEAL_DELETED = ('meal-deleted', 'Meal successfully canceled')
+    PROFILE_UPDATED = ('profile-updated', 'Profile successfully updated!')

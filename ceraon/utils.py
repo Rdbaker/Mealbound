@@ -26,13 +26,18 @@ def friendly_arg_get(key, default=None, type_cast=None):
 
 class FlaskThread(Thread):
     """A utility class for threading in a flask app."""
+
     def __init__(self, *args, **kwargs):
+        """Create a new thread with a flask context."""
         super().__init__(*args, **kwargs)
         self.app = current_app._get_current_object()
 
     def run(self):
-        with self.app.app_context():
-            super().run()
+        """Run the thread."""
+        # Make this an effective no-op if we're testing.
+        if not self.app.config['TESTING']:
+            with self.app.app_context():
+                super().run()
 
 
 def flash_errors(form, category='warning'):

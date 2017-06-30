@@ -20,7 +20,7 @@ class TestLoggingIn:
         # Fills out login form in navbar
         form = res.forms['loginForm']
         form['email'] = user.email
-        form['password'] = 'myprecious'
+        form['password'] = 'example'
         # Submits
         res = form.submit().follow()
         assert res.status_code == 200
@@ -31,7 +31,7 @@ class TestLoggingIn:
         # Fills out login form in navbar
         form = res.forms['loginForm']
         form['email'] = user.email
-        form['password'] = 'myprecious'
+        form['password'] = 'example'
         # Submits
         res = form.submit().follow()
         res = testapp.get(url_for('public.logout')).follow()
@@ -103,7 +103,8 @@ class TestRegistering:
         # sees error message
         assert 'Passwords must match' in res
 
-    def test_sees_error_message_if_user_already_registered(self, user, testapp):
+    def test_sees_error_message_if_user_already_registered(self, user,
+                                                           testapp):
         """Show error if user already registered."""
         user = UserFactory(active=True)  # A registered user
         user.save()
