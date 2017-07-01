@@ -18,6 +18,15 @@ class Errors(object):
     MEAL_NEEDS_COST = ('meal-needs-cost', 'The meal needs a cost (even $0)')
     NON_NEGATIVE = ('non-negative', 'This can\'t be negative')
     CANNOT_JOIN_MEAL = ('cannot-join-meal', 'You can\'t join that meal')
+    MEAL_ALREADY_JOINED = ('meal-already-joined',
+                           'You already joined that meal')
+    MEAL_ALREADY_HAPPENED = ('meal-already-happened',
+                             'You can\'t do that for a meal that '
+                             'happened already!')
+    MEAL_NOT_JOINED = ('meal-not-joined',
+                       'You need to join that meal first')
+    JOIN_HOSTED_MEAL = ('join-hosted-meal',
+                        'You cannot join your own meal')
     MEAL_NAME_MISSING = ('meal-name-missing', 'That meal needs a name')
     MEAL_PRICE_MISSING = ('meal-price-missing', 'That meal needs a price')
     MEAL_PRICE_NEGATIVE = ('meal-price-negative', 'A price cannot be negative')

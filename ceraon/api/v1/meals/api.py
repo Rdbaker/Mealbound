@@ -1,11 +1,15 @@
 """API routes for meals."""
 
+from datetime import datetime as dt
+
 from flask import jsonify, request
 from flask_login import current_user, login_required
+from sqlalchemy.exc import IntegrityError
 
 from ceraon.constants import Errors, Success
-from ceraon.errors import NotFound, PreconditionRequired, Forbidden
-from ceraon.models.meals import Meal
+from ceraon.errors import (NotFound, PreconditionRequired, Conflict, Forbidden,
+                           BadRequest)
+from ceraon.models.meals import Meal, UserMeal
 from ceraon.utils import RESTBlueprint, friendly_arg_get
 
 from .schema import MealSchema
@@ -96,6 +100,43 @@ def create_meal():
     meal = Meal.create(location_id=current_user.location.id, **meal_data)
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_CREATED), 201
+
+
+@blueprint.flexible_route('/<string:uid>/reservation', methods=['POST'])
+@login_required
+def join_meal(uid):
+    """Join a meal."""
+    meal = Meal.find(uid)
+    if meal is None:
+        raise NotFound(Errors.MEAL_NOT_FOUND)
+    if meal.scheduled_for < dt.now().astimezone():
+        raise BadRequest(Errors.MEAL_ALREADY_HAPPENED)
+    if meal.host.id == current_user.id:
+        raise BadRequest(Errors.JOIN_HOSTED_MEAL)
+    # TODO: do some validation here for payment processing
+    try:
+        UserMeal.create(meal=meal, user=current_user)
+    except IntegrityError:
+        # an integrity error means that the user already joined the meal
+        raise Conflict(Errors.MEAL_ALREADY_JOINED)
+    return jsonify(data=MEAL_SCHEMA.dump(meal).data,
+                   message=Success.MEAL_WAS_JOINED), 201
+
+
+@blueprint.flexible_route('/<string:uid>/reservation', methods=['DELETE'])
+@login_required
+def leave_meal(uid):
+    """Leave a meal."""
+    meal = Meal.find(uid)
+    if meal is None:
+        raise NotFound(Errors.MEAL_NOT_FOUND)
+    if meal.scheduled_for < dt.now().astimezone():
+        raise BadRequest(Errors.MEAL_ALREADY_HAPPENED)
+    um = UserMeal.query.get((current_user.id, meal.id))
+    if um is None:
+        raise PreconditionRequired(Errors.MEAL_NOT_JOINED)
+    um.delete()
+    return jsonify(data=None, message=Success.MEAL_WAS_LEFT), 204
 
 
 @blueprint.update()

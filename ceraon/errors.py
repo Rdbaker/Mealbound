@@ -44,6 +44,12 @@ class NotFound(APIException):
     status_code = 404
 
 
+class Conflict(APIException):
+    """A 409 code."""
+
+    status_code = 409
+
+
 class UnprocessableEntity(APIException):
     """A 422 code."""
 

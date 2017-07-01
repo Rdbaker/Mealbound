@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
+from datetime import tzinfo, timedelta as td
 from threading import Thread
 
 import requests
@@ -112,3 +113,26 @@ class RESTBlueprint(Blueprint):
     def destroy(self, *args, **kwargs):
         kwargs.update({'methods': ['DELETE']})
         return self.flexible_route('/<string:uid>', *args, **kwargs)
+
+
+class UTC(tzinfo):
+    """tzinfo for a UTC timezone."""
+
+    def dst(self, dt_obj):
+        """Return the DST offset in minutes from UTC."""
+        return 0
+
+    def fromutc(self, dt_obj):
+        """Return a datetime object in local time from a UTC datetime."""
+        return dt_obj
+
+    def tzname(self, dt_obj):
+        """Return the name of the timezone from a datetime obj."""
+        return 'UTC/GMT'
+
+    def utcoffset(self, dt_obj):
+        """Return a timedelta showing offset from UTC.
+
+        Negative values indicating West of UTC
+        """
+        return td()

@@ -28,7 +28,7 @@ class Meal(UUIDModel):
     description = Column(db.Text)
 
     # ALL TIMES ARE IN UTC
-    scheduled_for = Column(db.DateTime, nullable=False,
+    scheduled_for = Column(db.DateTime(timezone=True), nullable=False,
                            default=dt.datetime.utcnow)
 
     location_id = reference_col('location', nullable=False)
@@ -63,7 +63,7 @@ class Meal(UUIDModel):
             return False
         elif self.joined(user):
             return False
-        elif self.scheduled_for < dt.datetime.now():
+        elif self.scheduled_for < dt.datetime.now().astimezone():
             return False
         return True
 
@@ -73,7 +73,7 @@ class Meal(UUIDModel):
 
     def is_upcoming(self):
         """Returns whether or not the meal is upcoming."""
-        return self.scheduled_for >= dt.datetime.utcnow()
+        return self.scheduled_for >= dt.datetime.now().astimezone()
 
     @classmethod
     def upcoming(cls):
@@ -104,7 +104,8 @@ class Meal(UUIDModel):
 
         :return flask_sqlalchemy.BaseQuery:
         """
-        return query.filter(cls.scheduled_for >= dt.datetime.utcnow())
+        return query.filter(cls.scheduled_for >=
+                            dt.datetime.now().astimezone())
 
     @classmethod
     def breakfast_filter(cls, query):

@@ -41,5 +41,9 @@ class MealSchema(Schema):
     @validates('scheduled_for')
     def validate_scheduled_for(self, value):
         """Validate the scheduled_for field."""
-        if value <= dt.utcnow():
+        # if there is no timezone
+        if value.tzinfo is None:
+            # assign the server's timezone
+            value = value.astimezone()
+        if value <= dt.now().astimezone():
             raise ValidationError(Errors.MEAL_CREATE_IN_PAST[1])

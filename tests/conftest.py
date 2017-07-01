@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Defines fixtures available to all tests."""
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 import pytest
 from webtest import TestApp
@@ -89,7 +89,7 @@ def meal(db, hosted_location):
 @pytest.fixture
 def past_meal(meal):
     """A meal in the past."""
-    meal.scheduled_for = dt.now()
+    meal.scheduled_for = dt.now().astimezone() - td(days=1)
     meal.save()
     return meal
 
