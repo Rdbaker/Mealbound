@@ -39,6 +39,8 @@ class Errors(object):
     USER_NOT_FOUND = ('user-not-found', 'That user doesn\'t exist')
     PASSWORD_CONFIRM_MATCH = ('password-confirm-match',
                               'Password and confirm fields must match')
+    INVALID_MEAL_ROLE = ('invalid-meal-role',
+                         'A meal role must either be "guest" or "host"')
 
 
 class Success(object):

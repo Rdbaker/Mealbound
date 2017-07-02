@@ -16,7 +16,8 @@ class MealSchema(Schema):
     description = fields.String()
     scheduled_for = fields.DateTime(required=True)
     price = fields.Float(required=True, places=2)
-    host = fields.Nested(UserSchema, dump_only=True)
+    host = fields.Nested(UserSchema, dump_only=True,
+                         only=['first_name', 'public_name', 'image_url', 'id'])
 
     class Meta:
         """Meta class for Meal schema."""

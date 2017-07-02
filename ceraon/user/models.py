@@ -12,7 +12,7 @@ from sqlalchemy.orm import backref
 from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,
                              relationship)
 from ceraon.extensions import bcrypt
-from ceraon.models import locations
+from ceraon.models import locations, meals
 from ceraon.utils import get_fb_access_token, FlaskThread
 
 
@@ -159,6 +159,16 @@ class User(UserMixin, SurrogatePK, Model):
             self.location.update(address=val)
         th = FlaskThread(target=self.location.update_coordinates)
         th.start()
+
+    def get_hosted_meals(self):
+        """Get the meals that this user hosts."""
+        return self.location.meals
+
+    def get_joined_meals(self):
+        """Get the meals that this user joined."""
+        return [um.meal for um in
+                meals.UserMeal.query.join(User).filter(
+                    meals.UserMeal.user_id == self.id).all()]
 
     def __repr__(self):
         """Represent instance as a unique string."""
