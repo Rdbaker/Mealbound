@@ -12,6 +12,12 @@ from .models import User
 class RegisterForm(Form):
     """Register form."""
 
+    first_name = StringField('First name',
+                             validators=[DataRequired(),
+                                         Length(min=2, max=40)])
+    last_name = StringField('Last name',
+                            validators=[DataRequired(),
+                                        Length(min=2, max=40)])
     email = StringField('Email',
                         validators=[DataRequired(), Email(),
                                     Length(min=6, max=40)])
@@ -52,9 +58,9 @@ class EditProfileForm(Form):
                             [EqualTo('password',
                                      message='Passwords must match')])
     first_name = StringField('First Name',
-                             validators=[Length(min=3, max=25)])
+                             validators=[Length(min=2, max=25)])
     last_name = StringField('Last Name',
-                            validators=[Length(min=3, max=25)])
+                            validators=[Length(min=2, max=25)])
     address = StringField('Address', validators=[Length(min=3, max=255)])
     password = PasswordField('Password',
                              validators=[Length(min=6, max=40)])

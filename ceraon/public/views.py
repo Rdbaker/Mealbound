@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 from ceraon.extensions import login_manager
 from ceraon.public.forms import LoginForm
@@ -69,7 +69,8 @@ def register():
     form = RegisterForm(request.form)
     if form.validate_on_submit():
         User.create(email=form.email.data, password=form.password.data,
-                    active=True)
+                    first_name=form.first_name.data,
+                    last_name=form.last_name.data, active=True)
         flash('Thank you for registering. You can now log in.', 'success')
         return redirect(url_for('public.home'))
     else:

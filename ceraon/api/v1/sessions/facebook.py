@@ -2,7 +2,7 @@
 """Facebook utils for the sessions API."""
 
 import facebook
-from flask import request, current_app
+from flask import current_app, request
 
 from ceraon.user.models import User
 

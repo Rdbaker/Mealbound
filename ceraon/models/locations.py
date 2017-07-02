@@ -3,7 +3,7 @@
 from geopy.geocoders import Nominatim
 from sqlalchemy.dialects.postgresql import JSONB
 
-from ceraon.database import UUIDModel, Column, db, relationship
+from ceraon.database import Column, UUIDModel, db, relationship
 
 
 class Location(UUIDModel):

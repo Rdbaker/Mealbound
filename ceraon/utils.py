@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
+from datetime import tzinfo, timedelta as td
 from threading import Thread
 
-from flask import flash, Blueprint, current_app, request
+import requests
+from flask import Blueprint, current_app, flash, request
+
+
+def get_fb_access_token():
+    """Get an access token from facebook for graph API calls."""
+    base_url = 'https://graph.facebook.com/oauth/access_token?' \
+        'grant_type=client_credentials'
+    res = requests.get(
+        base_url + '&client_id={}'.format(current_app.config['FB_APP_ID']) +
+        '&client_secret={}'.format(current_app.config['FB_APP_SECRET']))
+    return res.json().get('access_token')
 
 
 def friendly_arg_get(key, default=None, type_cast=None):
@@ -15,13 +27,18 @@ def friendly_arg_get(key, default=None, type_cast=None):
 
 class FlaskThread(Thread):
     """A utility class for threading in a flask app."""
+
     def __init__(self, *args, **kwargs):
+        """Create a new thread with a flask context."""
         super().__init__(*args, **kwargs)
         self.app = current_app._get_current_object()
 
     def run(self):
-        with self.app.app_context():
-            super().run()
+        """Run the thread."""
+        # Make this an effective no-op if we're testing.
+        if not self.app.config['TESTING']:
+            with self.app.app_context():
+                super().run()
 
 
 def flash_errors(form, category='warning'):
@@ -63,32 +80,59 @@ class RESTBlueprint(Blueprint):
     parameter called `uid` to your route. Make sure to correctly resolve that to
     your entity's ID.
     """
+
     def __init__(self, blueprint_name, name, version):
         return super(RESTBlueprint, self).__init__(
             'api.{}.{}'.format(version, blueprint_name),
             name, url_prefix='/api/{}/{}'.format(version, blueprint_name))
 
     def flexible_route(self, *args, **kwargs):
-        return self.route(*args, **kwargs, strict_slashes=False)
+        kwargs.update({'strict_slashes': False})
+        return self.route(*args, **kwargs)
 
     def create(self, *args, **kwargs):
-        return self.flexible_route('/', *args, **kwargs, methods=['POST'])
+        kwargs.update({'methods': ['POST']})
+        return self.flexible_route('/', *args, **kwargs)
 
     def list(self, *args, **kwargs):
-        return self.flexible_route('/', *args, **kwargs, methods=['GET'])
+        kwargs.update({'methods': ['GET']})
+        return self.flexible_route('/', *args, **kwargs)
 
     def find(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['GET'])
+        kwargs.update({'methods': ['GET']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
 
     def update(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['PATCH'])
+        kwargs.update({'methods': ['PATCH']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
 
     def replace(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['PUT'])
+        kwargs.update({'methods': ['PUT']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
 
     def destroy(self, *args, **kwargs):
-        return self.flexible_route('/<string:uid>', *args, **kwargs,
-                                   methods=['DELETE'])
+        kwargs.update({'methods': ['DELETE']})
+        return self.flexible_route('/<string:uid>', *args, **kwargs)
+
+
+class UTC(tzinfo):
+    """tzinfo for a UTC timezone."""
+
+    def dst(self, dt_obj):
+        """Return the DST offset in minutes from UTC."""
+        return 0
+
+    def fromutc(self, dt_obj):
+        """Return a datetime object in local time from a UTC datetime."""
+        return dt_obj
+
+    def tzname(self, dt_obj):
+        """Return the name of the timezone from a datetime obj."""
+        return 'UTC/GMT'
+
+    def utcoffset(self, dt_obj):
+        """Return a timedelta showing offset from UTC.
+
+        Negative values indicating West of UTC
+        """
+        return td()

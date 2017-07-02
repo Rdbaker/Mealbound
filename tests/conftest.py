@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Defines fixtures available to all tests."""
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 import pytest
 from webtest import TestApp
@@ -10,7 +10,7 @@ from ceraon.database import db as _db
 from ceraon.models.meals import UserMeal
 from ceraon.settings import TestConfig
 
-from .factories import UserFactory, LocationFactory, MealFactory
+from .factories import LocationFactory, MealFactory, UserFactory
 
 
 @pytest.yield_fixture(scope='function')
@@ -48,7 +48,7 @@ def db(app):
 @pytest.fixture
 def user(db):
     """A user for the tests."""
-    user = UserFactory(password='myprecious')
+    user = UserFactory()
     db.session.commit()
     return user
 
@@ -56,7 +56,7 @@ def user(db):
 @pytest.fixture
 def host(db):
     """A user to host the location and meal."""
-    user = UserFactory(password='myprecious')
+    user = UserFactory()
     db.session.commit()
     return user
 
@@ -89,7 +89,7 @@ def meal(db, hosted_location):
 @pytest.fixture
 def past_meal(meal):
     """A meal in the past."""
-    meal.scheduled_for = dt.now()
+    meal.scheduled_for = dt.now().astimezone() - td(days=1)
     meal.save()
     return meal
 
@@ -100,3 +100,13 @@ def guest(user, meal):
     um = UserMeal(user=user, meal=meal)
     um.save()
     return user
+
+
+@pytest.fixture
+def guest_location(guest):
+    """A location for the guest."""
+    location = LocationFactory()
+    location.save()
+    guest.location = location
+    guest.save()
+    return location

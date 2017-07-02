@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Location views."""
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_login import login_required, current_user
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from flask_paginate import Pagination
 
 from ceraon.constants import Success
 from ceraon.locations.forms import LocationForm
 from ceraon.models.locations import Location
-from ceraon.utils import flash_errors, FlaskThread
+from ceraon.utils import FlaskThread, flash_errors
 
 blueprint = Blueprint('location', __name__, url_prefix='/location',
                       static_folder='../static')

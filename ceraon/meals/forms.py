@@ -4,7 +4,7 @@ from datetime import datetime as dt
 
 from flask_wtf import FlaskForm
 from wtforms import DateTimeField, DecimalField, StringField
-from wtforms.validators import DataRequired, ValidationError, Length
+from wtforms.validators import DataRequired, Length, ValidationError
 
 from ceraon.constants import Errors
 

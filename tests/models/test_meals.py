@@ -22,8 +22,6 @@ class TestMeal:
 
     def test_any_user_can_join(self, meal, user):
         """Test that a user who has not joined a meal can join a meal."""
-        print(meal.scheduled_for)
-        print(meal.host == user)
         assert meal.user_can_join(user)
 
     def test_cannot_join_in_past(self, past_meal, user):

@@ -8,7 +8,6 @@ from ceraon.utils import RESTBlueprint
 
 from .facebook import get_fb_user_from_cookie, resolve_user_from_fb_response
 
-
 blueprint = RESTBlueprint('sessions', __name__, version='v1')
 
 

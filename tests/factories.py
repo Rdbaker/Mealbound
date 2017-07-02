@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """Factories to help in tests."""
-from datetime import datetime as dt, timedelta as td
 import random
+from datetime import datetime as dt
+from datetime import timedelta as td
 
 from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
 
 from ceraon.database import db
-from ceraon.user.models import User
 from ceraon.models.locations import Location
 from ceraon.models.meals import Meal
+from ceraon.user.models import User
 
 
 class BaseFactory(SQLAlchemyModelFactory):
@@ -25,10 +26,11 @@ class BaseFactory(SQLAlchemyModelFactory):
 class UserFactory(BaseFactory):
     """User factory."""
 
-    username = Sequence(lambda n: 'user{0}'.format(n))
     email = Sequence(lambda n: 'user{0}@example.com'.format(n))
     password = PostGenerationMethodCall('set_password', 'example')
     active = True
+    first_name = Sequence(lambda n: 'user {0} first name'.format(n))
+    last_name = Sequence(lambda n: 'user {0} last name'.format(n))
 
     class Meta:
         """Factory configuration."""

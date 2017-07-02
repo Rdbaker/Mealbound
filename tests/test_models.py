@@ -15,7 +15,7 @@ class TestUser:
 
     def test_get_by_id(self):
         """Get user by ID."""
-        user = User('foo', 'foo@bar.com')
+        user = User(email='foo@bar.com', first_name='foo', last_name='bar')
         user.save()
 
         retrieved = User.get_by_id(user.id)
@@ -23,14 +23,14 @@ class TestUser:
 
     def test_created_at_defaults_to_datetime(self):
         """Test creation date."""
-        user = User(username='foo', email='foo@bar.com')
+        user = User(email='foo@bar.com', first_name='foo', last_name='bar')
         user.save()
         assert bool(user.created_at)
         assert isinstance(user.created_at, dt.datetime)
 
     def test_password_is_nullable(self):
         """Test null password."""
-        user = User(username='foo', email='foo@bar.com')
+        user = User(email='foo@bar.com', first_name='foo', last_name='bar')
         user.save()
         assert user.password is None
 
@@ -38,7 +38,6 @@ class TestUser:
         """Test user factory."""
         user = UserFactory(password='myprecious')
         db.session.commit()
-        assert bool(user.username)
         assert bool(user.email)
         assert bool(user.created_at)
         assert user.is_admin is False
@@ -47,8 +46,8 @@ class TestUser:
 
     def test_check_password(self):
         """Check password."""
-        user = User.create(username='foo', email='foo@bar.com',
-                           password='foobarbaz123')
+        user = User.create(email='foo@bar.com', first_name='foo',
+                           last_name='bar', password='foobarbaz123')
         assert user.check_password('foobarbaz123') is True
         assert user.check_password('barfoobaz') is False
 
@@ -67,16 +66,6 @@ class TestUser:
         assert role in user.roles
 
     def test_public_name_with_full_name(self):
-        """Test that the public name property works correctly with full name."""
+        """Test that the public name property works with full name."""
         user = UserFactory(first_name='Ryan', last_name='Baker')
         assert user.public_name == 'Ryan B.'
-
-    def test_public_name_no_last_name(self):
-        """Test that public name works correctly with only first name."""
-        user = UserFactory(first_name='Ryan')
-        assert user.public_name == 'Ryan'
-
-    def test_public_name__name(self):
-        """Test that public name works correctly with no name."""
-        user = UserFactory()
-        assert user.public_name == user.username

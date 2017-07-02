@@ -2,16 +2,19 @@
 """The app module, containing the app factory function."""
 import os
 
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template
 from flask_sslify import SSLify
+from marshmallow.exceptions import ValidationError
 
 from ceraon import commands, public, user
 from ceraon.assets import assets
+from ceraon.errors import APIException
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
                                login_manager, migrate)
-from ceraon.models import locations as locations_models, meals as meals_models # noqa
 from ceraon.locations.views import blueprint as location_blueprint
 from ceraon.meals.views import blueprint as meal_blueprint
+from ceraon.models import locations as locations_models  # noqa
+from ceraon.models import meals as meals_models  # noqa
 from ceraon.settings import ProdConfig
 
 
@@ -67,11 +70,28 @@ def register_blueprints(app):
     app.register_blueprint(token_views.blueprint)
     from ceraon.api.v1.sessions import views as sessions_views
     app.register_blueprint(sessions_views.blueprint)
+    from ceraon.api.v1.meals import api as meals_views
+    app.register_blueprint(meals_views.blueprint)
+    from ceraon.api.v1.users import api as users_views
+    app.register_blueprint(users_views.blueprint)
+
     return None
 
 
 def register_errorhandlers(app):
     """Register error handlers."""
+    @app.errorhandler(ValidationError)
+    def handle_marshmallow_validation_error(ex):
+        response = jsonify(error_code="data-validation-error",
+                           error_message=ex.messages)
+        response.status_code = 422
+        return response
+
+    @app.errorhandler(APIException)
+    def handle_api_error(err):
+        """Handle an APIException."""
+        return jsonify(err.to_dict()), err.status_code
+
     def render_error(error):
         """Render error template."""
         # If a HTTPException, pull the `code` attribute; default to 500
@@ -79,6 +99,7 @@ def register_errorhandlers(app):
         return render_template('{0}.html'.format(error_code)), error_code
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)
+
     return None
 
 
