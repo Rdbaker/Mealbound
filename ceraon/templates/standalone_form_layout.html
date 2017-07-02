@@ -1,6 +1,4 @@
-
 <!doctype html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -30,40 +28,14 @@
   {% block css %}{% endblock %}
 
 </head>
-<body class="{% block body_class %}{% endblock %}">
-{% block fblogin %}{% endblock %}
-{% block body %}
-{% with form=form  %}
-{% include "nav.html" %}
-{% endwith %}
-
-<header>{% block header %}{% endblock %}</header>
-<div class="{% block content_class %}container{% endblock content_class %}">
-
-  <div role="main">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="row">
-      <div class="col-md-12">
-        {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-          <a class="close" title="Close" href="javascript:void(0)" data-dismiss="alert">&times;</a>
-         {{message}}
-        </div><!-- end .alert -->
-        {% endfor %}
-      </div><!-- end col-md -->
-    </div><!-- end row -->
-        {% endif %}
-    {% endwith %}
-
-    {% block content %}{% endblock %}
+<body id="standalone-form-body" class="{% block body_class %}{% endblock %}">
+  <div id="standalone-form-bg"></div>
+  <div class="container-narrow module" id="standalone-form-container">
+    <div id="standalone-form-header">
+      <h4 class="text-center">Mealbound</h4>
+    </div>
+    {% block form %}{% endblock %}
   </div>
-
-</div><!-- end container -->
-
-{% include "footer.html" %}
-
-<!-- JavaScript at the bottom for fast page loading -->
 {% assets "js_all" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     <script type="text/javascript">
@@ -81,7 +53,5 @@
 {% endassets %}
 {% block js %}{% endblock %}
 <!-- end scripts -->
-{% endblock %}
 </body>
 </html>
-

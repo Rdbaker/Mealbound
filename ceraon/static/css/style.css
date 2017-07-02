@@ -28,7 +28,7 @@ textarea {
 
 .container-narrow{
   margin: 0 auto;
-  max-width: 700px;
+  max-width: 500px;
 }
 
 /* Forms */
@@ -40,7 +40,8 @@ textarea {
 
 
 .form-register {
-  width: 50%;
+  width: 90%;
+  margin-left: 5%;
 }
 
 .form-register .form-control {
@@ -171,4 +172,91 @@ footer .footer-nav {
   text-align: center;
   border-bottom: solid #8080804d 1px;
   padding-bottom: 10px;
+}
+
+/* standalone form styles */
+
+#standalone-form-body {}
+
+#standalone-form-bg {
+  z-index: -1;
+  background-image: url("/static/img/cooking-icons.png");
+  background-repeat: repeat;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  background-size: 340px auto;
+  position: fixed;
+}
+
+#standalone-form-header {
+  border-bottom: 2px solid rgba(50, 50, 150, 0.2);
+}
+
+#standalone-form-container {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 1px 5px 1px rgba(44, 44, 88, 0.3);
+}
+
+#standalone-form-nav {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.standalone-nav-btn {
+  min-width: 30%;
+  max-width: 30%;
+  padding-bottom: 5px;
+  padding-top: 10px;
+  text-align: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  cursor: pointer;
+  display: inline;
+}
+
+.standalone-nav-btn:hover,
+.standalone-nav-btn:focus {
+  background-color: rgba(150, 150, 150, 0.07);
+  text-decoration: none;
+  color: black;
+}
+
+.standalone-nav-btn.nav-active {
+  background-color: rgba(150, 150, 150, 0.03);
+  border-bottom: 4px solid #1b8effb3;
+  cursor: unset;
+}
+
+.form-control.standalone-form-input {
+  box-shadow: 0 0;
+  border-left-color: white;
+  border-right-color: white;
+  border-top-color: white;
+  border-bottom: solid 1px #efefef;
+  box-shadow: 0px 1px 0px 0px #efefef;
+  padding: 5px;
+}
+
+.form-control.standalone-form-input:focus,
+.form-control.standalone-form-input:active {
+  border-bottom: solid 1px #1b8effb3;
+  box-shadow: 0px 1px 0px 0px #71b9ff99;
+}
+
+.standalone-form-inline-group {
+  display: inline-block;
+}
+
+#standalone-form-submit-btn {
+  background-color: #1b8effb3;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: white;
+  border-color: #1a69b7b3;
 }
