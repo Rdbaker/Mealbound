@@ -330,3 +330,44 @@ class TestLeaveMeal(BaseViewTest):
         self.login(guest, testapp)
         res = testapp.delete(self.base_url.format(past_meal.id), status=400)
         assert res.status_code == 400
+
+
+@pytest.mark.usefixtures('db')
+class TestGetMyMeals(BaseViewTest):
+    """Test GET /api/v1/meals/mine/<role>."""
+
+    base_url = '/api/v1/meals/mine/{}'
+
+    def test_unauthenticated(self, testapp, meal):
+        """Test that an unauthenticated user gets a 401."""
+        res = testapp.get(self.base_url, status=401)
+        assert res.status_code == 401
+
+    def test_see_joined_meal(self, testapp, guest, meal):
+        """Test that a user can see the meals they joined."""
+        self.login(guest, testapp)
+        res = testapp.get(self.base_url.format('guest'))
+        assert res.status_code == 200
+        assert res.json['data'][0]['id'] == str(meal.id)
+        assert len(res.json['data']) == 1
+
+    def test_see_hosted_meal(self, testapp, host, meal):
+        """Test that a user can see the meals they host."""
+        self.login(host, testapp)
+        res = testapp.get(self.base_url.format('host'))
+        assert res.status_code == 200
+        assert res.json['data'][0]['id'] == str(meal.id)
+        assert len(res.json['data']) == 1
+
+    def test_see_hosts_joined_meals(self, testapp, host, meal):
+        """Check that the host has joined no meals... just a sanity check."""
+        self.login(host, testapp)
+        res = testapp.get(self.base_url.format('guest'))
+        assert res.status_code == 200
+        assert len(res.json['data']) == 0
+
+    def test_bad_role(self, testapp, user):
+        """Test that you can only specify 'guest' or 'host' as a role."""
+        self.login(user, testapp)
+        res = testapp.get(self.base_url.format('somethingelse'), status=400)
+        assert res.status_code == 400

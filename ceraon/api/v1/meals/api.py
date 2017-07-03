@@ -167,3 +167,23 @@ def destroy_meal(uid):
     meal.delete()
     # TODO: should we have logic to refund or make sure there are no guests?
     return jsonify(data=None, message=Success.MEAL_DELETED), 204
+
+
+@blueprint.flexible_route('/mine/<string:role>')
+@login_required
+def get_user_meals(role):
+    """Get a user's meals based on their role in the meal.
+
+    :param role string: `role` can be either: 'guest', or 'host'
+
+    a `role` of "guest" will return all the meals that the user has joined.
+    a `role` of "host" will return all the meals that the user is hosting.
+    """
+    valid_roles = set(['guest', 'host'])
+    if role not in valid_roles:
+        raise BadRequest(Errors.INVALID_MEAL_ROLE)
+    if role == 'guest':
+        meals = current_user.get_joined_meals()
+    else:
+        meals = current_user.get_hosted_meals()
+    return jsonify(data=MEAL_SCHEMA.dump(meals, many=True).data)
