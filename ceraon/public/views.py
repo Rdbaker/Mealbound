@@ -71,11 +71,13 @@ def register():
         redirect_url = request.args.get('next') or url_for('user.me')
         return redirect(redirect_url)
     if form.validate_on_submit():
-        User.create(email=form.email.data, password=form.password.data,
-                    first_name=form.first_name.data,
-                    last_name=form.last_name.data, active=True)
-        flash('Thank you for registering. You can now log in.', 'success')
-        return redirect(url_for('public.home'))
+        user = User.create(email=form.email.data, password=form.password.data,
+                           first_name=form.first_name.data, active=True,
+                           last_name=form.last_name.data)
+        login_user(user)
+        flash('You are logged in.', 'success')
+        redirect_url = request.args.get('next') or url_for('user.me')
+        return redirect(redirect_url)
     else:
         flash_errors(form)
     return render_template('public/register.html', form=form)
