@@ -172,6 +172,11 @@ footer .footer-nav {
   text-align: center;
   border-bottom: solid #8080804d 1px;
   padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+#oauth-login-container > p {
+  margin-top: 5px;
 }
 
 /* standalone form styles */
@@ -260,3 +265,14 @@ footer .footer-nav {
   color: white;
   border-color: #1a69b7b3;
 }
+
+#standalone-error-container {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#standalone-form-loading-icon {
+  font-size: 26px;
+}
+
+#fb-root { float: left; }

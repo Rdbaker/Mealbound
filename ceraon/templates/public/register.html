@@ -1,9 +1,60 @@
 {% extends "standalone_form_layout.html" %}
+
+
+{% block fblogin %}
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : document.querySelector('meta[name=fb-app-id]').getAttribute('content'),
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    FB.AppEvents.logPageView();
+
+    FB.Event.subscribe('xfbml.render', finishedRendering);
+
+    FB.getLoginStatus(communicateStatus);
+  };
+
+  function finishedRendering() {
+    var spinner = document.getElementById('standalone-form-loading-icon');
+    spinner.remove();
+  }
+
+  function communicateStatus(response) {
+    return $.post('/api/v1/sessions/facebook', JSON.stringify(response)).
+      done(function(res) { location.href = res;});
+  }
+
+  function loginSuccess() {
+    return FB.getLoginStatus(communicateStatus);
+  }
+
+  (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+{% endblock %}
+
+
+
 {% block form %}
 <div id="standalone-form-nav">
   <h4 class="standalone-nav-btn nav-active">Sign Up</h4>
   <a class="h4 standalone-nav-btn" href="{{ url_for('public.login') }}">Login</a>
 </div>
+  <div id="oauth-login-container">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw" id="standalone-form-loading-icon"></i>
+    <div id="fb-root">
+    </div>
+    <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false" data-scope="public_profile,email" onlogin="loginSuccess();"></div>
+    <p>Or create a new account</p>
+  </div>
   <form id="registerForm" class="form form-register" method="POST" action="" role="form">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <div class="form-group standalone-form-inline-group">

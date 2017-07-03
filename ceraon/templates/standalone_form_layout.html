@@ -29,6 +29,23 @@
 
 </head>
 <body id="standalone-form-body" class="{% block body_class %}{% endblock %}">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="row" id="standalone-error-container">
+      <div class="col-md-offset-4 col-md-4">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          <a class="close" title="Close" href="javascript:void(0)" data-dismiss="alert">&times;</a>
+         {{message}}
+        </div><!-- end .alert -->
+        {% endfor %}
+      </div><!-- end col-md -->
+    </div><!-- end row -->
+    {% endif %}
+    {% endwith %}
+
+{% block fblogin %}{% endblock %}
   <div id="standalone-form-bg"></div>
   <div class="container-narrow module" id="standalone-form-container">
     <div id="standalone-form-header">

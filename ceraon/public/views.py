@@ -35,7 +35,7 @@ def home():
     return render_template('public/home.html', form=form)
 
 
-@blueprint.route('/login', methods=['GET', 'POST'])
+@blueprint.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     """Login."""
     form = LoginForm(request.form)
@@ -63,10 +63,13 @@ def logout():
     return redirect(url_for('public.home'))
 
 
-@blueprint.route('/register/', methods=['GET', 'POST'])
+@blueprint.route('/register/', methods=['GET', 'POST'], strict_slashes=False)
 def register():
     """Register new user."""
     form = RegisterForm(request.form)
+    if current_user.is_authenticated:
+        redirect_url = request.args.get('next') or url_for('user.me')
+        return redirect(redirect_url)
     if form.validate_on_submit():
         User.create(email=form.email.data, password=form.password.data,
                     first_name=form.first_name.data,
