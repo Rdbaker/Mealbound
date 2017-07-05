@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
+import json
 import os
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, g
 from flask_sslify import SSLify
 from marshmallow.exceptions import ValidationError
 
@@ -11,6 +12,7 @@ from ceraon.assets import assets
 from ceraon.errors import APIException
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
                                login_manager, migrate)
+from ceraon.eager_loader import assign_requested_entity
 from ceraon.locations.views import blueprint as location_blueprint
 from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.models import locations as locations_models  # noqa
@@ -35,7 +37,18 @@ def create_app(config_object=ProdConfig):
 
     @app.context_processor
     def inject_fb_app_ID():
-        return dict(fb_app_id=app.config['FB_APP_ID'])
+        return dict(
+            fb_app_id=app.config['FB_APP_ID'],
+            embed_entity=json.dumps(g.embed_entity),
+        )
+
+    @app.before_request
+    def embed_entity():
+        """Embed the entity based on the request."""
+        # NOTE: this relies pretty heavily on the fact that the before_request
+        # runs before the context_processor. If that's ever False, we'll have
+        # to change how this works.
+        assign_requested_entity()
 
     return app
 

@@ -77,8 +77,8 @@ class RESTBlueprint(Blueprint):
             return User.create(name='my new user')
 
     The `find`, `update`, `replace`, and `destroy` methods will add a string
-    parameter called `uid` to your route. Make sure to correctly resolve that to
-    your entity's ID.
+    parameter called `uid` to your route. Make sure to correctly resolve that
+    to your entity's ID.
     """
 
     def __init__(self, blueprint_name, name, version):
