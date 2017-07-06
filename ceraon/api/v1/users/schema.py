@@ -15,6 +15,8 @@ class UserSchema(Schema):
     email = fields.Str(required=True)
     address = fields.Str()
 
+    private_fields = ['email', 'address']
+
     class Meta:
         """Meta class for User schema."""
 
