@@ -53,3 +53,6 @@ git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 
 # use SSL in production (heroku only)
 Flask-SSLify==0.1.5
+
+# documentation for the API
+flask-swagger==0.2.13
