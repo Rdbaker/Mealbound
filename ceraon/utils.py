@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from datetime import tzinfo, timedelta as td
+from datetime import timedelta as td
+from datetime import tzinfo
 from threading import Thread
 
 import requests

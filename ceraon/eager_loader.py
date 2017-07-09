@@ -2,13 +2,13 @@
 """Module for the eager loader of an entity."""
 
 import flask
+from flask_login import current_user
 
 from ceraon.api.v1.locations.schema import LocationSchema
 from ceraon.api.v1.meals.schema import MealSchema
 from ceraon.api.v1.users.schema import UserSchema
 from ceraon.models import locations, meals
 from ceraon.user.models import User
-
 
 ENTITY_MAP = {
     'location': {
@@ -55,3 +55,7 @@ def assign_requested_entity():
                 flask.g.embed_entity = None
     else:
         flask.g.embed_entity = None
+
+    # Always assign user if the user is logged in
+    if current_user is not None:
+        flask.g.current_user_json = UserSchema().dump(current_user).data

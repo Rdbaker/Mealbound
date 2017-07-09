@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 """Test the views at /api/v1/users."""
 
-from flask import url_for
 import pytest
+from flask import url_for
 
 from ceraon.user.models import User
 from tests.utils import BaseViewTest

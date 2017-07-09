@@ -2,7 +2,8 @@
 """Test the views at /api/v1/meals."""
 
 import uuid
-from datetime import datetime as dt, timedelta as td
+from datetime import datetime as dt
+from datetime import timedelta as td
 
 import pytest
 

@@ -7,8 +7,8 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 
 from ceraon.constants import Errors, Success
-from ceraon.errors import (NotFound, PreconditionRequired, Conflict, Forbidden,
-                           BadRequest)
+from ceraon.errors import (BadRequest, Conflict, Forbidden, NotFound,
+                           PreconditionRequired)
 from ceraon.models.meals import Meal, UserMeal
 from ceraon.utils import RESTBlueprint, friendly_arg_get
 
@@ -16,7 +16,8 @@ from .schema import MealSchema
 
 blueprint = RESTBlueprint('meals', __name__, version='v1')
 
-MEAL_SCHEMA = MealSchema()
+MEAL_SCHEMA = MealSchema(exclude=MealSchema.private_fields)
+PRIVATE_MEAL_SCHEMA = MealSchema()
 
 
 def update_or_replace_meal(meal_id, data, replace=False):
@@ -186,4 +187,4 @@ def get_user_meals(role):
         meals = current_user.get_joined_meals()
     else:
         meals = current_user.get_hosted_meals()
-    return jsonify(data=MEAL_SCHEMA.dump(meals, many=True).data)
+    return jsonify(data=PRIVATE_MEAL_SCHEMA.dump(meals, many=True).data)

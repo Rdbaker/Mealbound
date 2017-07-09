@@ -3,16 +3,16 @@
 import json
 import os
 
-from flask import Flask, jsonify, render_template, g
+from flask import Flask, g, jsonify, render_template
 from flask_sslify import SSLify
 from marshmallow.exceptions import ValidationError
 
 from ceraon import commands, public, user
 from ceraon.assets import assets
+from ceraon.eager_loader import assign_requested_entity
 from ceraon.errors import APIException
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
                                login_manager, migrate)
-from ceraon.eager_loader import assign_requested_entity
 from ceraon.locations.views import blueprint as location_blueprint
 from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.models import locations as locations_models  # noqa
