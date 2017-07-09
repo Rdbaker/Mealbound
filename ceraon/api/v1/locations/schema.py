@@ -19,7 +19,7 @@ class LocationSchema(Schema):
     private_fields = ['address', 'latitude', 'longitude']
 
     class Meta:
-        """The mata class for the locationschema."""
+        """The mata class for the location schema."""
 
         type_ = 'location'
         strict = True
