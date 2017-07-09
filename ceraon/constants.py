@@ -41,6 +41,21 @@ class Errors(object):
                               'Password and confirm fields must match')
     INVALID_MEAL_ROLE = ('invalid-meal-role',
                          'A meal role must either be "guest" or "host"')
+    REVIEW_DESCRIPTION_MISSING = ('review-description-missing',
+                                  'A review must have a body')
+    REVIEW_DESCRIPTION_TOO_BIG = ('review-description-too-big',
+                                  'The review body is too big')
+    REVIEW_RATING_MISSING = ('review-rating-missing', 'A review needs a rating')
+    REVIEW_RATING_BAD = ('review-rating-bad', 'A review rating is a whole or'
+                         ' half number between 0 and 5')
+    REVIEW_NOT_FOUND = ('review-not-found', 'That review could not be found')
+    NOT_YOUR_REVIEW = ('not-your-review', 'You can\'t edit that review!')
+    BAD_REVIEW_ID = ('bad-review-id', 'A review ID is in the form'
+                                      ' (meal_id, user_id)')
+    REVIEW_IN_FUTURE = ('review-in-future', 'You can\'t review a meal that '
+                                            'hasn\'t happened yet!')
+    REVIEW_NONJOINED_MEAL = ('review-nonjoined-meal', 'You can\'t review a meal'
+                                                      ' that you didn\'t join')
 
 
 class Success(object):
@@ -54,3 +69,7 @@ class Success(object):
     MEAL_WAS_LEFT = ('meal-left', 'Reservation successfully canceled')
     MEAL_DELETED = ('meal-deleted', 'Meal successfully canceled')
     PROFILE_UPDATED = ('profile-updated', 'Profile successfully updated!')
+    REVIEW_CREATED = ('review-created', 'Your review has been submitted '
+                                        'successfully')
+    REVIEW_UPDATED = ('review-updated', 'Your review has been updated')
+    REVIEW_DELETED = ('review-deleted', 'Review successfully removed')

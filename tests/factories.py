@@ -10,6 +10,7 @@ from factory.alchemy import SQLAlchemyModelFactory
 from ceraon.database import db
 from ceraon.models.locations import Location
 from ceraon.models.meals import Meal
+from ceraon.models.reviews import Review
 from ceraon.user.models import User
 
 
@@ -61,3 +62,16 @@ class MealFactory(BaseFactory):
         """Factory configuration."""
 
         model = Meal
+
+
+class ReviewFactory(BaseFactory):
+    """Review factory."""
+
+    rating = random.choice([x/2 for x in range(11)])
+    created_at = dt.now()
+    description = Sequence(lambda n: 'review{0}'.format(n))
+
+    class Meta:
+        """Factory configuration."""
+
+        model = Review

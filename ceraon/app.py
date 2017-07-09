@@ -17,6 +17,7 @@ from ceraon.locations.views import blueprint as location_blueprint
 from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.models import locations as locations_models  # noqa
 from ceraon.models import meals as meals_models  # noqa
+from ceraon.models import reviews as reviews_models  # noqa
 from ceraon.settings import ProdConfig
 
 
@@ -78,15 +79,18 @@ def register_blueprints(app):
     app.register_blueprint(meal_blueprint)
 
     from ceraon.api.v1.locations import views as locations_views
-    app.register_blueprint(locations_views.blueprint)
     from ceraon.api.v1.token import views as token_views
-    app.register_blueprint(token_views.blueprint)
     from ceraon.api.v1.sessions import views as sessions_views
-    app.register_blueprint(sessions_views.blueprint)
     from ceraon.api.v1.meals import api as meals_views
-    app.register_blueprint(meals_views.blueprint)
     from ceraon.api.v1.users import api as users_views
+    from ceraon.api.v1.reviews import api as reviews_views
+
+    app.register_blueprint(locations_views.blueprint)
+    app.register_blueprint(token_views.blueprint)
+    app.register_blueprint(sessions_views.blueprint)
+    app.register_blueprint(meals_views.blueprint)
     app.register_blueprint(users_views.blueprint)
+    app.register_blueprint(reviews_views.blueprint)
 
     return None
 
