@@ -97,7 +97,10 @@ def list_meal_reviews(meal_id):
 
 @blueprint.list()
 def list_reviews():
-    """List reviews for a meal."""
+    """List reviews for a meal.
+
+    NOTE: for this endpoint, you MUST specify a query param of meal_id=<id>
+    """
     meal = get_meal_from_query_params()
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
@@ -126,7 +129,10 @@ def create_review_from_meal_id(meal_id):
 @blueprint.create()
 @login_required
 def create_review():
-    """Create a new review."""
+    """Create a new review.
+
+    NOTE: for this endpoint, you MUST specify a query param of meal_id=<id>
+    """
     meal = get_meal_from_query_params()
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
