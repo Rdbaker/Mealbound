@@ -4,6 +4,7 @@ from datetime import datetime as dt
 
 from marshmallow import Schema, ValidationError, fields, validates
 
+from ceraon.api.v1.locations.schema import LocationSchema
 from ceraon.api.v1.users.schema import UserSchema
 from ceraon.constants import Errors
 
@@ -16,8 +17,14 @@ class MealSchema(Schema):
     description = fields.String()
     scheduled_for = fields.DateTime(required=True)
     price = fields.Float(required=True, places=2)
-    host = fields.Nested(UserSchema, dump_only=True,
-                         exclude=UserSchema.private_fields)
+    host = fields.Nested(UserSchema, dump_only=True)
+    location = fields.Nested(LocationSchema, dump_only=True,
+                             load_from='user.location')
+
+    private_fields = ['location.{}'.format(field)
+                      for field in LocationSchema.private_fields] + \
+                     ['host.{}'.format(field)
+                      for field in UserSchema.private_fields]
 
     class Meta:
         """Meta class for Meal schema."""

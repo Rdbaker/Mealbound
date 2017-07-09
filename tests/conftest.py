@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Defines fixtures available to all tests."""
-from datetime import datetime as dt, timedelta as td
+from datetime import datetime as dt
+from datetime import timedelta as td
 
 import pytest
 from webtest import TestApp

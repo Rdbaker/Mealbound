@@ -4,7 +4,7 @@ from flask import jsonify, request
 from flask_login import current_user, login_required
 
 from ceraon.constants import Errors, Success
-from ceraon.errors import NotFound, BadRequest
+from ceraon.errors import BadRequest, NotFound
 from ceraon.user.models import User
 from ceraon.utils import RESTBlueprint
 

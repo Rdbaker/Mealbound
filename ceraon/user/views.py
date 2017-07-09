@@ -34,8 +34,7 @@ def edit_profile():
     else:
         if form.validate_on_submit():
             if form.address.data:
-                current_user.location.address = form.address.data
-                current_user.location.save()
+                current_user.address = form.address.data
             current_user.update(first_name=form.first_name.data,
                                 last_name=form.last_name.data,
                                 email=form.email.data)

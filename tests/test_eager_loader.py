@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Test the eager loader."""
 
-import uuid
 import json
+import uuid
 
-from bs4 import BeautifulSoup
 import pytest
+from bs4 import BeautifulSoup
 
 from ceraon.api.v1.meals.schema import MealSchema
 from ceraon.api.v1.users.schema import UserSchema
