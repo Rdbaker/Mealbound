@@ -11,7 +11,7 @@ from ceraon.database import db as _db
 from ceraon.models.meals import UserMeal
 from ceraon.settings import TestConfig
 
-from .factories import LocationFactory, MealFactory, UserFactory
+from .factories import LocationFactory, MealFactory, ReviewFactory, UserFactory
 
 
 @pytest.yield_fixture(scope='function')
@@ -93,6 +93,22 @@ def past_meal(meal):
     meal.scheduled_for = dt.now().astimezone() - td(days=1)
     meal.save()
     return meal
+
+
+@pytest.fixture
+def past_guest(user, past_meal):
+    """A guest from a meal in the past."""
+    um = UserMeal(user=user, meal=past_meal)
+    um.save()
+    return user
+
+
+@pytest.fixture
+def review(past_guest, past_meal):
+    """A review from a guest."""
+    review = ReviewFactory(user=past_guest, meal=past_meal)
+    review.save()
+    return review
 
 
 @pytest.fixture

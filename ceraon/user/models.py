@@ -12,7 +12,7 @@ from sqlalchemy.orm import backref
 from ceraon.database import (Column, Model, SurrogatePK, db, reference_col,
                              relationship)
 from ceraon.extensions import bcrypt
-from ceraon.models import locations, meals
+from ceraon.models import locations, meals, reviews
 from ceraon.utils import FlaskThread, get_fb_access_token
 
 
@@ -174,6 +174,11 @@ class User(UserMixin, SurrogatePK, Model):
         return [um.meal for um in
                 meals.UserMeal.query.join(User).filter(
                     meals.UserMeal.user_id == self.id).all()]
+
+    def get_reviews_as_subject(self):
+        """Return the reviews that were written about the user."""
+        return reviews.Review.query.join(meals.Meal).join(locations.Location)\
+            .filter(locations.Location.id == self.location.id).all()
 
     def __repr__(self):
         """Represent instance as a unique string."""

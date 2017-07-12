@@ -77,7 +77,7 @@ class RESTBlueprint(Blueprint):
         def create_user():
             return User.create(name='my new user')
 
-    The `find`, `update`, `replace`, and `destroy` methods will add a string
+    The `find`, `update`, `replace`, and `destroy` methods will add a
     parameter called `uid` to your route. Make sure to correctly resolve that
     to your entity's ID.
     """
@@ -99,21 +99,25 @@ class RESTBlueprint(Blueprint):
         kwargs.update({'methods': ['GET']})
         return self.flexible_route('/', *args, **kwargs)
 
-    def find(self, *args, **kwargs):
+    def find(self, converter='string', *args, **kwargs):
         kwargs.update({'methods': ['GET']})
-        return self.flexible_route('/<string:uid>', *args, **kwargs)
+        return self.flexible_route('/<{}:uid>'.format(converter), *args,
+                                   **kwargs)
 
-    def update(self, *args, **kwargs):
+    def update(self, converter='string', *args, **kwargs):
         kwargs.update({'methods': ['PATCH']})
-        return self.flexible_route('/<string:uid>', *args, **kwargs)
+        return self.flexible_route('/<{}:uid>'.format(converter), *args,
+                                   **kwargs)
 
-    def replace(self, *args, **kwargs):
+    def replace(self, converter='string', *args, **kwargs):
         kwargs.update({'methods': ['PUT']})
-        return self.flexible_route('/<string:uid>', *args, **kwargs)
+        return self.flexible_route('/<{}:uid>'.format(converter), *args,
+                                   **kwargs)
 
-    def destroy(self, *args, **kwargs):
+    def destroy(self, converter='string', *args, **kwargs):
         kwargs.update({'methods': ['DELETE']})
-        return self.flexible_route('/<string:uid>', *args, **kwargs)
+        return self.flexible_route('/<{}:uid>'.format(converter), *args,
+                                   **kwargs)
 
 
 class UTC(tzinfo):
