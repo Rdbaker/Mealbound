@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 """API routes for meals."""
 
 from datetime import datetime as dt

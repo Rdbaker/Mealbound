@@ -168,9 +168,9 @@ footer .footer-nav {
 
 #oauth-login-container {
   padding-top: 10px;
-  border-top: solid #8080804d 1px;
+  border-top: solid rgba(128, 128, 128, 0.3) 1px;
   text-align: center;
-  border-bottom: solid #8080804d 1px;
+  border-bottom: solid rgba(128, 128, 128, 0.3) 1px;
   padding-bottom: 10px;
   margin-bottom: 5px;
 }
@@ -234,7 +234,7 @@ footer .footer-nav {
 
 .standalone-nav-btn.nav-active {
   background-color: rgba(150, 150, 150, 0.03);
-  border-bottom: 4px solid #1b8effb3;
+  border-bottom: 4px solid rgba(27, 142, 255, 0.7);
   cursor: unset;
 }
 
@@ -250,8 +250,8 @@ footer .footer-nav {
 
 .form-control.standalone-form-input:focus,
 .form-control.standalone-form-input:active {
-  border-bottom: solid 1px #1b8effb3;
-  box-shadow: 0px 1px 0px 0px #71b9ff99;
+  border-bottom: solid 1px rgba(27, 142, 255, 0.7);
+  box-shadow: 0px 1px 0px 0px rgba(113, 185, 255, 0.6);
 }
 
 .standalone-form-inline-group {
@@ -259,11 +259,11 @@ footer .footer-nav {
 }
 
 #standalone-form-submit-btn {
-  background-color: #1b8effb3;
+  background-color: rgba(27, 142, 255, 0.7);
   margin-top: 10px;
   margin-bottom: 10px;
   color: white;
-  border-color: #1a69b7b3;
+  border-color: rgba(26, 105, 183, 0.7);
 }
 
 #standalone-error-container {
