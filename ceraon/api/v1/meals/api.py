@@ -47,7 +47,60 @@ def update_or_replace_meal(meal_id, data, replace=False):
 
 @blueprint.find()
 def find_meal(uid):
-    """Find a meal from it's UUID."""
+    """
+    Find a meal from it's UUID.
+
+    ---
+    tags:
+      - meals
+    definitions:
+      - schema:
+          id: Meal
+          properties:
+            id:
+             type: integer
+             description: the meal's UUID as a string
+            name:
+             type: string
+             description: the name of the meal
+            description:
+             type: string
+             description: the description of the meal
+            price:
+             type: number
+             format: float
+             description: the cost of the meal
+            host:
+             schema:
+               id: User
+               properties:
+                 first_name:
+                   type: string
+                 last_name:
+                   type: string
+                 public_name:
+                   type: string
+                 image_url:
+                   type: string
+                 created_at:
+                   type: string
+                   format: date-time
+                 id:
+                   type: integer
+             description: the last name of the user
+    parameters:
+      - in: path
+        name: uid
+        description: The meal's id
+        required: true
+    responses:
+      200:
+        description: Meal data found
+        schema:
+          id: Meal
+      404:
+        description: The meal could not be found
+    """
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
@@ -56,7 +109,37 @@ def find_meal(uid):
 
 @blueprint.list()
 def list_meals():
-    """Search for a meal based on search parameters."""
+    """
+    Search for a meal based on search parameters.
+
+    ---
+    tags:
+     - meals
+    parameters:
+     - in: query
+       name: page
+       description: the page of the meals to retrieve
+       default: 1
+     - in: query
+       name: per_page
+       description: the number of results to return per page
+       default: 10
+     - in: query
+       name: meal
+       description: the meal of day that should be returned
+       enum:
+         - breakfast
+         - lunch
+         - dinner
+    responses:
+      200:
+        description: Meal data found
+        schema:
+          type: array
+          items:
+            schema:
+              id: Meal
+    """
     page_num = friendly_arg_get('page', 1, int)
     per_page = friendly_arg_get('per_page', 10, int)
     requested_meal = request.args.get('meal')

@@ -51,6 +51,18 @@ def create_app(config_object=ProdConfig):
         # to change how this works.
         assign_requested_entity()
 
+    @app.route("/swagger/spec")
+    def spec():
+        from flask_swagger import swagger
+        swag = swagger(app)
+        swag['info']['version'] = "1.0"
+        swag['info']['title'] = "Ceraon API"
+        return jsonify(swag)
+
+    @app.route("/swagger/docs")
+    def api_doct():
+        return render_template('swagger-index.html')
+
     return app
 
 
@@ -84,6 +96,7 @@ def register_blueprints(app):
     from ceraon.api.v1.meals import api as meals_views
     from ceraon.api.v1.users import api as users_views
     from ceraon.api.v1.reviews import api as reviews_views
+    from ceraon.api.v1.docs import api as docs_views
 
     app.register_blueprint(locations_views.blueprint)
     app.register_blueprint(token_views.blueprint)
@@ -91,6 +104,7 @@ def register_blueprints(app):
     app.register_blueprint(meals_views.blueprint)
     app.register_blueprint(users_views.blueprint)
     app.register_blueprint(reviews_views.blueprint)
+    app.register_blueprint(docs_views.blueprint)
 
     return None
 
