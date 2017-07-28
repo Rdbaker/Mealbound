@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 
 from ceraon.constants import Errors, Success
 from ceraon.errors import BadRequest, NotFound
+from ceraon.models.transactions import Transaction
 from ceraon.user.models import User
 from ceraon.utils import RESTBlueprint
 
@@ -62,6 +63,37 @@ def get_me():
         description: The user is not authenticated
     """
     return jsonify(data=PRIVATE_USER_SCHEMA.dump(current_user).data)
+
+
+@blueprint.flexible_route('/me/payment-info', methods=['POST', 'PUT', 'PATCH'])
+@login_required
+def update_my_payment_info():
+    """Update the currently logged-in user's payment info.
+
+    Since we use stripe, this will currently update the users's
+    stripe_customer_id
+    ---
+    tags:
+      - users
+    parameters:
+      - in: body
+        name: body
+        schema:
+          properties:
+            stripe_token:
+              type: string
+              description: the token returned from strip for payment info
+    responses:
+      200:
+        description: User payment info updated
+      400:
+        description: No stripe_token was supplied
+      500:
+        description: Something went wront when talking to stripe
+    """
+    token = request.args.get('stripe_token')
+    Transaction.set_stripe_id_on_user(current_user, token)
+    return jsonify(data=None, message=Success.PAYMENT_INFO_UPDATED), 200
 
 
 @blueprint.flexible_route('/me', methods=['PATCH'])

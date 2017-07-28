@@ -3,6 +3,7 @@
 import json
 import os
 
+import stripe
 from flask import Flask, g, jsonify, render_template
 from flask_sslify import SSLify
 from marshmallow.exceptions import ValidationError
@@ -73,6 +74,7 @@ def register_extensions(app):
     if 'DYNO' in os.environ:
         SSLify(app)
 
+    stripe.api_key = app.config['STRIPE_SECRET_KEY']
     assets.init_app(app)
     bcrypt.init_app(app)
     cache.init_app(app)

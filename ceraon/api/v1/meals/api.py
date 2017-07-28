@@ -271,6 +271,7 @@ def join_meal(uid):
         transaction = Transaction.create(
             meal_id=meal.id, payer_id=current_user.id, payee_id=meal.host.id,
             amount=meal.price)
+        # TODO: raise a 500 if this returns false
         transaction.charge()
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_WAS_JOINED), 201

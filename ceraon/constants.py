@@ -73,3 +73,5 @@ class Success(object):
                                         'successfully')
     REVIEW_UPDATED = ('review-updated', 'Your review has been updated')
     REVIEW_DELETED = ('review-deleted', 'Review successfully removed')
+    PAYMENT_INFO_UPDATED = ('payment-info-updated',
+                            'Payment info successfully updated')

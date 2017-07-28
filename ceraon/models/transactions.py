@@ -3,6 +3,7 @@
 import datetime as dt
 import uuid
 
+import stripe
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 
 from ceraon.database import Column, IDModel, db, reference_col, relationship
@@ -45,7 +46,17 @@ class Transaction(IDModel):
         We use stripe, so if we change this later, we should change the low
         level implementation details, but the general flow should be the same.
         """
-        pass
+        try:
+            stripe.Charge.create(
+                amount=self.amount * 100,
+                currency='usd',
+                customer=self.payer.stripe_customer_id
+            )
+        except:
+            return False
+        else:
+            self.update(transaction_went_through=True)
+        return True
 
     def cancel(self):
         """Cancel the charge for the transaction and start the refund process.
@@ -54,5 +65,31 @@ class Transaction(IDModel):
         level implementation details, but the general flow should be the same.
         """
         self.update(canceled=True)
-        # TODO: finish this flow
-        return None
+        # TODO: automate this flow later, if we're okay with that.
+        # for now, we'll do payouts manually
+        return True
+
+    @staticmethod
+    def set_stripe_id_on_user(user, token):
+        """Set the stripe_customer_id on the given user with the given token.
+
+        Since this class is responsible for interfacing with our payments
+        vendor, it is responsible for setting up the user with a corresponding
+        Stripe customer.
+
+        :param user User: the user to set the stripe_customer_id on
+        :param token string: the token stripe returned in exchange for payment
+            info
+        :return None:
+        """
+        if user.stripe_customer_id is None:
+            customer = stripe.Customer.create(
+                email=user.email,
+                source=token
+            )
+            user.stripe_customer_id = customer.id
+            user.save()
+        else:
+            customer = stripe.Customer.retrieve(user.stripe_customer_id)
+            customer.source = token
+            customer.save()
