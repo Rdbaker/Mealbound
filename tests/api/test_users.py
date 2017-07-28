@@ -84,7 +84,7 @@ class TestUpdateMe(BaseViewTest):
         """Test that a user can update their info."""
         self.login(user, testapp)
         res = testapp.patch_json(self.base_url, self.update_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert user.first_name == self.update_data['first_name']
         assert user.last_name == self.update_data['last_name']
         assert user.address == self.update_data['address']
@@ -94,6 +94,6 @@ class TestUpdateMe(BaseViewTest):
         """Test that a user's new password works."""
         self.login(user, testapp)
         res = testapp.patch_json(self.base_url, self.update_pw_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         testapp.get(url_for('public.logout')).follow()
         self.login(user, testapp, self.update_pw_data['password'])

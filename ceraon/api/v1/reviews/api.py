@@ -144,7 +144,7 @@ def create_review():
 def update_meal(uid):
     """Update a review."""
     return jsonify(data=update_or_replace_review(uid, request.json, False),
-                   message=Success.REVIEW_UPDATED), 202
+                   message=Success.REVIEW_UPDATED), 200
 
 
 @blueprint.replace()
@@ -152,7 +152,7 @@ def update_meal(uid):
 def replace_meal(uid):
     """Replace a review."""
     return jsonify(data=update_or_replace_review(uid, request.json, True),
-                   message=Success.REVIEW_UPDATED), 202
+                   message=Success.REVIEW_UPDATED), 200
 
 
 @blueprint.destroy()

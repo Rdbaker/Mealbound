@@ -94,7 +94,7 @@ def update_me():
               type: string
               description: the confirmation for the user's new password
     responses:
-      202:
+      200:
         description: User data updated
         schema:
           id: User
@@ -113,7 +113,7 @@ def update_me():
             current_user.set_password(request.json.get('password'))
     current_user.update(**user_data)
     return jsonify(data=PRIVATE_USER_SCHEMA.dump(current_user).data,
-                   message=Success.PROFILE_UPDATED), 202
+                   message=Success.PROFILE_UPDATED), 200
 
 
 @blueprint.find()

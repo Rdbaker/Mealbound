@@ -174,7 +174,7 @@ class TestUpdateReview(BaseViewTest):
         self.login(past_guest, testapp)
         res = testapp.patch_json(self.base_url.format(review.id),
                                  self.valid_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert review.rating == self.valid_data['rating']
 
     def test_partial_update_works(self, testapp, past_guest, review):
@@ -182,7 +182,7 @@ class TestUpdateReview(BaseViewTest):
         self.login(past_guest, testapp)
         res = testapp.patch_json(self.base_url.format(review.id),
                                  {'rating': 4.00})
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert review.rating == 4.00
 
 
@@ -224,7 +224,7 @@ class TestReplaceReview(BaseViewTest):
         self.login(past_guest, testapp)
         res = testapp.put_json(self.base_url.format(review.id),
                                self.valid_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert review.rating == self.valid_data['rating']
 
     def test_partial_replace_fails(self, testapp, past_guest, review):
