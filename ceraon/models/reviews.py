@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 """Models for reviews."""
-import uuid
 import datetime as dt
 
 from sqlalchemy.orm import validates
-from werkzeug.exceptions import BadRequest
 
-from ceraon.constants import Errors
 from ceraon.database import Column, UUIDModel, db, reference_col, relationship
 
 

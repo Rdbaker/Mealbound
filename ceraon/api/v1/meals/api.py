@@ -11,6 +11,7 @@ from ceraon.constants import Errors, Success
 from ceraon.errors import (BadRequest, Conflict, Forbidden, NotFound,
                            PreconditionRequired)
 from ceraon.models.meals import Meal, UserMeal
+from ceraon.models.transactions import Transaction
 from ceraon.utils import RESTBlueprint, friendly_arg_get
 
 from .schema import MealSchema
@@ -58,7 +59,7 @@ def find_meal(uid):
           id: Meal
           properties:
             id:
-             type: integer
+             type: string
              description: the meal's UUID as a string
             name:
              type: string
@@ -87,7 +88,6 @@ def find_meal(uid):
                    format: date-time
                  id:
                    type: integer
-             description: the last name of the user
     parameters:
       - in: path
         name: uid
@@ -198,12 +198,16 @@ def join_meal(uid):
         raise BadRequest(Errors.MEAL_ALREADY_HAPPENED)
     if meal.host.id == current_user.id:
         raise BadRequest(Errors.JOIN_HOSTED_MEAL)
-    # TODO: do some validation here for payment processing
     try:
         UserMeal.create(meal=meal, user=current_user)
     except IntegrityError:
         # an integrity error means that the user already joined the meal
         raise Conflict(Errors.MEAL_ALREADY_JOINED)
+    else:
+        transaction = Transaction.create(
+            meal_id=meal.id, payer_id=current_user.id, payee_id=meal.host.id,
+            amount=meal.price)
+        transaction.charge()
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_WAS_JOINED), 201
 
@@ -211,7 +215,11 @@ def join_meal(uid):
 @blueprint.flexible_route('/<string:uid>/reservation', methods=['DELETE'])
 @login_required
 def leave_meal(uid):
-    """Leave a meal."""
+    """Leave a meal.
+
+    ---
+    This will cancel a transaction and begin a refund process.
+    """
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
@@ -221,6 +229,10 @@ def leave_meal(uid):
     if um is None:
         raise PreconditionRequired(Errors.MEAL_NOT_JOINED)
     um.delete()
+    transaction = Transaction.query.filter(meal_id=meal.id,
+                                           payer_id=current_user.id).first()
+    if transaction:
+        transaction.cancel()
     return jsonify(data=None, message=Success.MEAL_WAS_LEFT), 204
 
 

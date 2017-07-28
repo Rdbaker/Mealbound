@@ -12,12 +12,13 @@ from ceraon.assets import assets
 from ceraon.eager_loader import assign_requested_entity
 from ceraon.errors import APIException
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
-                               login_manager, migrate)
+                               login_manager, migrate, sentry)
 from ceraon.locations.views import blueprint as location_blueprint
 from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.models import locations as locations_models  # noqa
 from ceraon.models import meals as meals_models  # noqa
 from ceraon.models import reviews as reviews_models  # noqa
+from ceraon.models import transactions as transactions_models  # noqa
 from ceraon.settings import ProdConfig
 
 
@@ -80,6 +81,7 @@ def register_extensions(app):
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
+    sentry.init_app(app, app.config['SENTRY_DSN'])
     return None
 
 
