@@ -4,6 +4,7 @@
 import uuid
 from datetime import datetime as dt
 from datetime import timedelta as td
+from unittest.mock import patch
 
 import pytest
 
@@ -268,7 +269,8 @@ class TestJoinMeal(BaseViewTest):
         res = testapp.post(self.base_url.format(uuid.uuid4()), status=404)
         assert res.status_code == 404
 
-    def test_join_meal(self, testapp, user, meal):
+    @patch('ceraon.models.transactions.stripe')
+    def test_join_meal(self, stripe_mock, testapp, user, meal):
         """Test that a user can join a meal."""
         self.login(user, testapp)
         res = testapp.post(self.base_url.format(meal.id))

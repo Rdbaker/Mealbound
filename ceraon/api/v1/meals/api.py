@@ -9,7 +9,7 @@ from sqlalchemy.exc import IntegrityError
 
 from ceraon.constants import Errors, Success
 from ceraon.errors import (BadRequest, Conflict, Forbidden, NotFound,
-                           PreconditionRequired)
+                           PreconditionRequired, TransactionVendorError)
 from ceraon.models.meals import Meal, UserMeal
 from ceraon.models.transactions import Transaction
 from ceraon.utils import RESTBlueprint, friendly_arg_get
@@ -271,8 +271,8 @@ def join_meal(uid):
         transaction = Transaction.create(
             meal_id=meal.id, payer_id=current_user.id, payee_id=meal.host.id,
             amount=meal.price)
-        # TODO: raise a 500 if this returns false
-        transaction.charge()
+        if not transaction.charge():
+            raise TransactionVendorError(Errors.TRANSACTION_CHARGE_FAILED)
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_WAS_JOINED), 201
 

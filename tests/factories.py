@@ -11,6 +11,7 @@ from ceraon.database import db
 from ceraon.models.locations import Location
 from ceraon.models.meals import Meal
 from ceraon.models.reviews import Review
+from ceraon.models.transactions import Transaction
 from ceraon.user.models import User
 
 
@@ -75,3 +76,16 @@ class ReviewFactory(BaseFactory):
         """Factory configuration."""
 
         model = Review
+
+
+class TransactionFactory(BaseFactory):
+    """Transaction factory."""
+
+    # at least $0.31, which is the amount we can charge for our stripe overhead
+    # outcome to be $0
+    amount = max(round(float(random.random() * random.random() * 10), 2), 0.31)
+
+    class Meta:
+        """Factory configuration."""
+
+        model = Transaction

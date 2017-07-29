@@ -11,7 +11,8 @@ from ceraon.database import db as _db
 from ceraon.models.meals import UserMeal
 from ceraon.settings import TestConfig
 
-from .factories import LocationFactory, MealFactory, ReviewFactory, UserFactory
+from .factories import (LocationFactory, MealFactory, ReviewFactory,
+                        UserFactory, TransactionFactory)
 
 
 @pytest.yield_fixture(scope='function')
@@ -127,3 +128,11 @@ def guest_location(guest):
     guest.location = location
     guest.save()
     return location
+
+
+@pytest.fixture
+def transaction(host, guest, meal):
+    """A transaction for the tests."""
+    transaction = TransactionFactory(meal=meal, payer=guest, payee=host)
+    transaction.save()
+    return transaction

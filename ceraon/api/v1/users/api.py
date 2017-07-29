@@ -4,7 +4,7 @@ from flask import jsonify, request
 from flask_login import current_user, login_required
 
 from ceraon.constants import Errors, Success
-from ceraon.errors import BadRequest, NotFound
+from ceraon.errors import BadRequest, NotFound, TransactionVendorError
 from ceraon.models.transactions import Transaction
 from ceraon.user.models import User
 from ceraon.utils import RESTBlueprint
@@ -92,7 +92,8 @@ def update_my_payment_info():
         description: Something went wront when talking to stripe
     """
     token = request.args.get('stripe_token')
-    Transaction.set_stripe_id_on_user(current_user, token)
+    if not Transaction.set_stripe_id_on_user(current_user, token):
+        raise TransactionVendorError(Errors.TRANSACTION_VENDOR_CONTACT_FAILED)
     return jsonify(data=None, message=Success.PAYMENT_INFO_UPDATED), 200
 
 

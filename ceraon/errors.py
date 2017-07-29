@@ -60,3 +60,13 @@ class PreconditionRequired(APIException):
     """A 428 code."""
 
     status_code = 428
+
+
+class InternalServerError(APIException):
+    """A 500 code."""
+
+    status_code = 500
+
+
+class TransactionVendorError(InternalServerError):
+    """Something went wrong with our transaction vendor."""

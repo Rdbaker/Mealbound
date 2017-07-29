@@ -56,6 +56,15 @@ class Errors(object):
                                             'hasn\'t happened yet!')
     REVIEW_NONJOINED_MEAL = ('review-nonjoined-meal', 'You can\'t review a meal'
                                                       ' that you didn\'t join')
+    TRANSACTION_CHARGE_FAILED = ('transaction-charge-failed',
+                                 'The transaction could not go through at the'
+                                 ' moment, it will be retried later, customer '
+                                 'support is on it!')
+    TRANSACTION_VENDOR_CONTACT_FAILED = (
+        'transaction-vendor-contact-failed',
+        'The transaction vendor could not be contacted, please try again later.'
+        ' Customer service is on it! Feel free to contact us if the problem '
+        'persists.')
 
 
 class Success(object):

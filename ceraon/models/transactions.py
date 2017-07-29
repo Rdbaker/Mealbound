@@ -43,6 +43,8 @@ class Transaction(IDModel):
     def charge(self):
         """Run the charge for the transaction.
 
+        :return bool: indicating whether it was a success or failure
+
         We use stripe, so if we change this later, we should change the low
         level implementation details, but the general flow should be the same.
         """
@@ -50,7 +52,8 @@ class Transaction(IDModel):
             stripe.Charge.create(
                 amount=self.amount * 100,
                 currency='usd',
-                customer=self.payer.stripe_customer_id
+                customer=self.payer.stripe_customer_id,
+                idempotency_key=str(self.stripe_idempotency_key)
             )
         except:
             return False
@@ -80,16 +83,21 @@ class Transaction(IDModel):
         :param user User: the user to set the stripe_customer_id on
         :param token string: the token stripe returned in exchange for payment
             info
-        :return None:
+        :return bool: indicating whether it was successful or not
         """
-        if user.stripe_customer_id is None:
-            customer = stripe.Customer.create(
-                email=user.email,
-                source=token
-            )
-            user.stripe_customer_id = customer.id
-            user.save()
+        try:
+            if user.stripe_customer_id is None:
+                customer = stripe.Customer.create(
+                    email=user.email,
+                    source=token
+                )
+                user.stripe_customer_id = customer.id
+                user.save()
+            else:
+                customer = stripe.Customer.retrieve(user.stripe_customer_id)
+                customer.source = token
+                customer.save()
+        except:
+            return False
         else:
-            customer = stripe.Customer.retrieve(user.stripe_customer_id)
-            customer.source = token
-            customer.save()
+            return True
