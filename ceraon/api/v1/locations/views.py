@@ -11,7 +11,7 @@ from .schema import LocationSchema
 
 blueprint = RESTBlueprint('locations', __name__, version='v1')
 
-LOCATION_SCHEMA = LocationSchema()
+LOCATION_SCHEMA = LocationSchema(exclude=LocationSchema.private_fields)
 
 
 @blueprint.find()
@@ -24,7 +24,7 @@ def find_location(uid):
 
 @blueprint.list()
 def list_locations():
-    """List the locations
+    """List the locations.
 
     :param page int: (default: 1) the page of locations to retrieve
     :param per_page int: (default: 10) the size of the page to return
