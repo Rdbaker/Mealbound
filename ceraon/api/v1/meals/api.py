@@ -240,6 +240,10 @@ def join_meal(uid):
         name: uid
         description: The meal's id
         required: true
+      - in: body
+        name: stripe_token
+        description: The stripe token used to make a charge. This should only
+            be used if the used doesn't have payment info saved.
     responses:
       201:
         description: Meal reservation successfully cancelled
@@ -271,8 +275,23 @@ def join_meal(uid):
         transaction = Transaction.create(
             meal_id=meal.id, payer_id=current_user.id, payee_id=meal.host.id,
             amount=meal.price)
-        if not transaction.charge():
-            raise TransactionVendorError(Errors.TRANSACTION_CHARGE_FAILED)
+        if transaction.payer_has_stripe_source():
+            # user has told us to save payment info, so we have their card on
+            # file
+            if not transaction.charge():
+                raise TransactionVendorError(Errors.TRANSACTION_CHARGE_FAILED)
+        else:
+            # user told us not to save the card, so we need to make a one-time
+            # charge
+            req_json = request.json
+            if req_json is None:
+                raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
+            else:
+                token = req_json.get('stripe_token')
+                if token is None:
+                    raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
+                else:
+                    transaction.charge(transaction_token=token)
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_WAS_JOINED), 201
 

@@ -49,34 +49,34 @@ class TestTransaction:
         assert transaction.canceled is True
 
     @patch('ceraon.models.transactions.stripe')
-    def test_set_stripe_id_on_user_no_stripe_id(self, stripe_mock, user):
+    def test_set_stripe_source_on_user_no_stripe_id(self, stripe_mock, user):
         """Test that setting the stripe customer ID works."""
         customer_id = 'this is the stripe customer id'
         stripe_mock.Customer.create.return_value.id = customer_id
-        Transaction.set_stripe_id_on_user(user=user, token='some token')
+        Transaction.set_stripe_source_on_user(user=user, token='some token')
         assert user.stripe_customer_id == customer_id
 
     @patch('ceraon.models.transactions.stripe')
-    def test_set_stripe_id_on_user_returns_true(self, stripe_mock, user):
+    def test_set_stripe_source_on_user_returns_true(self, stripe_mock, user):
         """Test that setting the stripe customer ID returns True."""
         customer_id = 'this is the stripe customer id'
         stripe_mock.Customer.create.return_value.id = customer_id
-        assert Transaction.set_stripe_id_on_user(
+        assert Transaction.set_stripe_source_on_user(
             user=user, token='some token') is True
 
     @patch('ceraon.models.transactions.stripe')
-    def test_set_stripe_id_on_user_existing_id(self, stripe_mock, user):
+    def test_set_stripe_source_on_user_existing_id(self, stripe_mock, user):
         """Test that resetting the stripe customer ID works."""
         customer_id = 'this is the stripe customer id'
         assert user.stripe_customer_id is None
         user.stripe_customer_id = customer_id
-        assert Transaction.set_stripe_id_on_user(
+        assert Transaction.set_stripe_source_on_user(
             user=user, token='some token') is True
         stripe_mock.Customer.retrieve.assert_called_once()
 
     @patch('ceraon.models.transactions.stripe')
-    def test_set_stripe_id_on_user_fail(self, stripe_mock, user):
+    def test_set_stripe_source_on_user_fail(self, stripe_mock, user):
         """Test that a stripe failure returns false."""
         stripe_mock.Customer.create.side_effect = RuntimeError('stripe error')
-        assert Transaction.set_stripe_id_on_user(
+        assert Transaction.set_stripe_source_on_user(
             user=user, token='some token') is False

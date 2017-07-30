@@ -94,7 +94,7 @@ def update_my_payment_info():
     token = request.json.get('stripe_token')
     if not token:
         raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
-    if not Transaction.set_stripe_id_on_user(current_user, token):
+    if not Transaction.set_stripe_source_on_user(current_user, token):
         raise TransactionVendorError(Errors.TRANSACTION_VENDOR_CONTACT_FAILED)
     return jsonify(data=None, message=Success.PAYMENT_INFO_UPDATED), 200
 

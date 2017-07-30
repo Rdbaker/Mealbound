@@ -270,10 +270,21 @@ class TestJoinMeal(BaseViewTest):
         assert res.status_code == 404
 
     @patch('ceraon.models.transactions.stripe')
-    def test_join_meal(self, stripe_mock, testapp, user, meal):
-        """Test that a user can join a meal."""
+    def test_join_meal_card_on_file(self, stripe_mock, testapp, user, meal):
+        """Test that a user can join a meal with a card on file."""
+        user.stripe_customer_id = 'customer-id'
         self.login(user, testapp)
         res = testapp.post(self.base_url.format(meal.id))
+        assert res.status_code == 201
+        new_um = UserMeal.query.get((user.id, meal.id))
+        assert new_um is not None
+
+    @patch('ceraon.models.transactions.stripe')
+    def test_join_meal_no_card_on_file(self, stripe_mock, testapp, user, meal):
+        """Test that a user can join a meal without having a card on file."""
+        self.login(user, testapp)
+        res = testapp.post_json(self.base_url.format(meal.id),
+                                {'stripe_token': 'some-token'})
         assert res.status_code == 201
         new_um = UserMeal.query.get((user.id, meal.id))
         assert new_um is not None

@@ -40,21 +40,29 @@ class Transaction(IDModel):
     # NOTE: stripe shows the "amount" of a charge in cents
     stripe_payload = Column(JSONB)
 
-    def charge(self):
+    def charge(self, transaction_token=None):
         """Run the charge for the transaction.
 
+        :param transaction_token string: (default: None) he string used to
+            create a new transaction via stripe
         :return bool: indicating whether it was a success or failure
 
         We use stripe, so if we change this later, we should change the low
         level implementation details, but the general flow should be the same.
         """
         try:
-            stripe.Charge.create(
-                amount=int(self.amount * 100),
-                currency='usd',
-                customer=self.payer.stripe_customer_id,
-                idempotency_key=str(self.stripe_idempotency_key)
-            )
+            charge_params = {
+                'amount': int(self.amount * 100),
+                'currency': 'usd',
+                'idempotency_key': str(self.stripe_idempotency_key)
+            }
+            # see if we're doing a one-time transaction or if we're charging a
+            # card that stripe has on file
+            if transaction_token is not None:
+                charge_params.update(source=transaction_token)
+            else:
+                charge_params.update(customer=self.payer.stripe_customer_id)
+            stripe.Charge.create(**charge_params)
         except:
             return False
         else:
@@ -72,9 +80,20 @@ class Transaction(IDModel):
         # for now, we'll do payouts manually
         return True
 
+    def payer_has_stripe_source(self):
+        """Return true if the payer has a `source` on their stripe customer."""
+        if not self.payer.stripe_customer_id:
+            return False
+        else:
+            customer = stripe.Customer.retrieve(self.payer.stripe_customer_id)
+            if customer is None or customer.source is None:
+                return False
+            else:
+                return True
+
     @staticmethod
-    def set_stripe_id_on_user(user, token):
-        """Set the stripe_customer_id on the given user with the given token.
+    def set_stripe_source_on_user(user, token):
+        """Set the stripe customer source for the user given a source token.
 
         Since this class is responsible for interfacing with our payments
         vendor, it is responsible for setting up the user with a corresponding

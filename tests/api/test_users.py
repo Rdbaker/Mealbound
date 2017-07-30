@@ -126,7 +126,7 @@ class TestUpdatePaymentInfo(BaseViewTest):
     @patch('ceraon.api.v1.users.api.Transaction')
     def test_stripe_failure(self, trans_mock, testapp, user, method):
         """Test that a stripe failure returns 500."""
-        trans_mock.set_stripe_id_on_user.return_value = False
+        trans_mock.set_stripe_source_on_user.return_value = False
         func = getattr(testapp, method)
         self.login(user, testapp)
         res = func(self.base_url, {'stripe_token': 'some-token'}, status=500)
