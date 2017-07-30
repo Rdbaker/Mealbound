@@ -56,6 +56,8 @@ class Errors(object):
                                             'hasn\'t happened yet!')
     REVIEW_NONJOINED_MEAL = ('review-nonjoined-meal', 'You can\'t review a meal'
                                                       ' that you didn\'t join')
+    STRIPE_TOKEN_REQUIRED = ('stripe_token-required',
+                             'The stripe_token parameter is required.')
     TRANSACTION_CHARGE_FAILED = ('transaction-charge-failed',
                                  'The transaction could not go through at the'
                                  ' moment, it will be retried later, customer '

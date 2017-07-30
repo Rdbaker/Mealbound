@@ -50,7 +50,7 @@ class Transaction(IDModel):
         """
         try:
             stripe.Charge.create(
-                amount=self.amount * 100,
+                amount=int(self.amount * 100),
                 currency='usd',
                 customer=self.payer.stripe_customer_id,
                 idempotency_key=str(self.stripe_idempotency_key)

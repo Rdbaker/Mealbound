@@ -91,7 +91,9 @@ def update_my_payment_info():
       500:
         description: Something went wront when talking to stripe
     """
-    token = request.args.get('stripe_token')
+    token = request.json.get('stripe_token')
+    if not token:
+        raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
     if not Transaction.set_stripe_id_on_user(current_user, token):
         raise TransactionVendorError(Errors.TRANSACTION_VENDOR_CONTACT_FAILED)
     return jsonify(data=None, message=Success.PAYMENT_INFO_UPDATED), 200
