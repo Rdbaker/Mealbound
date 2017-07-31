@@ -43,8 +43,8 @@ class Transaction(IDModel):
     def charge(self, transaction_token=None):
         """Run the charge for the transaction.
 
-        :param transaction_token string: (default: None) he string used to
-            create a new transaction via stripe
+        :param transaction_token string: (default: None) the string used to
+            create a new transaction via stripe, if not using saved payment info
         :return bool: indicating whether it was a success or failure
 
         We use stripe, so if we change this later, we should change the low
