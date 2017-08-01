@@ -37,7 +37,12 @@ class User(UserMixin, SurrogatePK, Model):
     """A user of the app."""
 
     __tablename__ = 'users'
+
+    # External API identifiers
     facebook_id = Column(db.String(80), unique=True, nullable=True, index=True)
+    stripe_customer_id = Column(db.String(80), unique=True, nullable=True,
+                                index=True)
+
     email = Column(db.String(80), unique=True, nullable=False)
     #: The hashed password
     password = Column(db.Binary(128), nullable=True)
@@ -120,12 +125,6 @@ class User(UserMixin, SurrogatePK, Model):
             >>> u = user(first_name='Ryan', last_name='Baker')
             >>> u.public_name
             u'Ryan B.'
-            >>> u.last_name = None
-            >>> u.public_name
-            u'Ryan'
-            >>> u.first_name = None
-            >>> u.public_name
-            u'rbaker'
         """
         if self.last_name is not None and len(self.last_name) > 0:
             return '{} {}.'.format(self.first_name, self.last_name[0])

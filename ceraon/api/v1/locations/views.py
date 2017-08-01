@@ -11,11 +11,47 @@ from .schema import LocationSchema
 
 blueprint = RESTBlueprint('locations', __name__, version='v1')
 
-LOCATION_SCHEMA = LocationSchema()
+LOCATION_SCHEMA = LocationSchema(exclude=LocationSchema.private_fields)
 
 
 @blueprint.find()
 def find_location(uid):
+    """Find a location given the uuid.
+
+    ---
+    tags:
+     - locations
+    definitions:
+     - schema:
+       id: Location
+       properties:
+         id:
+           type: string
+           description: the ID of the location
+         address:
+           type: string
+           description: the full address of the location
+         latitude:
+           type: number
+           format: Float
+           description: the latitude of the location
+         longitude:
+           type: number
+           format: Float
+           description: the longitude of the location
+    parameters:
+     - in: path
+       name: uid
+       required: true
+       description: the UUID of the location
+    responses:
+      200:
+        description: Location data found
+        schema:
+          id: Locations
+      404:
+        description: The location could not be found
+    """
     location = Location.find(uid)
     if location is None:
         raise NotFound(Errors.LOCATION_NOT_FOUND)
@@ -24,12 +60,32 @@ def find_location(uid):
 
 @blueprint.list()
 def list_locations():
-    """List the locations
+    """List the locations.
 
-    :param page int: (default: 1) the page of locations to retrieve
-    :param per_page int: (default: 10) the size of the page to return
-    :param source string: return locations from a specific source, "internal"
-        for locations with no external source
+    ---
+    tags:
+     - locations
+    parameters:
+     - in: query
+       name: page
+       description: the page of the meals to retrieve
+       default: 1
+     - in: query
+       name: per_page
+       description: the number of results to return per page
+       default: 10
+     - in: query
+       name: source
+       description: the source of the location. Use "internal" for locations
+            created by users
+    responses:
+      200:
+        description: Location data found
+        schema:
+          type: array
+          items:
+            schema:
+              id: Locations
     """
     if request.args.get('source') is not None:
         source = request.args.get('source')

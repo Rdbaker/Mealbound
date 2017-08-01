@@ -9,8 +9,9 @@ from sqlalchemy.exc import IntegrityError
 
 from ceraon.constants import Errors, Success
 from ceraon.errors import (BadRequest, Conflict, Forbidden, NotFound,
-                           PreconditionRequired)
+                           PreconditionRequired, TransactionVendorError)
 from ceraon.models.meals import Meal, UserMeal
+from ceraon.models.transactions import Transaction
 from ceraon.utils import RESTBlueprint, friendly_arg_get
 
 from .schema import MealSchema
@@ -58,7 +59,7 @@ def find_meal(uid):
           id: Meal
           properties:
             id:
-             type: integer
+             type: string
              description: the meal's UUID as a string
             name:
              type: string
@@ -70,6 +71,10 @@ def find_meal(uid):
              type: number
              format: float
              description: the cost of the meal
+            scheduled_for:
+             type: string
+             format: date-time
+             description: the date time that the meal is scheduled for
             host:
              schema:
                id: User
@@ -87,7 +92,6 @@ def find_meal(uid):
                    format: date-time
                  id:
                    type: integer
-             description: the last name of the user
     parameters:
       - in: path
         name: uid
@@ -178,7 +182,43 @@ def list_meals():
 @blueprint.create()
 @login_required
 def create_meal():
-    """Create a new meal."""
+    """Create a new meal.
+
+    ---
+    tags:
+      - meals
+    parameters:
+      - in: body
+        name: body
+        schema:
+          id: Meal
+          properties:
+            name:
+             type: string
+             description: the name of the meal
+            description:
+             type: string
+             description: the description of the meal
+            price:
+             type: number
+             format: float
+             description: the cost of the meal
+            scheduled_for:
+             type: string
+             format: date-time
+             description: the date time that the meal is scheduled for
+    responses:
+      201:
+        description: Meal was successfully created
+        schema:
+          id: Meal
+      401:
+        description: The user is not authenticated
+      422:
+        description: The data failed validation
+      428:
+        description: The current user has not added their address
+    """
     if current_user.location is None:
         raise PreconditionRequired(Errors.LOCATION_NOT_CREATED_YET)
     meal_data = MEAL_SCHEMA.load(request.json).data
@@ -190,7 +230,35 @@ def create_meal():
 @blueprint.flexible_route('/<string:uid>/reservation', methods=['POST'])
 @login_required
 def join_meal(uid):
-    """Join a meal."""
+    """Join a meal.
+
+    ---
+    tags:
+     - reservations
+    parameters:
+      - in: path
+        name: uid
+        description: The meal's id
+        required: true
+      - in: body
+        name: stripe_token
+        description: The stripe token used to make a charge. This should only
+            be used if the used doesn't have payment info saved.
+    responses:
+      201:
+        description: Meal reservation successfully cancelled
+        schema:
+          id: Meal
+      400:
+        description: The meal already happened or the meal is hosted by the
+            current user
+      401:
+        description: The user is not authenticated
+      404:
+        description: The meal could not be found
+      409:
+        description: The current user already joined the meal
+    """
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
@@ -198,12 +266,32 @@ def join_meal(uid):
         raise BadRequest(Errors.MEAL_ALREADY_HAPPENED)
     if meal.host.id == current_user.id:
         raise BadRequest(Errors.JOIN_HOSTED_MEAL)
-    # TODO: do some validation here for payment processing
     try:
         UserMeal.create(meal=meal, user=current_user)
     except IntegrityError:
         # an integrity error means that the user already joined the meal
         raise Conflict(Errors.MEAL_ALREADY_JOINED)
+    else:
+        transaction = Transaction.create(
+            meal_id=meal.id, payer_id=current_user.id, payee_id=meal.host.id,
+            amount=meal.price)
+        if transaction.payer_has_stripe_source():
+            # user has told us to save payment info, so we have their card on
+            # file
+            if not transaction.charge():
+                raise TransactionVendorError(Errors.TRANSACTION_CHARGE_FAILED)
+        else:
+            # user told us not to save the card, so we need to make a one-time
+            # charge
+            req_json = request.json
+            if req_json is None:
+                raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
+            else:
+                token = req_json.get('stripe_token')
+                if token is None:
+                    raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
+                else:
+                    transaction.charge(transaction_token=token)
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_WAS_JOINED), 201
 
@@ -211,7 +299,32 @@ def join_meal(uid):
 @blueprint.flexible_route('/<string:uid>/reservation', methods=['DELETE'])
 @login_required
 def leave_meal(uid):
-    """Leave a meal."""
+    """Leave a meal.
+
+    This will cancel a transaction and begin a refund process.
+
+    ---
+    tags:
+     - reservations
+    parameters:
+      - in: path
+        name: uid
+        description: The meal's id
+        required: true
+    responses:
+      200:
+        description: Meal reservation successfully cancelled
+        schema:
+          id: Meal
+      400:
+        description: The meal has already taken place
+      401:
+        description: The user is not authenticated
+      404:
+        description: The meal could not be found
+      428:
+        description: The current user has not joined the meal
+    """
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
@@ -221,29 +334,127 @@ def leave_meal(uid):
     if um is None:
         raise PreconditionRequired(Errors.MEAL_NOT_JOINED)
     um.delete()
-    return jsonify(data=None, message=Success.MEAL_WAS_LEFT), 204
+    transaction = Transaction.query.filter_by(meal_id=meal.id,
+                                              payer_id=current_user.id).first()
+    if transaction:
+        transaction.cancel()
+    return jsonify(data=None, message=Success.MEAL_WAS_LEFT), 200
 
 
 @blueprint.update()
 @login_required
 def update_meal(uid):
-    """Update a meal."""
+    """Update a meal.
+
+    ---
+    tags:
+      - meals
+    parameters:
+      - in: body
+        name: body
+        schema:
+          id: Meal
+          properties:
+            name:
+             type: string
+             description: the name of the meal
+            description:
+             type: string
+             description: the description of the meal
+            price:
+             type: number
+             format: float
+             description: the cost of the meal
+            scheduled_for:
+             type: string
+             format: date-time
+             description: the date time that the meal is scheduled for
+    responses:
+      200:
+        description: Meal was successfully updated
+        schema:
+          id: Meal
+      401:
+        description: The user is not authenticated
+      403:
+        description: The meal does not belong to the current user
+      404:
+        description: The meal could not be found
+      422:
+        description: The data failed validation
+      428:
+        description: The current user has not added their address
+    """
     return jsonify(data=update_or_replace_meal(uid, request.json, False),
-                   message=Success.MEAL_UPDATED), 202
+                   message=Success.MEAL_UPDATED), 200
 
 
 @blueprint.replace()
 @login_required
 def replace_meal(uid):
-    """Replace a meal."""
+    """Replace a meal.
+
+    ---
+    tags:
+      - meals
+    parameters:
+      - in: body
+        name: body
+        schema:
+          id: Meal
+          properties:
+            name:
+             type: string
+             description: the name of the meal
+            description:
+             type: string
+             description: the description of the meal
+            price:
+             type: number
+             format: float
+             description: the cost of the meal
+            scheduled_for:
+             type: string
+             format: date-time
+             description: the date time that the meal is scheduled for
+    responses:
+      200:
+        description: Meal was successfully replaced
+        schema:
+          id: Meal
+      401:
+        description: The user is not authenticated
+      403:
+        description: The meal does not belong to the current user
+      404:
+        description: The meal could not be found
+      422:
+        description: The data failed validation
+      428:
+        description: The current user has not added their address
+    """
     return jsonify(data=update_or_replace_meal(uid, request.json, True),
-                   message=Success.MEAL_UPDATED), 202
+                   message=Success.MEAL_UPDATED), 200
 
 
 @blueprint.destroy()
 @login_required
 def destroy_meal(uid):
-    """Destroy a meal."""
+    """Destroy a meal.
+
+    ---
+    tags:
+      - meals
+    responses:
+      204:
+        description: Meal was successfully deleted
+      401:
+        description: The user is not authenticated
+      403:
+        description: The meal does not belong to the current user
+      404:
+        description: The meal could not be found
+    """
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
@@ -259,10 +470,27 @@ def destroy_meal(uid):
 def get_user_meals(role):
     """Get a user's meals based on their role in the meal.
 
-    :param role string: `role` can be either: 'guest', or 'host'
+    a role of "guest" will return all the meals that the user has joined.
+    a role of "host" will return all the meals that the user is hosting.
 
-    a `role` of "guest" will return all the meals that the user has joined.
-    a `role` of "host" will return all the meals that the user is hosting.
+    ---
+    tags:
+      - meals
+    parameters:
+      - in: path
+        name: role
+        enum:
+          - host
+          - guest
+        required: true
+        description: the user's role in relation to the meals
+    responses:
+      200:
+        description: Meals were successfully queried
+      400:
+        description: A bad "role" parameter was supplied
+      401:
+        description: The user is not authenticated
     """
     valid_roles = set(['guest', 'host'])
     if role not in valid_roles:

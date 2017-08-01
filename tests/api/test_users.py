@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 """Test the views at /api/v1/users."""
+from unittest.mock import patch
 
 import pytest
 from flask import url_for
 
-from ceraon.user.models import User
 from tests.utils import BaseViewTest
 
 
@@ -84,7 +84,7 @@ class TestUpdateMe(BaseViewTest):
         """Test that a user can update their info."""
         self.login(user, testapp)
         res = testapp.patch_json(self.base_url, self.update_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert user.first_name == self.update_data['first_name']
         assert user.last_name == self.update_data['last_name']
         assert user.address == self.update_data['address']
@@ -94,6 +94,49 @@ class TestUpdateMe(BaseViewTest):
         """Test that a user's new password works."""
         self.login(user, testapp)
         res = testapp.patch_json(self.base_url, self.update_pw_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         testapp.get(url_for('public.logout')).follow()
         self.login(user, testapp, self.update_pw_data['password'])
+
+
+@pytest.mark.usefixtures('db')
+class TestUpdatePaymentInfo(BaseViewTest):
+    """Test PUT/PATCH/POST /api/v1/users/me/payment-info endpoint."""
+
+    base_url = '/api/v1/users/me/payment-info'
+
+    methods = ['post_json', 'put_json', 'patch_json']
+
+    @pytest.mark.parametrize('method', methods)
+    def test_unauthenticated(self, testapp, method):
+        """Test that unauthenticated returns 401."""
+        func = getattr(testapp, method)
+        res = func(self.base_url, status=401)
+        assert res.status_code == 401
+
+    @pytest.mark.parametrize('method', methods)
+    def test_no_stripe_token(self, testapp, user, method):
+        """Test that passing no stripe_token returns 400."""
+        func = getattr(testapp, method)
+        self.login(user, testapp)
+        res = func(self.base_url, status=400)
+        assert res.status_code == 400
+
+    @pytest.mark.parametrize('method', methods)
+    @patch('ceraon.api.v1.users.api.Transaction')
+    def test_stripe_failure(self, trans_mock, testapp, user, method):
+        """Test that a stripe failure returns 500."""
+        trans_mock.set_stripe_source_on_user.return_value = False
+        func = getattr(testapp, method)
+        self.login(user, testapp)
+        res = func(self.base_url, {'stripe_token': 'some-token'}, status=500)
+        assert res.status_code == 500
+
+    @pytest.mark.parametrize('method', methods)
+    @patch('ceraon.api.v1.users.api.Transaction')
+    def test_is_works_ok(self, trans_mock, testapp, user, method):
+        """Test that it returns ok if it works fine."""
+        func = getattr(testapp, method)
+        self.login(user, testapp)
+        res = func(self.base_url, {'stripe_token': 'some-token'})
+        assert res.status_code == 200

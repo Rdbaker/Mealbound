@@ -4,7 +4,8 @@ from flask import jsonify, request
 from flask_login import current_user, login_required
 
 from ceraon.constants import Errors, Success
-from ceraon.errors import BadRequest, NotFound
+from ceraon.errors import BadRequest, NotFound, TransactionVendorError
+from ceraon.models.transactions import Transaction
 from ceraon.user.models import User
 from ceraon.utils import RESTBlueprint
 
@@ -64,6 +65,40 @@ def get_me():
     return jsonify(data=PRIVATE_USER_SCHEMA.dump(current_user).data)
 
 
+@blueprint.flexible_route('/me/payment-info', methods=['POST', 'PUT', 'PATCH'])
+@login_required
+def update_my_payment_info():
+    """Update the currently logged-in user's payment info.
+
+    Since we use stripe, this will currently update the users's
+    stripe_customer_id
+    ---
+    tags:
+      - users
+    parameters:
+      - in: body
+        name: body
+        schema:
+          properties:
+            stripe_token:
+              type: string
+              description: the token returned from strip for payment info
+    responses:
+      200:
+        description: User payment info updated
+      400:
+        description: No stripe_token was supplied
+      500:
+        description: Something went wront when talking to stripe
+    """
+    token = request.json.get('stripe_token')
+    if not token:
+        raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
+    if not Transaction.set_stripe_source_on_user(current_user, token):
+        raise TransactionVendorError(Errors.TRANSACTION_VENDOR_CONTACT_FAILED)
+    return jsonify(data=None, message=Success.PAYMENT_INFO_UPDATED), 200
+
+
 @blueprint.flexible_route('/me', methods=['PATCH'])
 @login_required
 def update_me():
@@ -94,7 +129,7 @@ def update_me():
               type: string
               description: the confirmation for the user's new password
     responses:
-      202:
+      200:
         description: User data updated
         schema:
           id: User
@@ -113,7 +148,7 @@ def update_me():
             current_user.set_password(request.json.get('password'))
     current_user.update(**user_data)
     return jsonify(data=PRIVATE_USER_SCHEMA.dump(current_user).data,
-                   message=Success.PROFILE_UPDATED), 202
+                   message=Success.PROFILE_UPDATED), 200
 
 
 @blueprint.find()

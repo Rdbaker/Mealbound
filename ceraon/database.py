@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Database module, including the SQLAlchemy database object and DB-related \
-utilities.
-"""
+"""Database module, including the database object and DB-related utilities."""
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
-from werkzeug.exceptions import BadRequest
 
 from .compat import basestring
 from .constants import Errors
+from .errors import BadRequest
 from .extensions import db
 
 # Alias common SQLAlchemy names

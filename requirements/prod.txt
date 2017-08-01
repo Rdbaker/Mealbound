@@ -56,3 +56,9 @@ Flask-SSLify==0.1.5
 
 # documentation for the API
 flask-swagger==0.2.13
+
+# error reporting for sentry
+raven==6.1.0
+
+# payment processing
+stripe==1.62.0

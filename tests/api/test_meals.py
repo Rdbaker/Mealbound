@@ -4,6 +4,7 @@
 import uuid
 from datetime import datetime as dt
 from datetime import timedelta as td
+from unittest.mock import patch
 
 import pytest
 
@@ -155,7 +156,7 @@ class TestUpdateMeal(BaseViewTest):
         self.login(host, testapp)
         res = testapp.patch_json(self.base_url.format(meal.id),
                                  self.valid_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert meal.price == self.valid_data['price']
 
     def test_partial_update_works(self, testapp, host, hosted_location, meal):
@@ -163,7 +164,7 @@ class TestUpdateMeal(BaseViewTest):
         self.login(host, testapp)
         res = testapp.patch_json(self.base_url.format(meal.id),
                                  {'price': 4.00})
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert meal.price == 4.00
 
 
@@ -207,7 +208,7 @@ class TestReplaceMeal(BaseViewTest):
         self.login(host, testapp)
         res = testapp.put_json(self.base_url.format(meal.id),
                                self.valid_data)
-        assert res.status_code == 202
+        assert res.status_code == 200
         assert meal.price == self.valid_data['price']
 
     def test_partial_replace_fails(self, testapp, host, hosted_location, meal):
@@ -268,10 +269,22 @@ class TestJoinMeal(BaseViewTest):
         res = testapp.post(self.base_url.format(uuid.uuid4()), status=404)
         assert res.status_code == 404
 
-    def test_join_meal(self, testapp, user, meal):
-        """Test that a user can join a meal."""
+    @patch('ceraon.models.transactions.stripe')
+    def test_join_meal_card_on_file(self, stripe_mock, testapp, user, meal):
+        """Test that a user can join a meal with a card on file."""
+        user.stripe_customer_id = 'customer-id'
         self.login(user, testapp)
         res = testapp.post(self.base_url.format(meal.id))
+        assert res.status_code == 201
+        new_um = UserMeal.query.get((user.id, meal.id))
+        assert new_um is not None
+
+    @patch('ceraon.models.transactions.stripe')
+    def test_join_meal_no_card_on_file(self, stripe_mock, testapp, user, meal):
+        """Test that a user can join a meal without having a card on file."""
+        self.login(user, testapp)
+        res = testapp.post_json(self.base_url.format(meal.id),
+                                {'stripe_token': 'some-token'})
         assert res.status_code == 201
         new_um = UserMeal.query.get((user.id, meal.id))
         assert new_um is not None
@@ -310,7 +323,8 @@ class TestLeaveMeal(BaseViewTest):
         """Test that a user can leave a meal."""
         self.login(guest, testapp)
         res = testapp.delete(self.base_url.format(meal.id))
-        assert res.status_code == 204
+        assert res.status_code == 200
+        assert res.json['data'] is None
         new_um = UserMeal.query.get((guest.id, meal.id))
         assert new_um is None
 
