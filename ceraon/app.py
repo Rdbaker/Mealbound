@@ -5,6 +5,7 @@ import os
 
 import stripe
 from flask import Flask, g, jsonify, render_template
+from flask_login import current_user
 from flask_sslify import SSLify
 from marshmallow.exceptions import ValidationError
 
@@ -52,6 +53,11 @@ def create_app(config_object=ProdConfig):
         # runs before the context_processor. If that's ever False, we'll have
         # to change how this works.
         assign_requested_entity()
+
+    @app.before_request
+    def set_sentry_user_context():
+        """Add the user to the sentry context."""
+        sentry.user_context({'id': getattr(current_user, 'id', None)})
 
     @app.route("/swagger/spec")
     def spec():
