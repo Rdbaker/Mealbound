@@ -80,3 +80,29 @@ class TestTransaction:
         stripe_mock.Customer.create.side_effect = RuntimeError('stripe error')
         assert Transaction.set_stripe_source_on_user(
             user=user, token='some token') is False
+
+    @pytest.mark.parametrize('amount,expected', [
+        (5.00, 0.5),
+        (5.05, 0.505),
+        (4.00, 0.5),
+        (90.00, 9),
+        (42.10, 4.21),
+        (2.50, 0.5)
+    ])
+    def test_operational_overhead_cut(self, transaction, amount, expected):
+        """Test that the operational_overhead_cost is as expected."""
+        transaction.amount = amount
+        assert transaction.operational_overhead_cut == expected
+
+    @pytest.mark.parametrize('amount,expected', [
+        (5.00, 4.5),
+        (5.05, 4.545),
+        (4.00, 3.5),
+        (90.00, 81),
+        (42.10, 37.89),
+        (2.50, 2)
+    ])
+    def test_takehome_amount(self, transaction, amount, expected):
+        """Test that the takehome_amount is as expected."""
+        transaction.amount = amount
+        assert transaction.takehome_amount == expected

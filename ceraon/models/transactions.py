@@ -40,6 +40,17 @@ class Transaction(IDModel):
     # NOTE: stripe shows the "amount" of a charge in cents
     stripe_payload = Column(JSONB)
 
+    @property
+    def takehome_amount(self):
+        """The amount for this transaction minus operational overhead."""
+        return self.amount - self.operational_overhead_cut
+
+    @property
+    def operational_overhead_cut(self):
+        """The amount of money we need to take to run our servers."""
+        # We take 10% of the transaction, or at least $0.50
+        return max(0.50, self.amount * 0.1)
+
     def charge(self, transaction_token=None):
         """Run the charge for the transaction.
 
