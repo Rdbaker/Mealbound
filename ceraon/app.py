@@ -5,11 +5,13 @@ import os
 
 import stripe
 from flask import Flask, g, jsonify, render_template
+from flask_admin import Admin
 from flask_login import current_user
 from flask_sslify import SSLify
 from marshmallow.exceptions import ValidationError
 
 from ceraon import commands, public, user
+from ceraon.admin import AdminModelView
 from ceraon.assets import assets
 from ceraon.eager_loader import assign_requested_entity
 from ceraon.errors import APIException
@@ -33,11 +35,12 @@ def create_app(config_object=ProdConfig):
     """
     app = Flask(__name__.split('.')[0])
     app.config.from_object(config_object)
-    register_extensions(app)
     register_blueprints(app)
+    register_extensions(app)
     register_errorhandlers(app)
     register_shellcontext(app)
     register_commands(app)
+    register_admin(app)
 
     @app.context_processor
     def inject_fb_app_ID():
@@ -153,6 +156,30 @@ def register_shellcontext(app):
             'User': user.models.User}
 
     app.shell_context_processor(shell_context)
+
+
+def register_admin(app):
+    """Register the admin panel."""
+    admin = Admin(app, name='Mealbound Admin Panel',
+                  template_mode='bootstrap3')
+
+    admin.index_view.is_accessible = AdminModelView._is_accessible
+    admin.index_view.inaccessible_callback = \
+        AdminModelView._inaccessible_callback
+
+    for model in [
+        locations_models.Location,
+        meals_models.Meal,
+        meals_models.UserMeal,
+        reviews_models.Review,
+        transactions_models.Transaction
+    ]:
+        admin.add_view(AdminModelView(
+            model,
+            db.session,
+            endpoint='admin-{}'.format(model.__name__.lower())))
+
+    return None
 
 
 def register_commands(app):
