@@ -1,57 +1,46 @@
 import * as React from 'react';
-import {MealTime, mealTimeToString} from '../State/Meal/Filters/MealTime';
+import {MealTime} from '../State/Meal/Filters/MealTime';
 import { Button, Dropdown } from 'semantic-ui-react';
 
 interface MealSearchDropdownProps extends React.Props<MealSearchDropdown> {
-  mealTimeOptions: MealTime[];
   onSearchClicked: (selectedMealTime: MealTime) => void;
-  showSubmitButton?: boolean;
+  dropdownHeader: string;
 }
 
-interface MealSearchDropdownState {
-  selectedMealTime: MealTime;
-}
-
-export default class MealSearchDropdown extends React.Component<MealSearchDropdownProps, MealSearchDropdownState> {
+export default class MealSearchDropdown extends React.Component<MealSearchDropdownProps, undefined> {
+  private _dropdown: HTMLDivElement;
   constructor() {
     super();
-    this.state = {selectedMealTime: MealTime.Any};
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onSelectionChanged = this.onSelectionChanged.bind(this);
+    this.onBreakfast = this.onBreakfast.bind(this);
+    this.onLunch = this.onLunch.bind(this);
+    this.onDinner = this.onDinner.bind(this);
+
   }
 
-  getDropdownOptions() : object[] {
-    return this.props.mealTimeOptions.map((option: MealTime) => {
-      return { text: mealTimeToString(option), value: option }
-    });
+  onBreakfast() {
+    this.props.onSearchClicked(MealTime.Breakfast);
   }
 
-  onSelectionChanged(event: any, data: any) {
-    let mealTime = data.value;
-    this.setState({selectedMealTime: mealTime});
-
-    if (!this.props.showSubmitButton) {
-      this.props.onSearchClicked(mealTime);
-    }
+  onLunch() {
+    this.props.onSearchClicked(MealTime.Lunch);
   }
 
-  onSubmit() {
-    this.props.onSearchClicked(this.state.selectedMealTime);
+  onDinner() {
+    this.props.onSearchClicked(MealTime.Dinner);
   }
 
   render() {
-    let submitButton = <div/>
-
-    if (this.props.showSubmitButton) {
-      submitButton = <Button primary onClick={this.onSubmit}>Go</Button>
-    }
-
     return (
       <span>
       {' '}
-      <Dropdown inline options={this.getDropdownOptions()} defaultValue={this.props.mealTimeOptions[0]} onChange={this.onSelectionChanged}/>
+      <Dropdown inline text={this.props.dropdownHeader}>
+        <Dropdown.Menu>
+          <Dropdown.Item text='Breakfast' onClick={this.onBreakfast}/>
+          <Dropdown.Item text='Lunch' onClick={this.onLunch}/>
+          <Dropdown.Item text='Dinner' onClick={this.onDinner}/>
+        </Dropdown.Menu>
+      </Dropdown>
       {' '}
-      {submitButton}
       </span>
     )
   }

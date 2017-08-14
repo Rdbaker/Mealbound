@@ -47,6 +47,7 @@ def create_app(config_object=ProdConfig):
         return dict(
             fb_app_id=app.config['FB_APP_ID'],
             embed_entity=json.dumps(g.embed_entity),
+            current_user_json=json.dumps(g.current_user_json),
         )
 
     @app.before_request

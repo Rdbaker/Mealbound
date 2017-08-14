@@ -19,7 +19,7 @@ def load_user(user_id):
     return user
 
 
-@blueprint.route('/', methods=['GET', 'POST'])
+@blueprint.route('/v1/', methods=['GET', 'POST'])
 def home():
     """Home page."""
     form = LoginForm(request.form)
@@ -40,15 +40,16 @@ def login():
     """Login."""
     form = LoginForm(request.form)
     if current_user.is_authenticated:
-        redirect_url = request.args.get('next') or url_for('user.me')
+        redirect_url = request.args.get('next') or \
+            url_for('public.single_page_app')
         return redirect(redirect_url)
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():
             login_user(form.user)
             flash('You are logged in.', 'success')
-            redirect_url = request.args.get('next') or url_for(
-                'user.me', embed_class='user', embed_id=form.user.id)
+            redirect_url = request.args.get('next') or \
+                url_for('public.single_page_app')
             return redirect(redirect_url)
         else:
             flash_errors(form)
@@ -61,7 +62,7 @@ def logout():
     """Logout."""
     logout_user()
     flash('You are logged out.', 'info')
-    return redirect(url_for('public.home'))
+    return redirect(url_for('public.single_page_app'))
 
 
 @blueprint.route('/register/', methods=['GET', 'POST'], strict_slashes=False)
@@ -69,7 +70,8 @@ def register():
     """Register new user."""
     form = RegisterForm(request.form)
     if current_user.is_authenticated:
-        redirect_url = request.args.get('next') or url_for('user.me')
+        redirect_url = request.args.get('next') or \
+            url_for('public.single_page_app')
         return redirect(redirect_url)
     if form.validate_on_submit():
         user = User.create(email=form.email.data, password=form.password.data,
@@ -92,6 +94,6 @@ def about():
     return render_template('public/about.html', form=form)
 
 
-@blueprint.route('/v2/')
-def v2():
+@blueprint.route('/')
+def single_page_app():
     return render_template('AppHost.html')

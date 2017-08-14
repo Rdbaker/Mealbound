@@ -2,8 +2,10 @@ interface LoadingPageState {
   loadingStatusMessage: string;
 }
 
-export const DEFAULT_LOADING_PAGE_STATE: LoadingPageState = {
-  loadingStatusMessage: '',
-};
+export function defaultLoadingPageState() : LoadingPageState {
+  return {
+    loadingStatusMessage: '',
+  };
+}
 
 export default LoadingPageState;

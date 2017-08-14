@@ -23,4 +23,4 @@ def create_fb_session():
         raise Forbidden('email is required')
     login_user(user, force=True)
 
-    return url_for('user.me')
+    return url_for('public.single_page_app')

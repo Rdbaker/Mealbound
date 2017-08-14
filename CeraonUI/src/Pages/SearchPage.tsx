@@ -1,96 +1,167 @@
 import * as React from 'react';
 
-import { Menu, Input, Container, Checkbox } from 'semantic-ui-react';
+import { Menu, Container, Checkbox, Icon } from 'semantic-ui-react';
 import SearchPageState from '../State/Pages/SearchPageState';
-import MealSearchFilter, { MealSearchFilterType } from '../State/Meal/Filters/MealSearchFilter';
-
-import { MealTime, MealTimeFilter } from '../State/Meal/Filters/MealTime';
+import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
+import { MealTime } from '../State/Meal/Filters/MealTime';
 import CeraonDispatcher from '../Store/CeraonDispatcher';
-import CreateMealSearchAction, {MealSearchActionType} from '../Actions/MealSearchAction';
-
-import MealCard from '../Components/MealCard';
+import * as Actions from '../Actions/Index';
+import LoadingSpinner from '../Components/LoadingSpinner';
+import Meal from '../State/Meal/Meal';
+import MealCard, { MealCardMode } from '../Components/MealCard';
 
 export interface SearchPageProps extends SearchPageState, React.Props<SearchPage> {
 
 }
 
-export default class SearchPage extends React.Component<SearchPageProps, {}> {
+interface SearchPageInternalState {
+  searchValue: string;
+}
+
+export default class SearchPage extends React.Component<SearchPageProps, SearchPageInternalState> {
   constructor() {
     super();
     this.onMealTimeClicked = this.onMealTimeClicked.bind(this);
+
+    this.onSearchTextInput = this.onSearchTextInput.bind(this);
+    this.onSearchTextEnter = this.onSearchTextEnter.bind(this);
+
+    this.removeTextFilter = this.removeTextFilter.bind(this);
+
+    this.viewMeal = this.viewMeal.bind(this);
+
+    this.state = {searchValue: ''};
+  }
+
+  viewMeal(id: string) {
+    CeraonDispatcher(Actions.createViewMealAction(id));
+  }
+
+  removeTextFilter(filter: string) {
+    let newFilters = Object.assign({}, this.props.filters);
+    let index = newFilters.textFilter.findIndex((txtFilter) => {
+      return txtFilter == filter;
+    });
+
+    if (index > -1) {
+      newFilters.textFilter.splice(index, 1);
+    }
+
+    CeraonDispatcher(Actions.createMealSearchAction(newFilters));
+  }
+
+  onSearchTextEnter(event: any) {
+    let searchValue = this.state.searchValue;
+    if (searchValue.length > 0 && event.keyCode === 13) {
+      this.setState({searchValue: ''});
+      let newFilters = Object.assign({}, this.props.filters);
+      newFilters.textFilter.push(searchValue);
+
+      CeraonDispatcher(Actions.createMealSearchAction(newFilters));
+    }
+  }
+
+  onSearchTextInput(event: any) {
+    let searchValue = event.target.value;
+    this.setState({searchValue: searchValue});
   }
 
   onMealTimeClicked(event: any, data: any) {
-    CeraonDispatcher(CreateMealSearchAction(data.checked ? 
-      MealSearchActionType.AddFilter 
-      : MealSearchActionType.RemoveFilter,
-      new MealTimeFilter(data.value as MealTime)));
+    let newFilters = Object.assign({}, this.props.filters);
+    newFilters.mealTime = data.value as MealTime;
+    CeraonDispatcher(Actions.createMealSearchAction(newFilters));
   }
 
   render() {
-    let isBreakfastChecked = false;
-    let isLunchChecked = false;
-    let isDinnerChecked = false;
+    let textFilters = [];
 
-    for (let filter of this.props.filters) {
-      if (filter.getFilterType() == MealSearchFilterType.Time) {
-        switch((filter as MealTimeFilter).mealTime) {
-          case MealTime.Any:
-            isBreakfastChecked = true;
-            isLunchChecked = true;
-            isDinnerChecked = true;
-            break;
-          case MealTime.Breakfast:
-            isBreakfastChecked = true;
-            break;
-          case MealTime.Lunch:
-            isLunchChecked = true;
-            break;
-          case MealTime.Dinner:
-            isDinnerChecked = true;
-            break;
-        }
-      }
+    let i = 0;
+    for (let filter of this.props.filters.textFilter) {
+      textFilters.push((
+        <Menu.Item key={i++}>
+          <a onClick={()=>this.removeTextFilter(filter)}><Icon name='remove'/></a>
+          {filter}
+        </Menu.Item>
+      ));
     }
 
     let resultCards = [];
 
     for (let result of this.props.results) {
-      resultCards.push(<MealCard meal={result}/>)
+      resultCards.push(
+        <MealCard key={result.id}
+          meal={result}
+          mealCardMode={MealCardMode.Full}
+          onClick={(result: Meal)=>{ this.viewMeal(result.id)}
+          }/>
+      );
     }
 
     return (
-      <Container className='search-page-wrapper'>
-        <Menu className='search-page-filters' fixed='left' vertical>
-          <Menu.Item>
-            <Input placeholder='Filter...'/>
-          </Menu.Item>
-          <Menu.Item>
-            <Menu.Header>Meal Time</Menu.Header>
+      <div className='ui stackable grid'>
+        <div className='column search-page-filters'>
+          <div className='ui menu vertical stackable left'>
             <Menu.Item>
-              <Checkbox label='Breakfast' defaultChecked={isBreakfastChecked} onChange={this.onMealTimeClicked} value={MealTime.Breakfast}/>
+              <div className="ui input">
+                <input
+                  className='prompt'
+                  type='text'
+                  placeholder='Filter...'
+                  value={this.state.searchValue}
+                  onChange={this.onSearchTextInput}
+                  onKeyUp={this.onSearchTextEnter}/>
+              </div>
+              {textFilters}
             </Menu.Item>
             <Menu.Item>
-              <Checkbox label='Lunch' defaultChecked={isLunchChecked} onChange={this.onMealTimeClicked} value={MealTime.Lunch}/>
+              <Menu.Header>Meal Time</Menu.Header>
+              <Menu.Item>
+                <Checkbox radio name='mealTime'
+                  label='Breakfast'
+                  onChange={this.onMealTimeClicked}
+                  checked={this.props.filters.mealTime == MealTime.Breakfast}
+                  value={MealTime.Breakfast}/>
+              </Menu.Item>
+              <Menu.Item>
+                <Checkbox radio name='mealTime'
+                  label='Lunch'
+                  onChange={this.onMealTimeClicked}
+                  checked={this.props.filters.mealTime == MealTime.Lunch}
+                  value={MealTime.Lunch}/>
+              </Menu.Item>
+              <Menu.Item>
+                <Checkbox radio name='mealTime'
+                  label='Dinner'
+                  onChange={this.onMealTimeClicked}
+                  checked={this.props.filters.mealTime == MealTime.Dinner}
+                  value={MealTime.Dinner}/>
+              </Menu.Item>
+              <Menu.Item>
+                <Checkbox radio name='mealTime'
+                  label='Any Time'
+                  onChange={this.onMealTimeClicked}
+                  checked={this.props.filters.mealTime == MealTime.Any}
+                  value={MealTime.Any}/>
+              </Menu.Item>
             </Menu.Item>
             <Menu.Item>
-              <Checkbox label='Dinner' defaultChecked={isDinnerChecked} onChange={this.onMealTimeClicked} value={MealTime.Dinner}/>
+              <Menu.Header>Meal Location</Menu.Header>
             </Menu.Item>
-          </Menu.Item>
-          <Menu.Item>
-            <Menu.Header>Meal Location</Menu.Header>
-          </Menu.Item>
-          <Menu.Item>
-            <Menu.Header>Food Type</Menu.Header>
-          </Menu.Item>
-          <Menu.Item>
-            <Menu.Header>Price</Menu.Header>
-          </Menu.Item>
-        </Menu>
-        <div className='search-results-wrapper'>
-          {resultCards}
+            <Menu.Item>
+              <Menu.Header>Food Type</Menu.Header>
+            </Menu.Item>
+            <Menu.Item>
+              <Menu.Header>Price</Menu.Header>
+            </Menu.Item>
+          </div>
         </div>
-      </Container>
+        <div className='column search-results-wrapper'>
+          {this.props.isLoading ? 
+            <LoadingSpinner loadingStatusMessage={'Searching through thousands of meals..'}/>
+            : resultCards
+          }
+        </div>
+      </div>
     )
   }
 }

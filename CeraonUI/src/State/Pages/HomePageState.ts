@@ -1,16 +1,26 @@
-import { MealTime } from '../Meal/Filters/MealTime';
-
+import Meal from '../Meal/Meal';
 
 interface HomePageState {
   headerMessage: string;
   showMealSearchDropdown: boolean;
-  searchMealTimeOptions: MealTime[];
+  mealSearchDropdownText: string;
+
+  myJoinedMeals: Meal[];
+  myHostedMeals: Meal[];
+  showMyMealInfo: boolean;
+  myMealInfoLoading: boolean;
 }
 
-export const DEFAULT_HOME_PAGE_STATE: HomePageState = {
+export function defaultHomePageState() : HomePageState {
+  return {
   headerMessage: 'Find a place nearby to eat',
   showMealSearchDropdown: true,
-  searchMealTimeOptions: [MealTime.Any, MealTime.Breakfast, MealTime.Lunch, MealTime.Dinner],
-};
+  mealSearchDropdownText: 'Any Time',
+  myJoinedMeals: [],
+  myHostedMeals: [],
+  myMealInfoLoading: false,
+  showMyMealInfo: false,
+  };
+}
 
 export default HomePageState;

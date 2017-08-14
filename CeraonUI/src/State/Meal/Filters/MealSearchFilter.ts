@@ -1,18 +1,8 @@
+import MealTime from './MealTime';
 
-
-export enum MealSearchFilterType {
-  Time,
+interface MealSearchFilter {
+  mealTime: MealTime;
+  textFilter: string[];
 }
 
-export default abstract class MealSearchFilter {
-  abstract getFriendlyDescription(): string;
-  abstract getFilterType(): MealSearchFilterType;
-  
-  equals(otherFilter: MealSearchFilter): boolean {
-    if (otherFilter.getFilterType() !== this.getFilterType()) {
-      return false;
-    }
-
-    return otherFilter.getFriendlyDescription() === this.getFriendlyDescription();
-  }
-}
+export default MealSearchFilter;

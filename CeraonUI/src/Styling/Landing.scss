@@ -1,0 +1,87 @@
+.homepage-hero-module {
+    border-right: none;
+    border-left: none;
+    position: relative;
+    top: -55px;
+    left: -10%;
+    width: 120%;
+}
+
+.no-video .video-container video,
+.touch .video-container video {
+    display: none;
+}
+
+.no-video .video-container .poster,
+.touch .video-container .poster {
+    display: block !important;
+}
+
+.video-container {
+    position: relative;
+    bottom: 0%;
+    left: 0%;
+    height: 90%;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-container .poster img {
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+}
+
+.video-container .filter {
+    z-index: 100;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    width: 100%;
+    text-align: center;
+
+    .ui.divider.horizontal {
+      color: white;
+    }
+
+    .ui.inline.dropdown {
+      color: white;
+    }
+}
+
+.headline {
+  color: white;
+  font-size: 3em;
+  margin-top: 20%;
+  line-height: 40px;
+}
+
+.video-container video {
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+}
+
+.video-container video.fillWidth {
+    width: 100%;
+}
+
+.how-it-works {
+  margin-top: -50px;
+}
+
+.how-it-works .centered.header {
+  text-align: center;
+}
+
+.how-it-works .header-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.how-it-works .list {
+  margin-left: 10%;
+  font-size: 1.2em;
+}

@@ -1,5 +1,6 @@
 
 interface Location {
+  id: string;
   name: string;
   numDollarSigns: number;
   rating: number;

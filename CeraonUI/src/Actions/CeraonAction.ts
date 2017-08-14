@@ -1,6 +1,6 @@
 import * as Redux from 'redux';
 
-interface CeraonAction extends Redux.Action {
+export interface CeraonAction extends Redux.Action {
 
 }
 

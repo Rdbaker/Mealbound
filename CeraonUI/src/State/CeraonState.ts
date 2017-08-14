@@ -1,8 +1,14 @@
-import UserSessionInfo, { DEFAULT_USER_SESSION_INFO } from './Identity/UserSessionInfo';
-import NavigationBarState, { DEFAULT_NAVIGATION_BAR_STATE } from './NavigationBarState';
-import HomePageState, { DEFAULT_HOME_PAGE_STATE } from './Pages/HomePageState';
-import LoadingPageState, { DEFAULT_LOADING_PAGE_STATE } from './Pages/LoadingPageState';
-import SearchPageState, { DEFAULT_SEARCH_PAGE_STATE } from './Pages/SearchPageState';
+import UserSessionInfo, { defaultUserSessionInfo } from './Identity/UserSessionInfo';
+import NavigationBarState, { defaultNavigationBarState } from './NavigationBarState';
+import HomePageState, { defaultHomePageState } from './Pages/HomePageState';
+import LoadingPageState, { defaultLoadingPageState } from './Pages/LoadingPageState';
+import SearchPageState, { defaultSearchPageState } from './Pages/SearchPageState';
+import ViewMealPageState, { defaultViewMealPageState } from './Pages/ViewMealPageState';
+import EditMealPageState, { defaultEditMealPageState } from './Pages/EditMealPageState';
+import CreateMealPageState, { defaultCreateMealPageState } from './Pages/CreateMealPageState';
+import LandingPageState, { defaultLandingPageState } from './Pages/LandingPageState';
+import SettingsPageState, { defaultSettingsPageState } from './Pages/SettingsPageState';
+
 import CeraonPage from './CeraonPage';
 
 interface CeraonState {
@@ -11,16 +17,30 @@ interface CeraonState {
   loadingPageState: LoadingPageState;
   homePageState: HomePageState;
   searchPageState: SearchPageState;
+  createMealPageState: CreateMealPageState;
+  editMealPageState: EditMealPageState;
+  viewMealPageState: ViewMealPageState;
+  landingPageState: LandingPageState;
+  settingsPageState: SettingsPageState;
   activePage: CeraonPage;
+  pageTitle: string;
+  pageUrl: string;
 }
 
 export const DEFAULT_CERAON_STATE: CeraonState = {
-  userSessionInfo: DEFAULT_USER_SESSION_INFO,
-  navigationBarState: DEFAULT_NAVIGATION_BAR_STATE,
-  loadingPageState: DEFAULT_LOADING_PAGE_STATE,
-  homePageState: DEFAULT_HOME_PAGE_STATE,
-  searchPageState: DEFAULT_SEARCH_PAGE_STATE,
+  userSessionInfo: defaultUserSessionInfo(),
+  navigationBarState: defaultNavigationBarState(),
+  loadingPageState: defaultLoadingPageState(),
+  homePageState: defaultHomePageState(),
+  searchPageState: defaultSearchPageState(),
+  createMealPageState: defaultCreateMealPageState(),
+  viewMealPageState: defaultViewMealPageState(),
+  editMealPageState: defaultEditMealPageState(),
+  landingPageState: defaultLandingPageState(),
+  settingsPageState: defaultSettingsPageState(),
   activePage: CeraonPage.Home,
+  pageTitle: '',
+  pageUrl: '',
 };
 
 export default CeraonState;

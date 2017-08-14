@@ -1,23 +1,21 @@
 interface NavigationBarState {
   navigationTitle: string;
   showSearchBox: boolean;
-  showLoginUI: boolean;
-  showCreateAccountButton: boolean;
+  showLoginAndCreateAccountButton: boolean;
   showSettingsDropdown: boolean;
-  settingsOptions: any;
   showLoggedInText: boolean;
   loggedInText: string;
 }
 
-export const DEFAULT_NAVIGATION_BAR_STATE: NavigationBarState = {
-  navigationTitle: 'Ceraon',
-  showSearchBox: true,
-  showLoginUI: true,
-  showCreateAccountButton: true,
-  showSettingsDropdown: false,
-  settingsOptions: [],
-  showLoggedInText: false,
-  loggedInText:'',
-};
+export function defaultNavigationBarState(): NavigationBarState {
+  return {
+    navigationTitle: 'Mealbound',
+    showSearchBox: true,
+    showLoginAndCreateAccountButton: true,
+    showSettingsDropdown: false,
+    showLoggedInText: false,
+    loggedInText:'',
+  };
+}
 
 export default NavigationBarState;

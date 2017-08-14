@@ -18,11 +18,6 @@ js = Bundle(
     output='public/js/common.js'
 )
 
-assets = Environment()
-
-assets.register('js_all', js)
-assets.register('css_all', css)
-
 css_refactor = Bundle(
     'libs/CeraonUI/dist/css/Ceraon.css'
 )
@@ -31,5 +26,10 @@ js_refactor = Bundle(
     'libs/CeraonUI/dist/js/bundle.js'
 )
 
+
+assets = Environment()
+
+assets.register('js_all', js)
+assets.register('css_all', css)
 assets.register('refactor_js_all', js_refactor)
 assets.register('refactor_css_all', css_refactor)

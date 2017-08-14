@@ -267,7 +267,7 @@ def join_meal(uid):
     if meal.host.id == current_user.id:
         raise BadRequest(Errors.JOIN_HOSTED_MEAL)
     try:
-        UserMeal.create(meal=meal, user=current_user)
+        um = UserMeal.create(meal=meal, user=current_user)
     except IntegrityError:
         # an integrity error means that the user already joined the meal
         raise Conflict(Errors.MEAL_ALREADY_JOINED)
@@ -279,16 +279,19 @@ def join_meal(uid):
             # user has told us to save payment info, so we have their card on
             # file
             if not transaction.charge():
+                um.delete()
                 raise TransactionVendorError(Errors.TRANSACTION_CHARGE_FAILED)
         else:
             # user told us not to save the card, so we need to make a one-time
             # charge
             req_json = request.json
             if req_json is None:
+                um.delete()
                 raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
             else:
                 token = req_json.get('stripe_token')
                 if token is None:
+                    um.delete()
                     raise BadRequest(Errors.STRIPE_TOKEN_REQUIRED)
                 else:
                     transaction.charge(transaction_token=token)
@@ -338,7 +341,8 @@ def leave_meal(uid):
                                               payer_id=current_user.id).first()
     if transaction:
         transaction.cancel()
-    return jsonify(data=None, message=Success.MEAL_WAS_LEFT), 200
+    return jsonify(data=MEAL_SCHEMA.dump(meal).data,
+                   message=Success.MEAL_WAS_LEFT), 200
 
 
 @blueprint.update()

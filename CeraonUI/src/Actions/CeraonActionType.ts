@@ -1,8 +1,29 @@
 
-enum CeraonActionType {
+export enum CeraonActionType {
+  NotAuthorized = -2,
+  PageNotFound404 = -1,
+  LoadState = 0,
   Login = 1,
   MealSearch = 2,
   GoHome = 3,
+  ViewMeal = 4,
+  StartLoading = 5,
+  MealLoaded = 6,
+  SearchResultsLoaded = 7,
+  MyMealsLoaded = 8,
+  MealUpdated = 9,
+  UpdateMeal = 10,
+  CancelMeal = 11,
+  MealCancelled = 12,
+  Landing = 13,
+  GoToSettings = 14,
+  GoToCreateMeal = 15,
+  GoToEditMeal = 16,
+  CreateMeal = 17,
+  UpdateUser = 18,
+  UserUpdated = 19,
+  MealCreated = 20,
+  ToggleJoinMeal = 21,
 }
 
 export default CeraonActionType;
