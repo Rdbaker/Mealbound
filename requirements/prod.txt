@@ -62,3 +62,6 @@ raven==6.1.0
 
 # payment processing
 stripe==1.62.0
+
+# admin portal
+Flask-Admin==1.5.0
