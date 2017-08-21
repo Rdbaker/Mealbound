@@ -23,6 +23,10 @@ export class CeraonModel {
     return this._api.getUserSessionInfo();
   }
 
+  getStripeKey() {
+    return this._api.getStripeKey();
+  }
+
   // Takes any relevant model actions based on the given action
   onAction(state: CeraonState, action: CeraonAction): void {
     switch (action.type) {
@@ -55,6 +59,9 @@ export class CeraonModel {
         break;
       case CeraonActionType.ToggleJoinMeal:
         this.handleToggleJoinMeal(action as Actions.ToggleJoinMealAction);
+        break;
+      case CeraonActionType.UpdatePaymentInfo:
+        this.handleUpdatePaymentInfo(action as Actions.UpdatePaymentInfoAction);
         break;
     }
   }
@@ -200,6 +207,11 @@ export class CeraonModel {
         }
       }
     });
+  }
+
+  private handleUpdatePaymentInfo(action: Actions.UpdatePaymentInfoAction) {
+    let updateTask = new Tasks.UpdatePaymentInfoTask(this._api, action.stripeToken, true);
+    this.runTask(true, updateTask, ()=>{});
   }
 
 

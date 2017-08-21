@@ -6,6 +6,7 @@ import * as Actions from '../Actions/Index';
 import UserIdentity, { UserIdentityUpdateModel } from '../State/Identity/UserIdentity';
 import * as isEmail from 'isemail';
 import SettingsPageState from '../State/Pages/SettingsPageState';
+import CardInfoForm from '../Components/CardInfoForm';
 
 interface SettingsPageOwnState {
   firstName: string;
@@ -203,6 +204,7 @@ export default class SettingsPage extends React.Component<SettingsPageProps, Set
                       onChange={this.onPasswordConfirmChange}
                       disabled={this.props.isUpdating}/>
               </div>
+              <CardInfoForm></CardInfoForm>
               <Button onClick={this.onSubmitForm}
                 disabled={!this.state.isSubmitEnabled}
                 loading={this.props.isUpdating}>

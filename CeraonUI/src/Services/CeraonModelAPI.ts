@@ -12,6 +12,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
   private _userSessionInfo: UserSessionInfo = { isUserAuthenticated: false, userIdentity: null };
   private _joinedMealsIdsList: Array<String> = [];
   private _csrfToken: string = '';
+  private _stripeKey: string = '';
 
   private _jobQueue = [];
 
@@ -36,6 +37,14 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
       this._csrfToken = csrf;
     }
 
+    // Get the public Stripe token
+    let stripeMeta : Element = document.querySelector('meta[name="stripe-pub-key"]');
+    let stripeKey = stripeMeta && stripeMeta.getAttribute('content');
+
+    if (stripeKey) {
+      this._stripeKey = stripeKey;
+    }
+
     this.appendMealOwnerDetails = this.appendMealOwnerDetails.bind(this);
     this.createMeal = this.createMeal.bind(this);
     this.deleteMeal = this.deleteMeal.bind(this);
@@ -53,6 +62,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
     this.updateMeal = this.updateMeal.bind(this);
     this.updateMyLocation = this.updateMyLocation.bind(this);
     this.updateUserInfo = this.updateUserInfo.bind(this);
+    this.updatePaymentInfo = this.updatePaymentInfo.bind(this);
 
     this.pushJob(() => this.getMyHostedMeals());
     this.pushJob(() => this.getMyJoinedMeals());
@@ -96,6 +106,23 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
 
   getUserSessionInfo() : UserSessionInfo {
     return this._userSessionInfo;
+  }
+
+  getStripeKey() {
+    return this._stripeKey;
+  }
+
+  updatePaymentInfo(stripeToken: string): Promise<ModelUpdateResult<string>> {
+    return new Promise((resolve) => {
+      this.pushJob(() => axios.put('/api/v1/users/me/payment-info', { stripe_token: stripeToken }, this.getRequestConfig()).then((res) => {
+        resolve({
+          modelOnServer: stripeToken,
+          success: true,
+          errorCode: ModelUpdateErrorCode.Success,
+          errorString: ''
+        });
+      }));
+    });
   }
 
   updateUserInfo(userInfo: Partial<UserIdentityUpdateModel>): Promise<ModelUpdateResult<UserIdentity>> {
@@ -147,7 +174,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
         let mealList : Meal[] = response.data.data;
 
         this._joinedMealsIdsList = [];
-        
+
         mealList.forEach((meal) => {
           meal.joined = true;
           meal.mine = false;
@@ -156,7 +183,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
 
         resolve(mealList);
       }));
-    });  
+    });
   }
 
   getMyHostedMeals(): Promise<Meal[]> {
@@ -226,7 +253,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
       this.pushJob(() => axios.delete('/api/v1/meals/' + id, this.getRequestConfig()).then((response) => {
         resolve(<ModelUpdateResult<string>>{
           success: true,
-          modelOnServer: id, 
+          modelOnServer: id,
           errorCode: ModelUpdateErrorCode.Success,
           errorString: ''
         });
@@ -286,11 +313,11 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
       this.pushJob(() => axios.post('/api/v1/meals/', meal, this.getRequestConfig()).then((response) => {
         resolve(<ModelUpdateResult<Meal>>{
           success: true,
-          modelOnServer: this.appendMealOwnerDetails(response.data.data), 
+          modelOnServer: this.appendMealOwnerDetails(response.data.data),
           errorCode: ModelUpdateErrorCode.Success,
           errorString: ''
         });
       }));
-    });  
+    });
   }
 }

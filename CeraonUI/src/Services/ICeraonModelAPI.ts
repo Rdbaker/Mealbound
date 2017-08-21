@@ -19,7 +19,9 @@ export interface ModelUpdateResult<ModelType> {
 
 export interface ICeraonModelAPI {
   getUserSessionInfo() : UserSessionInfo;
+  getStripeKey() : string;
 
+  updatePaymentInfo(stripeToken: string): Promise<ModelUpdateResult<string>>;
   updateUserInfo(userInfo: Partial<UserIdentityUpdateModel>): Promise<ModelUpdateResult<UserIdentity>>;
 
   getLocationById(id: string): Promise<Location>;
