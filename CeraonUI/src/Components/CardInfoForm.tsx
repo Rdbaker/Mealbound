@@ -20,7 +20,7 @@ export default class CardInfoForm extends React.Component<any, any> {
         token={this.onToken}
         stripeKey={CeraonModel.getStripeKey()}
       >
-        <button className="ui primary button">Update Payment Info</button>
+        <button className="ui labeled icon violet button"><i className="credit card icon"></i>Update Payment Info</button>
       </StripeCheckout>
     )
   }

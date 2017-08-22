@@ -203,7 +203,6 @@ exports.createPageNotFoundAction = createPageNotFoundAction;
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../CeraonActionType");
 function createPaymentInfoUpdatedAction(stripeToken) {
-    console.log('created new action');
     return {
         type: CeraonActionType_1.default.UpdatePaymentInfo,
         stripeToken: stripeToken,
@@ -463,12 +462,13 @@ const CeraonDispatcher_1 = require("../Store/CeraonDispatcher");
 const CeraonModel_1 = require("../Services/CeraonModel");
 class CardInfoForm extends React.Component {
     onToken(token) {
-        console.log('here we go');
         CeraonDispatcher_1.default(Actions.createPaymentInfoUpdatedAction(token.id));
     }
     render() {
         return (React.createElement(react_stripe_checkout_1.default, { name: "Mealbound", description: "Update your payment info", panelLabel: "Update", label: "Update Payment Info", token: this.onToken, stripeKey: CeraonModel_1.default.getStripeKey() },
-            React.createElement("button", { className: "ui primary button" }, "Update Payment Info")));
+            React.createElement("button", { className: "ui labeled icon violet button" },
+                React.createElement("i", { className: "credit card icon" }),
+                "Update Payment Info")));
     }
 }
 exports.default = CardInfoForm;
@@ -1337,8 +1337,9 @@ class SettingsPage extends React.Component {
                         React.createElement("div", { className: passwordClass },
                             React.createElement("label", null, "Confirm Password"),
                             React.createElement("input", { type: 'password', placeholder: 'Confirm password', name: 'confirm-password', value: this.state.confirmPassword, onChange: this.onPasswordConfirmChange, disabled: this.props.isUpdating })),
-                        React.createElement(CardInfoForm_1.default, null),
-                        React.createElement(semantic_ui_react_1.Button, { onClick: this.onSubmitForm, disabled: !this.state.isSubmitEnabled, loading: this.props.isUpdating }, "Update Settings"),
+                        React.createElement("div", { className: "field" },
+                            React.createElement(CardInfoForm_1.default, null)),
+                        React.createElement(semantic_ui_react_1.Button, { onClick: this.onSubmitForm, disabled: !this.state.isSubmitEnabled, loading: this.props.isUpdating, className: "positive" }, "Update Settings"),
                         this.props.updatedMessage)))));
     }
 }

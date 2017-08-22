@@ -204,10 +204,13 @@ export default class SettingsPage extends React.Component<SettingsPageProps, Set
                       onChange={this.onPasswordConfirmChange}
                       disabled={this.props.isUpdating}/>
               </div>
-              <CardInfoForm></CardInfoForm>
+              <div className="field">
+                <CardInfoForm></CardInfoForm>
+              </div>
               <Button onClick={this.onSubmitForm}
                 disabled={!this.state.isSubmitEnabled}
-                loading={this.props.isUpdating}>
+                loading={this.props.isUpdating}
+                className="positive">
                 Update Settings
               </Button>
               { this.props.updatedMessage }
