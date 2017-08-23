@@ -7,3 +7,4 @@ export * from './ModelTask';
 export * from './UpdateMealTask';
 export * from './CreateMealTask';
 export * from './ToggleJoinMealTask';
+export * from './UpdatePaymentInfoTask';

@@ -83,7 +83,15 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
     };
   }
 
+  getStripeKey() : string{
+    return 'tok_testingtesting123';
+  }
+
   updateUserInfo(userInfo: Partial<UserIdentityUpdateModel>): Promise<ModelUpdateResult<UserIdentity>> {
+    return Promise.resolve(null);
+  }
+
+  updatePaymentInfo(stripeToken: string): Promise<ModelUpdateResult<string>> {
     return Promise.resolve(null);
   }
 

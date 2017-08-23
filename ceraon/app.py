@@ -46,6 +46,7 @@ def create_app(config_object=ProdConfig):
     def inject_fb_app_ID():
         return dict(
             fb_app_id=app.config['FB_APP_ID'],
+            stripe_pub_key=app.config['STRIPE_PUBLISHABLE_KEY'],
             embed_entity=json.dumps(g.embed_entity),
             current_user_json=json.dumps(g.current_user_json),
         )
