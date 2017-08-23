@@ -202,18 +202,6 @@ exports.createPageNotFoundAction = createPageNotFoundAction;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../CeraonActionType");
-function createPaymentInfoUpdatedAction(stripeToken) {
-    return {
-        type: CeraonActionType_1.default.UpdatePaymentInfo,
-        stripeToken: stripeToken,
-    };
-}
-exports.createPaymentInfoUpdatedAction = createPaymentInfoUpdatedAction;
-
-},{"../CeraonActionType":26}],19:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const CeraonActionType_1 = require("../CeraonActionType");
 function createSearchResultsLoadedAction(meals) {
     return {
         type: CeraonActionType_1.default.SearchResultsLoaded,
@@ -222,7 +210,7 @@ function createSearchResultsLoadedAction(meals) {
 }
 exports.createSearchResultsLoadedAction = createSearchResultsLoadedAction;
 
-},{"../CeraonActionType":26}],20:[function(require,module,exports){
+},{"../CeraonActionType":26}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../CeraonActionType");
@@ -233,7 +221,7 @@ function createStartLoadingAction() {
 }
 exports.createStartLoadingAction = createStartLoadingAction;
 
-},{"../CeraonActionType":26}],21:[function(require,module,exports){
+},{"../CeraonActionType":26}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../CeraonActionType");
@@ -246,7 +234,7 @@ function createToggleJoinMealAction(id, join) {
 }
 exports.createToggleJoinMealAction = createToggleJoinMealAction;
 
-},{"../CeraonActionType":26}],22:[function(require,module,exports){
+},{"../CeraonActionType":26}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../CeraonActionType");
@@ -257,6 +245,18 @@ function createUpdateMealAction(meal) {
     };
 }
 exports.createUpdateMealAction = createUpdateMealAction;
+
+},{"../CeraonActionType":26}],22:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const CeraonActionType_1 = require("../CeraonActionType");
+function createUpdatePaymentInfoAction(stripeToken) {
+    return {
+        type: CeraonActionType_1.default.UpdatePaymentInfo,
+        stripeToken: stripeToken,
+    };
+}
+exports.createUpdatePaymentInfoAction = createUpdatePaymentInfoAction;
 
 },{"../CeraonActionType":26}],23:[function(require,module,exports){
 "use strict";
@@ -358,9 +358,9 @@ __export(require("./ActionDefs/UserUpdatedAction"));
 __export(require("./ActionDefs/ViewMealAction"));
 __export(require("./ActionDefs/MealCreatedAction"));
 __export(require("./ActionDefs/ToggleJoinMeal"));
-__export(require("./ActionDefs/PaymentInfoUpdatedAction"));
+__export(require("./ActionDefs/UpdatePaymentInfoAction"));
 
-},{"./ActionDefs/CancelMealAction":1,"./ActionDefs/CreateMealAction":2,"./ActionDefs/GoHomeAction":3,"./ActionDefs/GoToCreateMealAction":4,"./ActionDefs/GoToEditMealAction":5,"./ActionDefs/GoToSettingsAction":6,"./ActionDefs/LandingAction":7,"./ActionDefs/LoadStateAction":8,"./ActionDefs/LoginAction":9,"./ActionDefs/MealCancelledAction":10,"./ActionDefs/MealCreatedAction":11,"./ActionDefs/MealLoadedAction":12,"./ActionDefs/MealSearchAction":13,"./ActionDefs/MealUpdatedAction":14,"./ActionDefs/MyMealsLoadedAction":15,"./ActionDefs/NotAuthorizedAction":16,"./ActionDefs/PageNotFoundAction":17,"./ActionDefs/PaymentInfoUpdatedAction":18,"./ActionDefs/SearchResultsLoadedAction":19,"./ActionDefs/StartLoadingAction":20,"./ActionDefs/ToggleJoinMeal":21,"./ActionDefs/UpdateMealAction":22,"./ActionDefs/UpdateUserAction":23,"./ActionDefs/UserUpdatedAction":24,"./ActionDefs/ViewMealAction":25,"./CeraonActionType":26}],28:[function(require,module,exports){
+},{"./ActionDefs/CancelMealAction":1,"./ActionDefs/CreateMealAction":2,"./ActionDefs/GoHomeAction":3,"./ActionDefs/GoToCreateMealAction":4,"./ActionDefs/GoToEditMealAction":5,"./ActionDefs/GoToSettingsAction":6,"./ActionDefs/LandingAction":7,"./ActionDefs/LoadStateAction":8,"./ActionDefs/LoginAction":9,"./ActionDefs/MealCancelledAction":10,"./ActionDefs/MealCreatedAction":11,"./ActionDefs/MealLoadedAction":12,"./ActionDefs/MealSearchAction":13,"./ActionDefs/MealUpdatedAction":14,"./ActionDefs/MyMealsLoadedAction":15,"./ActionDefs/NotAuthorizedAction":16,"./ActionDefs/PageNotFoundAction":17,"./ActionDefs/SearchResultsLoadedAction":18,"./ActionDefs/StartLoadingAction":19,"./ActionDefs/ToggleJoinMeal":20,"./ActionDefs/UpdateMealAction":21,"./ActionDefs/UpdatePaymentInfoAction":22,"./ActionDefs/UpdateUserAction":23,"./ActionDefs/UserUpdatedAction":24,"./ActionDefs/ViewMealAction":25,"./CeraonActionType":26}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
@@ -462,7 +462,7 @@ const CeraonDispatcher_1 = require("../Store/CeraonDispatcher");
 const CeraonModel_1 = require("../Services/CeraonModel");
 class CardInfoForm extends React.Component {
     onToken(token) {
-        CeraonDispatcher_1.default(Actions.createPaymentInfoUpdatedAction(token.id));
+        CeraonDispatcher_1.default(Actions.createUpdatePaymentInfoAction(token.id));
     }
     render() {
         return (React.createElement(react_stripe_checkout_1.default, { name: "Mealbound", description: "Update your payment info", panelLabel: "Update", label: "Update Payment Info", token: this.onToken, stripeKey: CeraonModel_1.default.getStripeKey() },

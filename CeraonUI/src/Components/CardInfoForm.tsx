@@ -7,7 +7,7 @@ import CeraonModel from '../Services/CeraonModel';
 
 export default class CardInfoForm extends React.Component<any, any> {
   onToken(token) {
-    CeraonDispatcher(Actions.createPaymentInfoUpdatedAction(token.id));
+    CeraonDispatcher(Actions.createUpdatePaymentInfoAction(token.id));
   }
 
   render() {

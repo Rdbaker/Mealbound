@@ -6,7 +6,7 @@ export interface UpdatePaymentInfoAction extends CeraonAction {
   stripeToken: string;
 }
 
-export function createPaymentInfoUpdatedAction(stripeToken: string) : UpdatePaymentInfoAction {
+export function createUpdatePaymentInfoAction(stripeToken: string) : UpdatePaymentInfoAction {
   return {
     type: CeraonActionType.UpdatePaymentInfo,
     stripeToken: stripeToken,
