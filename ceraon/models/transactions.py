@@ -97,7 +97,7 @@ class Transaction(IDModel):
             return False
         else:
             customer = stripe.Customer.retrieve(self.payer.stripe_customer_id)
-            if customer is None or customer.source is None:
+            if customer is None or customer.default_source is None:
                 return False
             else:
                 return True
