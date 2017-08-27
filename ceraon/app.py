@@ -180,6 +180,7 @@ def register_admin(app):
             model,
             db.session,
             endpoint='admin-{}'.format(model.__name__.lower())))
+    admin.add_view(AdminModelView(user.models.User, db.session, endpoint='admin-user'))
 
     return None
 

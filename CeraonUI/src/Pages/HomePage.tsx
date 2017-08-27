@@ -39,7 +39,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
               <Segment basic className='home-page-meals'>
                 <Header as='h3' textAlign='center'>
                   <Header.Content>
-                    Upcoming Meals You've Joined
+                    Meals You've Joined
                   </Header.Content>
                   <div className='meal-card-grid'>
                     {this.props.myJoinedMeals.map((meal: Meal) =>
@@ -55,7 +55,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
               <Segment basic className='home-page-meals'>
                 <Header as='h3' textAlign='center'>
                   <Header.Content>
-                      Upcoming Meals You're Hosting
+                      Meals You're Hosting
                   </Header.Content>
                     <div className='meal-card-grid'>
                       {this.props.myHostedMeals.map((meal: Meal) =>

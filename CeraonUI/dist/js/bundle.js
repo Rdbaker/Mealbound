@@ -511,6 +511,7 @@ exports.default = LoadingSpinner;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
+const Moment = require("moment");
 const semantic_ui_react_1 = require("semantic-ui-react");
 const UrlProvider_1 = require("../Services/UrlProvider");
 var MealCardMode;
@@ -533,6 +534,7 @@ class MealCard extends React.Component {
                             "$",
                             this.props.meal.price)),
                     React.createElement(semantic_ui_react_1.Card.Meta, null, this.props.meal.host.public_name),
+                    React.createElement(semantic_ui_react_1.Card.Meta, null, Moment(this.props.meal.scheduled_for).format('ddd, MMM Do [at] h:mm a')),
                     React.createElement(semantic_ui_react_1.Card.Description, null, this.props.meal.description)),
                 this.props.meal.location ?
                     React.createElement(semantic_ui_react_1.Card.Content, { extra: true },
@@ -551,7 +553,7 @@ class MealCard extends React.Component {
 }
 exports.default = MealCard;
 
-},{"../Services/UrlProvider":63,"react":832,"semantic-ui-react":941}],34:[function(require,module,exports){
+},{"../Services/UrlProvider":63,"moment":596,"react":832,"semantic-ui-react":941}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
@@ -895,13 +897,13 @@ class HomePage extends React.Component {
                         React.createElement("div", null) :
                         (React.createElement(semantic_ui_react_1.Segment, { basic: true, className: 'home-page-meals' },
                             React.createElement(semantic_ui_react_1.Header, { as: 'h3', textAlign: 'center' },
-                                React.createElement(semantic_ui_react_1.Header.Content, null, "Upcoming Meals You've Joined"),
+                                React.createElement(semantic_ui_react_1.Header.Content, null, "Meals You've Joined"),
                                 React.createElement("div", { className: 'meal-card-grid' }, this.props.myJoinedMeals.map((meal) => React.createElement(MealCard_1.default, { key: meal.id, meal: meal, mealCardMode: MealCard_1.MealCardMode.Summary, onClick: (meal) => CeraonDispatcher_1.default(Actions.createViewMealAction(meal.id)) })))))),
                     this.props.myHostedMeals.length == 0 ?
                         React.createElement("div", null) :
                         (React.createElement(semantic_ui_react_1.Segment, { basic: true, className: 'home-page-meals' },
                             React.createElement(semantic_ui_react_1.Header, { as: 'h3', textAlign: 'center' },
-                                React.createElement(semantic_ui_react_1.Header.Content, null, "Upcoming Meals You're Hosting"),
+                                React.createElement(semantic_ui_react_1.Header.Content, null, "Meals You're Hosting"),
                                 React.createElement("div", { className: 'meal-card-grid' }, this.props.myHostedMeals.map((meal) => React.createElement(MealCard_1.default, { key: meal.id, meal: meal, mealCardMode: MealCard_1.MealCardMode.Summary, onClick: (meal) => CeraonDispatcher_1.default(Actions.createViewMealAction(meal.id)) }))))))));
             }
         }

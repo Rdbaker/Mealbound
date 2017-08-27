@@ -8,6 +8,8 @@ from werkzeug.exceptions import NotFound
 class AdminModelView(ModelView):
     """A base admin view."""
 
+    column_exclude_list = ['password']
+
     @staticmethod
     def _is_accessible():
         """Figure out whether the user can admin the access panel."""

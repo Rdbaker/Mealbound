@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as  Moment from 'moment';
 import { Card, Label, Rating } from 'semantic-ui-react';
 import Meal from '../State/Meal/Meal';
 import UrlProvider from '../Services/UrlProvider';
@@ -26,9 +27,10 @@ export default class MealCard extends React.Component<MealCardProps, any> {
           <Card.Content>
             <Card.Header>{this.props.meal.name} <Label tag>${this.props.meal.price}</Label></Card.Header>
             <Card.Meta>{this.props.meal.host.public_name}</Card.Meta>
+            <Card.Meta>{Moment(this.props.meal.scheduled_for).format('ddd, MMM Do [at] h:mm a')}</Card.Meta>
             <Card.Description>{this.props.meal.description}</Card.Description>
           </Card.Content>
-          { this.props.meal.location ? 
+          { this.props.meal.location ?
             <Card.Content extra>
               <Rating icon='star' rating={this.props.meal.location.rating} maxRating={5} disabled/>
             </Card.Content>
