@@ -9,6 +9,7 @@ import * as Actions from '../Actions/Index';
 import ErrorModal from '../Components/ErrorModal';
 import * as Moment from 'moment';
 import UrlProvider from '../Services/UrlProvider';
+import CardInfoForm from '../Components/CardInfoForm';
 
 export interface ViewMealPageProps extends ViewMealPageState, React.Props<ViewMealPage> {
 
@@ -18,10 +19,15 @@ export default class ViewMealPage extends React.Component<ViewMealPageProps, und
   constructor() {
     super();
     this.toggleJoined = this.toggleJoined.bind(this);
+    this.joinMeal = this.joinMeal.bind(this);
   }
 
   toggleJoined() {
     CeraonDispatcher(Actions.createToggleJoinMealAction(this.props.mealId, !this.props.meal.joined));
+  }
+
+  joinMeal(token) {
+    CeraonDispatcher(Actions.createToggleJoinMealAction(this.props.mealId, !this.props.meal.joined, token.id));
   }
 
   private getViewMealMenuControls() : JSX.Element[] {
@@ -77,13 +83,16 @@ export default class ViewMealPage extends React.Component<ViewMealPageProps, und
         } else {
           menuControls = [
             <Menu.Item key={1}>
-              <Button
-                onClick={this.toggleJoined}
-                disabled={this.props.isToggleJoinPending}
-                loading={this.props.isToggleJoinPending}
-                color='green'>
-                Join Meal
-              </Button>
+              <CardInfoForm
+                stripeCheckoutDescription="Confirm meal purchase"
+                stripeCheckoutPanelLabel="Pay Now"
+                stripeCheckoutLabel="Pay Now"
+                stripeCheckoutOnToken={this.joinMeal}
+                stripeSubmitBtnText="Join Meal"
+                triggerBtnColor="green"
+                triggerBtnDisabled={this.props.isToggleJoinPending}
+                triggerBtnLoading={this.props.isToggleJoinPending}
+              ></CardInfoForm>
             </Menu.Item>];
         }
       }

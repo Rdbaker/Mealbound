@@ -225,12 +225,24 @@ exports.createStartLoadingAction = createStartLoadingAction;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../CeraonActionType");
-function createToggleJoinMealAction(id, join) {
-    return {
-        type: CeraonActionType_1.default.ToggleJoinMeal,
-        id: id,
-        join: join,
-    };
+function createToggleJoinMealAction(id, join, stripeToken) {
+    let action;
+    if (stripeToken) {
+        action = {
+            type: CeraonActionType_1.default.ToggleJoinMeal,
+            id: id,
+            join: join,
+            stripeToken: stripeToken
+        };
+    }
+    else {
+        action = {
+            type: CeraonActionType_1.default.ToggleJoinMeal,
+            id: id,
+            join: join
+        };
+    }
+    return action;
 }
 exports.createToggleJoinMealAction = createToggleJoinMealAction;
 
@@ -456,24 +468,49 @@ exports.default = AppHost;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_stripe_checkout_1 = require("react-stripe-checkout");
+const semantic_ui_react_1 = require("semantic-ui-react");
 const React = require("react");
-const Actions = require("../Actions/Index");
-const CeraonDispatcher_1 = require("../Store/CeraonDispatcher");
 const CeraonModel_1 = require("../Services/CeraonModel");
 class CardInfoForm extends React.Component {
-    onToken(token) {
-        CeraonDispatcher_1.default(Actions.createUpdatePaymentInfoAction(token.id));
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: this.props.stripeCheckoutName || "Mealbound",
+            triggerBtnColor: this.props.triggerBtnColor || "violet",
+            triggerBtnIcon: this.props.triggerBtnIcon,
+            description: this.props.stripeCheckoutDescription,
+            panelLabel: this.props.stripeCheckoutPanelLabel,
+            label: this.props.stripeCheckoutLabel,
+            onToken: this.props.stripeCheckoutOnToken,
+            submitBtnText: this.props.stripeSubmitBtnText
+        };
+    }
+    hasTriggerBtnIcon() {
+        if (this.state.triggerBtnIcon) {
+            return "labeled icon";
+        }
+        else {
+            return "";
+        }
+    }
+    getTriggerBtnIcon() {
+        if (this.state.triggerBtnIcon) {
+            return (React.createElement("i", { className: this.state.triggerBtnIcon }));
+        }
+        else {
+            return null;
+        }
     }
     render() {
-        return (React.createElement(react_stripe_checkout_1.default, { name: "Mealbound", description: "Update your payment info", panelLabel: "Update", label: "Update Payment Info", token: this.onToken, stripeKey: CeraonModel_1.default.getStripeKey() },
-            React.createElement("button", { className: "ui labeled icon violet button" },
-                React.createElement("i", { className: "credit card icon" }),
-                "Update Payment Info")));
+        return (React.createElement(react_stripe_checkout_1.default, { name: this.state.name, description: this.state.description, panelLabel: this.state.panelLabel, label: this.state.label, token: this.state.onToken, stripeKey: CeraonModel_1.default.getStripeKey() },
+            React.createElement(semantic_ui_react_1.Button, { color: this.state.triggerBtnColor, className: `${this.hasTriggerBtnIcon()}`, disabled: this.props.triggerBtnDisabled, loading: this.props.triggerBtnLoading },
+                this.getTriggerBtnIcon(),
+                this.state.submitBtnText)));
     }
 }
 exports.default = CardInfoForm;
 
-},{"../Actions/Index":27,"../Services/CeraonModel":48,"../Store/CeraonDispatcher":78,"react":832,"react-stripe-checkout":806}],31:[function(require,module,exports){
+},{"../Services/CeraonModel":48,"react":832,"react-stripe-checkout":806,"semantic-ui-react":941}],31:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
@@ -1225,6 +1262,7 @@ class SettingsPage extends React.Component {
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onPasswordConfirmChange = this.onPasswordConfirmChange.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.onToken = this.onToken.bind(this);
         let state = {
             firstName: this.props.first_name,
             lastName: this.props.last_name,
@@ -1310,6 +1348,11 @@ class SettingsPage extends React.Component {
         }
         CeraonDispatcher_1.default(Actions.createUpdateUserAction(updateModel));
     }
+    onToken(token) {
+        console.log('got a token!');
+        console.log(token);
+        CeraonDispatcher_1.default(Actions.createUpdatePaymentInfoAction(token.id));
+    }
     render() {
         let firstNameClass = this.state.firstNameError ? 'field error' : 'field';
         let lastNameClass = this.state.lastNameError ? 'field error' : 'field';
@@ -1340,7 +1383,7 @@ class SettingsPage extends React.Component {
                             React.createElement("label", null, "Confirm Password"),
                             React.createElement("input", { type: 'password', placeholder: 'Confirm password', name: 'confirm-password', value: this.state.confirmPassword, onChange: this.onPasswordConfirmChange, disabled: this.props.isUpdating })),
                         React.createElement("div", { className: "field" },
-                            React.createElement(CardInfoForm_1.default, null)),
+                            React.createElement(CardInfoForm_1.default, { stripeCheckoutDescription: "Update your payment info", stripeCheckoutPanelLabel: "Update", stripeCheckoutLabel: "Update Payment Info", stripeCheckoutOnToken: this.onToken, stripeSubmitBtnText: "Update Payment Info", triggerBtnColor: "violet", triggerBtnIcon: "credit card icon" })),
                         React.createElement(semantic_ui_react_1.Button, { onClick: this.onSubmitForm, disabled: !this.state.isSubmitEnabled, loading: this.props.isUpdating, className: "positive" }, "Update Settings"),
                         this.props.updatedMessage)))));
     }
@@ -1359,13 +1402,20 @@ const Actions = require("../Actions/Index");
 const ErrorModal_1 = require("../Components/ErrorModal");
 const Moment = require("moment");
 const UrlProvider_1 = require("../Services/UrlProvider");
+const CardInfoForm_1 = require("../Components/CardInfoForm");
 class ViewMealPage extends React.Component {
     constructor() {
         super();
         this.toggleJoined = this.toggleJoined.bind(this);
+        this.joinMeal = this.joinMeal.bind(this);
     }
     toggleJoined() {
         CeraonDispatcher_1.default(Actions.createToggleJoinMealAction(this.props.mealId, !this.props.meal.joined));
+    }
+    joinMeal(token) {
+        console.log('joining meal!');
+        console.log(token);
+        CeraonDispatcher_1.default(Actions.createToggleJoinMealAction(this.props.mealId, !this.props.meal.joined, token.id));
     }
     getViewMealMenuControls() {
         let mealIsInFuture = Moment(this.props.meal.scheduled_for).isAfter(Moment.now());
@@ -1405,7 +1455,7 @@ class ViewMealPage extends React.Component {
             else {
                 menuControls = [
                     React.createElement(semantic_ui_react_1.Menu.Item, { key: 1 },
-                        React.createElement(semantic_ui_react_1.Button, { onClick: this.toggleJoined, disabled: this.props.isToggleJoinPending, loading: this.props.isToggleJoinPending, color: 'green' }, "Join Meal"))
+                        React.createElement(CardInfoForm_1.default, { stripeCheckoutDescription: "Confirm meal purchase", stripeCheckoutPanelLabel: "Pay Now", stripeCheckoutLabel: "Pay Now", stripeCheckoutOnToken: this.joinMeal, stripeSubmitBtnText: "Join Meal", triggerBtnColor: "green", triggerBtnDisabled: this.props.isToggleJoinPending, triggerBtnLoading: this.props.isToggleJoinPending }))
                 ];
             }
         }
@@ -1444,7 +1494,7 @@ class ViewMealPage extends React.Component {
 }
 exports.default = ViewMealPage;
 
-},{"../Actions/Index":27,"../Components/ErrorModal":31,"../Components/LoadingSpinner":32,"../Components/MealCard":33,"../Services/UrlProvider":63,"../Store/CeraonDispatcher":78,"moment":596,"react":832,"semantic-ui-react":941}],48:[function(require,module,exports){
+},{"../Actions/Index":27,"../Components/CardInfoForm":30,"../Components/ErrorModal":31,"../Components/LoadingSpinner":32,"../Components/MealCard":33,"../Services/UrlProvider":63,"../Store/CeraonDispatcher":78,"moment":596,"react":832,"semantic-ui-react":941}],48:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CeraonActionType_1 = require("../Actions/CeraonActionType");
@@ -1606,7 +1656,7 @@ class CeraonModel {
         this.runTask(true, createTask, () => { });
     }
     handleToggleJoinMeal(action) {
-        let toggleTask = new Tasks.ToggleJoinMealTask(this._api, action.id, action.join, false);
+        let toggleTask = new Tasks.ToggleJoinMealTask(this._api, action.id, action.join, action.stripeToken, false);
         this.runTask(false, toggleTask, (task, result) => {
             if (result.success) {
                 if (result.modelOnServer.joined) {
@@ -1876,10 +1926,17 @@ class CeraonModelAPI {
             }));
         });
     }
-    toggleJoinMeal(id, join) {
+    toggleJoinMeal(id, join, stripeToken) {
         if (join) {
+            let payload;
+            if (stripeToken) {
+                payload = { stripe_token: stripeToken };
+            }
+            else {
+                payload = {};
+            }
             return new Promise((resolve) => {
-                this.pushJob(() => axios_1.default.post('/api/v1/meals/' + id + '/reservation', {}, this.getRequestConfig()).then((response) => {
+                this.pushJob(() => axios_1.default.post('/api/v1/meals/' + id + '/reservation', payload, this.getRequestConfig()).then((response) => {
                     let newMeal = response.data.data;
                     this._joinedMealsIdsList.push(id);
                     resolve({
@@ -2276,14 +2333,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ModelTask_1 = require("./ModelTask");
 const Actions = require("../../../Actions/Index");
 class ToggleJoinMealTask extends ModelTask_1.default {
-    constructor(_api, _id, _join, startLoading) {
+    constructor(_api, _id, _join, _stripeToken, startLoading) {
         super(startLoading);
         this._api = _api;
         this._id = _id;
         this._join = _join;
+        this._stripeToken = _stripeToken;
     }
     run(next) {
-        this._api.toggleJoinMeal(this._id, this._join).then((result) => {
+        this._api.toggleJoinMeal(this._id, this._join, this._stripeToken).then((result) => {
             this.dispatchAction(Actions.createMealUpdatedAction(result));
             if (next) {
                 next(this, result);

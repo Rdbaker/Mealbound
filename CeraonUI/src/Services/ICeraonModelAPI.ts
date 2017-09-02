@@ -35,6 +35,6 @@ export interface ICeraonModelAPI {
 
   deleteMeal(id: string): Promise<ModelUpdateResult<string>>;
   updateMeal(meal: Partial<Meal>): Promise<ModelUpdateResult<Meal>>;
-  toggleJoinMeal(id: string, join: boolean): Promise<ModelUpdateResult<Meal>>;
+  toggleJoinMeal(id: string, join: boolean, stripeToken?: string): Promise<ModelUpdateResult<Meal>>;
   createMeal(meal: Partial<Meal>): Promise<ModelUpdateResult<Meal>>;
 };

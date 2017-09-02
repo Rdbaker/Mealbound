@@ -261,10 +261,17 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
     });
   }
 
-  toggleJoinMeal(id: string, join: boolean): Promise<ModelUpdateResult<Meal>> {
+  toggleJoinMeal(id: string, join: boolean, stripeToken?: string): Promise<ModelUpdateResult<Meal>> {
     if (join) {
+      let payload;
+      if (stripeToken) {
+        payload = { stripe_token: stripeToken };
+      } else {
+        payload = {};
+      }
+
       return new Promise<ModelUpdateResult<Meal>>((resolve)=>{
-        this.pushJob(() => axios.post('/api/v1/meals/' + id + '/reservation', {}, this.getRequestConfig()).then((response) => {
+        this.pushJob(() => axios.post('/api/v1/meals/' + id + '/reservation', payload, this.getRequestConfig()).then((response) => {
           let newMeal : Meal = response.data.data;
           this._joinedMealsIdsList.push(id);
           resolve({

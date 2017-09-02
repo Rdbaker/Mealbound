@@ -193,7 +193,7 @@ export class CeraonModel {
   }
 
   private handleToggleJoinMeal(action: Actions.ToggleJoinMealAction) {
-    let toggleTask = new Tasks.ToggleJoinMealTask(this._api, action.id, action.join, false);
+    let toggleTask = new Tasks.ToggleJoinMealTask(this._api, action.id, action.join, action.stripeToken, false);
     this.runTask(false, toggleTask, (task: Tasks.ToggleJoinMealTask, result: ModelUpdateResult<Meal>) => {
       if (result.success) {
         if (result.modelOnServer.joined) {

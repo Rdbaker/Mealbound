@@ -36,6 +36,7 @@ export default class SettingsPage extends React.Component<SettingsPageProps, Set
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onPasswordConfirmChange = this.onPasswordConfirmChange.bind(this);
     this.onSubmitForm = this.onSubmitForm.bind(this);
+    this.onToken = this.onToken.bind(this);
 
     let state : SettingsPageOwnState = {
       firstName: this.props.first_name,
@@ -137,6 +138,10 @@ export default class SettingsPage extends React.Component<SettingsPageProps, Set
     CeraonDispatcher(Actions.createUpdateUserAction(updateModel));
   }
 
+  onToken(token) {
+    CeraonDispatcher(Actions.createUpdatePaymentInfoAction(token.id));
+  }
+
   render() {
     let firstNameClass = this.state.firstNameError ? 'field error' : 'field';
     let lastNameClass = this.state.lastNameError ? 'field error' : 'field';
@@ -205,7 +210,15 @@ export default class SettingsPage extends React.Component<SettingsPageProps, Set
                       disabled={this.props.isUpdating}/>
               </div>
               <div className="field">
-                <CardInfoForm></CardInfoForm>
+                <CardInfoForm
+                  stripeCheckoutDescription="Update your payment info"
+                  stripeCheckoutPanelLabel="Update"
+                  stripeCheckoutLabel="Update Payment Info"
+                  stripeCheckoutOnToken={this.onToken}
+                  stripeSubmitBtnText="Update Payment Info"
+                  triggerBtnColor="violet"
+                  triggerBtnIcon="credit card icon"
+                ></CardInfoForm>
               </div>
               <Button onClick={this.onSubmitForm}
                 disabled={!this.state.isSubmitEnabled}

@@ -243,7 +243,7 @@ def join_meal(uid):
       - in: body
         name: stripe_token
         description: The stripe token used to make a charge. This should only
-            be used if the used doesn't have payment info saved.
+            be used if the user doesn't have payment info saved.
     responses:
       201:
         description: Meal reservation successfully cancelled
