@@ -27,7 +27,16 @@ export default class MealCard extends React.Component<MealCardProps, any> {
           <Card.Content>
             <Card.Header>{this.props.meal.name} <Label tag>${this.props.meal.price}</Label></Card.Header>
             <Card.Meta>{this.props.meal.host.public_name}</Card.Meta>
-            <Card.Meta>{Moment(this.props.meal.scheduled_for).format('ddd, MMM Do [at] h:mm a')}</Card.Meta>
+            { this.props.mealCardMode == MealCardMode.Full ?
+              <Card.Meta>{Moment(this.props.meal.scheduled_for).format('ddd, MMM Do [at] h:mm a')}</Card.Meta>
+              :
+              <Card.Meta>{Moment(this.props.meal.scheduled_for).fromNow()}</Card.Meta>
+            }
+            { this.props.mealCardMode == MealCardMode.Full ?
+              <Card.Meta>{this.props.meal.location.address}</Card.Meta>
+              :
+              null
+            }
             <Card.Description>{this.props.meal.description}</Card.Description>
           </Card.Content>
           { this.props.meal.location ?

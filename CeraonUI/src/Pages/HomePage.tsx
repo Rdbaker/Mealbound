@@ -11,7 +11,7 @@ import Meal from '../State/Meal/Meal';
 import * as Actions from '../Actions/Index';
 
 export interface HomePageProps extends HomePageState, React.Props<HomePage> {
-  
+
 }
 
 export default class HomePage extends React.Component<HomePageProps, {}> {
@@ -33,7 +33,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
       } else {
         mealInfo = (
         <Segment.Group style={{border:'none', boxShadow:'0 0'}}>
-          { this.props.myJoinedMeals.length == 0 ? 
+          { this.props.myJoinedMeals.length == 0 ?
             <div/> :
             (
               <Segment basic className='home-page-meals'>
@@ -43,14 +43,19 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
                   </Header.Content>
                   <div className='meal-card-grid'>
                     {this.props.myJoinedMeals.map((meal: Meal) =>
-                      <MealCard key={meal.id} meal={meal} mealCardMode={MealCardMode.Summary} onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>)}
+                      <MealCard
+                        key={meal.id}
+                        meal={meal}
+                        mealCardMode={MealCardMode.Summary}
+                        onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
+                    )}
                   </div>
                 </Header>
               </Segment>
             )
           }
-          { this.props.myHostedMeals.length == 0 ? 
-            <div/> : 
+          { this.props.myHostedMeals.length == 0 ?
+            <div/> :
             (
               <Segment basic className='home-page-meals'>
                 <Header as='h3' textAlign='center'>
@@ -85,7 +90,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
               onSearchClicked={this.onMealSearch} />
           </Header.Content>
         </Header>
-        { this.props.showMyMealInfo ? 
+        { this.props.showMyMealInfo ?
            <Divider/>
            : <div/> }
         {mealInfo}

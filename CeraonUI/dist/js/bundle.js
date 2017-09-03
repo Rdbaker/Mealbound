@@ -571,11 +571,18 @@ class MealCard extends React.Component {
                             "$",
                             this.props.meal.price)),
                     React.createElement(semantic_ui_react_1.Card.Meta, null, this.props.meal.host.public_name),
-                    React.createElement(semantic_ui_react_1.Card.Meta, null, Moment(this.props.meal.scheduled_for).format('ddd, MMM Do [at] h:mm a')),
+                    this.props.mealCardMode == MealCardMode.Full ?
+                        React.createElement(semantic_ui_react_1.Card.Meta, null, Moment(this.props.meal.scheduled_for).format('ddd, MMM Do [at] h:mm a'))
+                        :
+                            React.createElement(semantic_ui_react_1.Card.Meta, null, Moment(this.props.meal.scheduled_for).fromNow()),
+                    this.props.mealCardMode == MealCardMode.Full ?
+                        React.createElement(semantic_ui_react_1.Card.Meta, null, this.props.meal.location.address)
+                        :
+                            null,
                     React.createElement(semantic_ui_react_1.Card.Description, null, this.props.meal.description)),
                 this.props.meal.location ?
                     React.createElement(semantic_ui_react_1.Card.Content, { extra: true },
-                        React.createElement(semantic_ui_react_1.Rating, { icon: 'star', rating: this.props.meal.location.rating, maxRating: 5, disabled: true }))
+                        React.createElement(semantic_ui_react_1.Rating, { icon: 'star', rating: this.props.meal.location.rating, maxRating: 5 }))
                     :
                         React.createElement("div", null))));
         if (this.props.onClick) {
@@ -2983,6 +2990,7 @@ function landingReducer(state) {
     return newState;
 }
 function viewMealReducer(state, action) {
+    Mixpanel_1.default.track('View Meal', action);
     const newState = resetOtherPageState(state, CeraonPage_1.default.ViewMeal);
     newState.activePage = CeraonPage_1.default.ViewMeal;
     newState.viewMealPageState.showUserLoginPrompt = !newState.userSessionInfo.isUserAuthenticated;
@@ -3063,6 +3071,7 @@ function toggleJoinedMealReducer(state) {
     return state;
 }
 function mealUpdatedReducer(state, action) {
+    Mixpanel_1.default.track('Meal Updated', action);
     if (state.activePage == CeraonPage_1.default.ViewMeal
         && action.meal.modelOnServer.id == state.viewMealPageState.mealId) {
         state.viewMealPageState.meal = action.meal.modelOnServer;
@@ -3092,6 +3101,7 @@ function cancelMealReducer(state, action) {
     return state;
 }
 function mealCancelledReducer(state, action) {
+    Mixpanel_1.default.track('Meal Cancel', action);
     if (state.activePage == CeraonPage_1.default.ViewMeal && state.viewMealPageState.mealId == action.mealId.modelOnServer) {
         state.viewMealPageState.meal = null;
         state.viewMealPageState.isCancelPending = false;
@@ -3151,6 +3161,7 @@ function updateUserReducer(state) {
     return state;
 }
 function userUpdatedReducer(state, action) {
+    Mixpanel_1.default.track('User Settings Updated', action);
     if (action.user.success) {
         state.userSessionInfo.userIdentity = action.user.modelOnServer;
         if (state.activePage == CeraonPage_1.default.CreateMeal) {
@@ -3166,6 +3177,7 @@ function userUpdatedReducer(state, action) {
     return state;
 }
 function mealCreatedReducer(state, action) {
+    Mixpanel_1.default.track('Meal Created', action);
     if (action.meal.success) {
         if (state.activePage == CeraonPage_1.default.CreateMeal) {
             state.createMealPageState.isCreateLoading = false;
