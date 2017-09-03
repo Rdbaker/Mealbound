@@ -49,6 +49,7 @@ def create_app(config_object=ProdConfig):
             stripe_pub_key=app.config['STRIPE_PUBLISHABLE_KEY'],
             embed_entity=json.dumps(g.embed_entity),
             current_user_json=json.dumps(g.current_user_json),
+            mixpanel_enabled=app.config['MIXPANEL_ENABLED'],
         )
 
     @app.before_request
@@ -180,7 +181,8 @@ def register_admin(app):
             model,
             db.session,
             endpoint='admin-{}'.format(model.__name__.lower())))
-    admin.add_view(AdminModelView(user.models.User, db.session, endpoint='admin-user'))
+    admin.add_view(AdminModelView(user.models.User, db.session,
+                                  endpoint='admin-user'))
 
     return None
 

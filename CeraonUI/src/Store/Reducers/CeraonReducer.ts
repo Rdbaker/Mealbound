@@ -15,6 +15,7 @@ import { defaultViewMealPageState } from '../../State/Pages/ViewMealPageState';
 import { defaultEditMealPageState } from '../../State/Pages/EditMealPageState';
 
 import assert from '../../Utils/Assert';
+import mixpanel from '../../Utils/Mixpanel';
 
 export default function ceraonReducer(state: CeraonState, action: CeraonAction) : CeraonState {
 
@@ -134,6 +135,7 @@ function loginReducer(state: CeraonState, action: CeraonAction) : CeraonState {
 }
 
 function mealSearchReducer(state: CeraonState, action: Actions.MealSearchAction) : CeraonState {
+  mixpanel.track('Meal Search', action);
   const newState = resetOtherPageState(state, CeraonPage.Search);
   newState.activePage = CeraonPage.Search;
 
@@ -173,6 +175,7 @@ function landingReducer(state: CeraonState) : CeraonState {
 }
 
 function viewMealReducer(state: CeraonState, action: Actions.ViewMealAction) : CeraonState {
+  mixpanel.track('View Meal', action);
   const newState = resetOtherPageState(state, CeraonPage.ViewMeal);
 
   newState.activePage = CeraonPage.ViewMeal;
@@ -268,6 +271,7 @@ function toggleJoinedMealReducer(state: CeraonState) : CeraonState {
 }
 
 function mealUpdatedReducer(state: CeraonState, action: Actions.MealUpdatedAction) : CeraonState {
+  mixpanel.track('Meal Updated', action);
 
   // TODO: Show errors here
   if (state.activePage == CeraonPage.ViewMeal
@@ -303,6 +307,7 @@ function cancelMealReducer(state: CeraonState, action: Actions.CancelMealAction)
 }
 
 function mealCancelledReducer(state: CeraonState, action: Actions.MealCancelledAction) : CeraonState {
+  mixpanel.track('Meal Cancel', action);
   if (state.activePage == CeraonPage.ViewMeal && state.viewMealPageState.mealId == action.mealId.modelOnServer) {
     state.viewMealPageState.meal = null;
     state.viewMealPageState.isCancelPending = false;
@@ -374,6 +379,7 @@ function updateUserReducer(state: CeraonState) : CeraonState {
 }
 
 function userUpdatedReducer(state: CeraonState, action: Actions.UserUpdatedAction) : CeraonState {
+  mixpanel.track('User Settings Updated', action);
 
   // TODO: handle errors
   if (action.user.success) {
@@ -393,6 +399,7 @@ function userUpdatedReducer(state: CeraonState, action: Actions.UserUpdatedActio
 }
 
 function mealCreatedReducer(state: CeraonState, action: Actions.MealCreatedAction) : CeraonState {
+  mixpanel.track('Meal Created', action);
   if (action.meal.success) {
     if (state.activePage == CeraonPage.CreateMeal) {
       state.createMealPageState.isCreateLoading = false;
