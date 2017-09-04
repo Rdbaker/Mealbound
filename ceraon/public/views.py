@@ -28,7 +28,8 @@ def home():
         if form.validate_on_submit():
             login_user(form.user)
             flash('You are logged in.', 'success')
-            redirect_url = request.args.get('next') or url_for('user.me')
+            redirect_url = request.args.get('next') or \
+                url_for('public.single_page_app')
             return redirect(redirect_url)
         else:
             flash_errors(form)
@@ -80,7 +81,7 @@ def register():
         login_user(user)
         flash('You are logged in.', 'success')
         redirect_url = request.args.get('next') or url_for(
-            'user.me', embed_class='user', embed_id=user.id)
+            'public.single_page_app', embed_class='user', embed_id=user.id)
         return redirect(redirect_url)
     else:
         flash_errors(form)

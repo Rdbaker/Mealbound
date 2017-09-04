@@ -324,7 +324,7 @@ class TestLeaveMeal(BaseViewTest):
         self.login(guest, testapp)
         res = testapp.delete(self.base_url.format(meal.id))
         assert res.status_code == 200
-        assert res.json['data'] is None
+        assert res.json['data'] is not None
         new_um = UserMeal.query.get((guest.id, meal.id))
         assert new_um is None
 

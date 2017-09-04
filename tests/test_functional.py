@@ -25,19 +25,6 @@ class TestLoggingIn:
         res = form.submit().follow()
         assert res.status_code == 200
 
-    def test_sees_alert_on_log_out(self, user, testapp):
-        """Show alert on logout."""
-        res = testapp.get('/login')
-        # Fills out login form in navbar
-        form = res.forms['loginForm']
-        form['email'] = user.email
-        form['password'] = 'example'
-        # Submits
-        res = form.submit().follow()
-        res = testapp.get(url_for('public.logout')).follow()
-        # sees alert
-        assert 'You are logged out.' in res
-
     def test_sees_error_message_if_password_is_incorrect(self, user, testapp):
         """Show error if password is incorrect."""
         # Goes to homepage
