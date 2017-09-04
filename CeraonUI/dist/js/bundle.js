@@ -589,11 +589,21 @@ var MealCardMode;
 class MealCard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            reviewDescription: this.getReviewDescription(),
+        };
         this.onRatingChange = this.onRatingChange.bind(this);
         this.onCancelReviewForm = this.onCancelReviewForm.bind(this);
         this.onSubmitReviewForm = this.onSubmitReviewForm.bind(this);
         this.onReviewDescriptionChange = this.onReviewDescriptionChange.bind(this);
+    }
+    getReviewDescription() {
+        if (this.props.meal.my_review) {
+            return this.props.meal.my_review.description;
+        }
+        else {
+            return null;
+        }
     }
     renderLocation() {
         if (this.props.mealCardMode == MealCardMode.Full && this.props.meal.location) {
@@ -613,7 +623,7 @@ class MealCard extends React.Component {
     }
     onRatingChange(evt, data) {
         this.setState({
-            reviewRating: data.rating,
+            pendingReviewRating: data.rating,
             showReviewForm: true,
             reviewSubmitEnabled: false
         });
@@ -625,7 +635,7 @@ class MealCard extends React.Component {
     }
     onSubmitReviewForm() {
         let review = {
-            rating: this.state.reviewRating,
+            rating: this.state.pendingReviewRating,
             description: this.state.reviewDescription,
             meal: this.props.meal
         };
@@ -640,8 +650,8 @@ class MealCard extends React.Component {
         });
     }
     getMealRating() {
-        if (this.state.reviewRating) {
-            return this.state.reviewRating;
+        if (this.state.pendingReviewRating) {
+            return this.state.pendingReviewRating;
         }
         if (this.props.meal.my_review) {
             return this.props.meal.my_review.rating;
@@ -3021,7 +3031,10 @@ const HomePageState_1 = require("../../State/Pages/HomePageState");
 const LoadingPageState_1 = require("../../State/Pages/LoadingPageState");
 const LandingPageState_1 = require("../../State/Pages/LandingPageState");
 const SearchPageState_1 = require("../../State/Pages/SearchPageState");
+const ViewMealPageState_1 = require("../../State/Pages/ViewMealPageState");
 const EditMealPageState_1 = require("../../State/Pages/EditMealPageState");
+const CreateMealPageState_1 = require("../../State/Pages/CreateMealPageState");
+const SettingsPageState_1 = require("../../State/Pages/SettingsPageState");
 const Assert_1 = require("../../Utils/Assert");
 const Mixpanel_1 = require("../../Utils/Mixpanel");
 function ceraonReducer(state, action) {
@@ -3385,10 +3398,19 @@ function resetOtherPageState(state, currentPage) {
     if (currentPage !== CeraonPage_1.default.EditMeal) {
         newState.editMealPageState = EditMealPageState_1.defaultEditMealPageState();
     }
+    if (currentPage !== CeraonPage_1.default.ViewMeal) {
+        newState.viewMealPageState = ViewMealPageState_1.defaultViewMealPageState();
+    }
+    if (currentPage !== CeraonPage_1.default.CreateMeal) {
+        newState.createMealPageState = CreateMealPageState_1.defaultCreateMealPageState();
+    }
+    if (currentPage !== CeraonPage_1.default.Settings) {
+        newState.settingsPageState = SettingsPageState_1.defaultSettingsPageState();
+    }
     return newState;
 }
 
-},{"../../Actions/CeraonActionType":28,"../../State/CeraonPage":67,"../../State/Pages/EditMealPageState":73,"../../State/Pages/HomePageState":74,"../../State/Pages/LandingPageState":75,"../../State/Pages/LoadingPageState":76,"../../State/Pages/SearchPageState":77,"../../State/Utils/CeraonPageUtils":80,"../../Utils/Assert":87,"../../Utils/Mixpanel":88}],87:[function(require,module,exports){
+},{"../../Actions/CeraonActionType":28,"../../State/CeraonPage":67,"../../State/Pages/CreateMealPageState":72,"../../State/Pages/EditMealPageState":73,"../../State/Pages/HomePageState":74,"../../State/Pages/LandingPageState":75,"../../State/Pages/LoadingPageState":76,"../../State/Pages/SearchPageState":77,"../../State/Pages/SettingsPageState":78,"../../State/Pages/ViewMealPageState":79,"../../State/Utils/CeraonPageUtils":80,"../../Utils/Assert":87,"../../Utils/Mixpanel":88}],87:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function assert(condition, text) {

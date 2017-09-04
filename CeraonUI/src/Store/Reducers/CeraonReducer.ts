@@ -13,6 +13,8 @@ import { defaultLandingPageState } from '../../State/Pages/LandingPageState';
 import { defaultSearchPageState } from '../../State/Pages/SearchPageState';
 import { defaultViewMealPageState } from '../../State/Pages/ViewMealPageState';
 import { defaultEditMealPageState } from '../../State/Pages/EditMealPageState';
+import { defaultCreateMealPageState } from '../../State/Pages/CreateMealPageState';
+import { defaultSettingsPageState } from '../../State/Pages/SettingsPageState';
 
 import assert from '../../Utils/Assert';
 import mixpanel from '../../Utils/Mixpanel';
@@ -449,6 +451,18 @@ function resetOtherPageState(state: CeraonState, currentPage: CeraonPage) : Cera
 
   if (currentPage !== CeraonPage.EditMeal) {
     newState.editMealPageState = defaultEditMealPageState();
+  }
+
+  if (currentPage !== CeraonPage.ViewMeal) {
+    newState.viewMealPageState = defaultViewMealPageState();
+  }
+
+  if (currentPage !== CeraonPage.CreateMeal) {
+    newState.createMealPageState = defaultCreateMealPageState();
+  }
+
+  if (currentPage !== CeraonPage.Settings) {
+    newState.settingsPageState = defaultSettingsPageState();
   }
 
   return newState;

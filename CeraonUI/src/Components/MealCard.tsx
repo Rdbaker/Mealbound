@@ -34,8 +34,8 @@ export default class MealCard extends React.Component<MealCardProps, any> {
   }
 
   private getReviewDescription() {
-    if (this.props.my_review) {
-      return this.props.my_review.description;
+    if (this.props.meal.my_review) {
+      return this.props.meal.my_review.description;
     } else {
       return null;
     }
