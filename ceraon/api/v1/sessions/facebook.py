@@ -57,6 +57,7 @@ def resolve_user_from_fb_response(user_from_fb):
 
         # check if it's their first time logging in ever
         if not user_from_db:
+            user_from_fb.update({'active': True})
             # make a new user!
             user_from_db = User.create(**user_from_fb)
 

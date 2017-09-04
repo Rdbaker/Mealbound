@@ -120,10 +120,17 @@ def create_review_from_meal_id(meal_id):
     if user_meal is None:
         raise Forbidden(Errors.REVIEW_NONJOINED_MEAL)
     review_data = REVIEW_SCHEMA.load(request.json).data
-    review = Review.create(meal_id=meal.id, user_id=current_user.id,
-                           **review_data)
-    return jsonify(data=REVIEW_SCHEMA.dump(review).data,
-                   message=Success.REVIEW_CREATED), 201
+    review = Review.query.filter_by(meal_id=meal.id, user_id=current_user.id)\
+        .first()
+    if review is None:
+        review = Review.create(meal_id=meal.id, user_id=current_user.id,
+                               **review_data)
+        return jsonify(data=REVIEW_SCHEMA.dump(review).data,
+                       message=Success.REVIEW_CREATED), 201
+    else:
+        return jsonify(
+            data=update_or_replace_review(review.id, review_data, True),
+            message=Success.REVIEW_UPDATED), 200
 
 
 @blueprint.create()
