@@ -1,6 +1,7 @@
 import { ICeraonModelAPI, ModelUpdateErrorCode, ModelUpdateResult } from './ICeraonModelAPI';
 import UserSessionInfo from '../State/Identity/UserSessionInfo';
 import Meal from '../State/Meal/Meal';
+import Review from '../State/Meal/Review';
 import MealTime from '../State/Meal/Filters/MealTime';
 import Location from '../State/Meal/Location';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
@@ -63,6 +64,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
     this.updateMyLocation = this.updateMyLocation.bind(this);
     this.updateUserInfo = this.updateUserInfo.bind(this);
     this.updatePaymentInfo = this.updatePaymentInfo.bind(this);
+    this.createReview = this.createReview.bind(this);
 
     this.pushJob(() => this.getMyHostedMeals());
     this.pushJob(() => this.getMyJoinedMeals());
@@ -117,6 +119,21 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
       this.pushJob(() => axios.put('/api/v1/users/me/payment-info', { stripe_token: stripeToken }, this.getRequestConfig()).then((res) => {
         resolve({
           modelOnServer: stripeToken,
+          success: true,
+          errorCode: ModelUpdateErrorCode.Success,
+          errorString: ''
+        });
+      }));
+    });
+  }
+
+  createReview(review: Partial<Review>): Promise<ModelUpdateResult<Partial<Review>>> {
+    return new Promise((resolve) => {
+      this.pushJob(() => axios.post(`/api/v1/meals/${review.meal.id}/reviews`, review, this.getRequestConfig()).then((res) => {
+        console.log('heres the response!');
+        console.log(res);
+        resolve({
+          modelOnServer: res.data,
           success: true,
           errorCode: ModelUpdateErrorCode.Success,
           errorString: ''

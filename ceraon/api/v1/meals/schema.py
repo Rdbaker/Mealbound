@@ -20,6 +20,9 @@ class MealSchema(Schema):
     host = fields.Nested(UserSchema, dump_only=True)
     location = fields.Nested(LocationSchema, dump_only=True,
                              load_from='user.location')
+    my_review = fields.Nested('ReviewSchema', dump_only=True, exclude=('meal',))
+
+    guest_fields = ['my_review']
 
     private_fields = ['location.{}'.format(field)
                       for field in LocationSchema.private_fields] + \

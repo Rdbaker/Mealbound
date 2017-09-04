@@ -2,6 +2,7 @@
 """Models for meals."""
 import datetime as dt
 
+from flask_login import current_user
 from sqlalchemy import Time, and_, cast
 
 from ceraon.database import (Column, Model, UUIDModel, db, reference_col,
@@ -48,6 +49,19 @@ class Meal(UUIDModel):
         """Get the count of the guests."""
         return len(self.user_meals)
 
+    @property
+    def my_review(self):
+        """Get the review of the currently logged-in user."""
+        if not current_user.is_authenticated:
+            return None
+        review = filter(
+            lambda r: r.user_id == current_user.id and r.meal_id == self.id,
+            self.reviews)
+        try:
+            return next(review)
+        except StopIteration:
+            return None
+
     def joined(self, user):
         """Return True if the given user has joined the meal already."""
         for um in self.user_meals:
@@ -70,6 +84,10 @@ class Meal(UUIDModel):
     def is_host(self, user):
         """Returns whether or not the given user is the host."""
         return user is self.host
+
+    def is_guest(self, user):
+        """Returns whether or not the given user is a guest."""
+        return user in [um.user for um in self.user_meals]
 
     def is_upcoming(self):
         """Returns whether or not the meal is upcoming."""

@@ -1,5 +1,6 @@
 import UserSessionInfo from '../State/Identity/UserSessionInfo';
 import Meal from '../State/Meal/Meal';
+import Review from '../State/Meal/Review';
 import Location from '../State/Meal/Location';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
 import UserIdentity, { UserIdentityUpdateModel } from '../State/Identity/UserIdentity';
@@ -37,4 +38,6 @@ export interface ICeraonModelAPI {
   updateMeal(meal: Partial<Meal>): Promise<ModelUpdateResult<Meal>>;
   toggleJoinMeal(id: string, join: boolean, stripeToken?: string): Promise<ModelUpdateResult<Meal>>;
   createMeal(meal: Partial<Meal>): Promise<ModelUpdateResult<Meal>>;
+
+  createReview(review: Partial<Review>): Promise<ModelUpdateResult<Review>>;
 };

@@ -91,6 +91,12 @@ export default function ceraonReducer(state: CeraonState, action: CeraonAction) 
     case CeraonActionType.ToggleJoinMeal:
       stateCopy = toggleJoinedMealReducer(stateCopy);
       break;
+    case CeraonActionType.CreateReview:
+      stateCopy = createReviewReducer(stateCopy, action as Actions.CreateReviewAction);
+      break;
+    case CeraonActionType.ReviewCreated:
+      stateCopy = reviewCreatedReducer(stateCopy, action as Actions.ReviewCreatedAction);
+      break;
   }
 
   stateCopy.pageUrl = CeraonPageUtils.CeraonPageToUrl[stateCopy.activePage](stateCopy);
@@ -405,6 +411,19 @@ function mealCreatedReducer(state: CeraonState, action: Actions.MealCreatedActio
       state.createMealPageState.isCreateLoading = false;
     }
   }
+
+  return state;
+}
+
+function createReviewReducer(state: CeraonState, action: Actions.CreateReviewAction) : CeraonState {
+  state.viewMealPageState.isReviewCreatePending = true;
+
+  return state;
+}
+
+function reviewCreatedReducer(state: CeraonState, action: Actions.ReviewCreatedAction) : CeraonState {
+  state.viewMealPageState.isReviewCreatePending = false;
+  state.viewMealPageState.isReviewCreateSuccess = true;
 
   return state;
 }

@@ -20,6 +20,7 @@ blueprint = RESTBlueprint('meals', __name__, version='v1')
 
 MEAL_SCHEMA = MealSchema(exclude=MealSchema.private_fields)
 PRIVATE_MEAL_SCHEMA = MealSchema()
+MEAL_SCHEMA_AS_HOST = MealSchema(exclude=MealSchema.guest_fields)
 
 
 def update_or_replace_meal(meal_id, data, replace=False):
@@ -108,7 +109,11 @@ def find_meal(uid):
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
-    return jsonify(data=MEAL_SCHEMA.dump(meal).data)
+    if meal.is_host(current_user) or meal.is_guest(current_user):
+        meal_data = PRIVATE_MEAL_SCHEMA.dump(meal).data
+    else:
+        meal_data = MEAL_SCHEMA.dump(meal).data
+    return jsonify(data=meal_data)
 
 
 @blueprint.list()
@@ -501,6 +506,8 @@ def get_user_meals(role):
         raise BadRequest(Errors.INVALID_MEAL_ROLE)
     if role == 'guest':
         meals = current_user.get_joined_meals()
+        schema = PRIVATE_MEAL_SCHEMA
     else:
         meals = current_user.get_hosted_meals()
-    return jsonify(data=PRIVATE_MEAL_SCHEMA.dump(meals, many=True).data)
+        schema = MEAL_SCHEMA_AS_HOST
+    return jsonify(data=schema.dump(meals, many=True).data)

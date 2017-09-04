@@ -8,3 +8,4 @@ export * from './UpdateMealTask';
 export * from './CreateMealTask';
 export * from './ToggleJoinMealTask';
 export * from './UpdatePaymentInfoTask';
+export * from './CreateReviewTask';

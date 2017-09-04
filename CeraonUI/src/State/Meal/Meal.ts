@@ -1,4 +1,5 @@
 import Location from './Location';
+import Review from './Review';
 import UserIdentity from '../Identity/UserIdentity';
 
 interface Meal {
@@ -11,6 +12,7 @@ interface Meal {
   location: Location;
   joined: boolean;
   mine: boolean;
+  my_review: Review;
 }
 
 export default Meal;

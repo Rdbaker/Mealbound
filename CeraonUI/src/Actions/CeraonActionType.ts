@@ -25,6 +25,8 @@ export enum CeraonActionType {
   MealCreated = 20,
   ToggleJoinMeal = 21,
   UpdatePaymentInfo = 22,
+  CreateReview = 23,
+  ReviewCreated = 24,
 }
 
 export default CeraonActionType;

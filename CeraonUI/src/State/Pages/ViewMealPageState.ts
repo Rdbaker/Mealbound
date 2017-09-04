@@ -8,6 +8,8 @@ interface ViewMealPageState {
   failedToFindMeal: boolean;
   isToggleJoinPending: boolean;
   isCancelPending: boolean;
+  isReviewCreatePending: boolean;
+  isReviewCreateSuccess: boolean;
 }
 
 export function defaultViewMealPageState(): ViewMealPageState {
@@ -19,6 +21,8 @@ export function defaultViewMealPageState(): ViewMealPageState {
     failedToFindMeal: false,
     isToggleJoinPending: false,
     isCancelPending: false,
+    isReviewCreatePending: false,
+    isReviewCreateSuccess: false,
   };
 }
 
