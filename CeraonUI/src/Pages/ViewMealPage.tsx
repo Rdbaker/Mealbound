@@ -130,7 +130,11 @@ export default class ViewMealPage extends React.Component<ViewMealPageProps, und
       return (
         <div className='ui stackable grid view-meal-page'>
           <div className='column view-meal-meal'>
-            <MealCard meal={this.props.meal} mealCardMode={MealCardMode.Full}/>
+            <MealCard
+              meal={this.props.meal}
+              mealCardMode={MealCardMode.Full}
+              isReviewCreatePending={this.props.isReviewCreatePending}
+              isReviewCreateSuccess={this.props.isReviewCreateSuccess} />
           </div>
           <div className='column view-meal-controls'>
             <div className='ui menu vertical stackable right'>

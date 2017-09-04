@@ -1,6 +1,7 @@
 import { ICeraonModelAPI, ModelUpdateErrorCode, ModelUpdateResult } from '../ICeraonModelAPI';
 import UserSessionInfo from '../../State/Identity/UserSessionInfo';
 import Meal from '../../State/Meal/Meal';
+import Review from '../../State/Meal/Review';
 import Location from '../../State/Meal/Location';
 import MealSearchFilter from '../../State/Meal/Filters/MealSearchFilter';
 import UserIdentity, { UserIdentityUpdateModel } from '../../State/Identity/UserIdentity';
@@ -31,6 +32,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       joined: false,
       mine: false,
       host: null,
+      my_review: null,
     },
     {
       id: '2',
@@ -42,6 +44,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       joined: false,
       mine: false,
       host: null,
+      my_review: null,
     },
     {
       id: '3',
@@ -53,6 +56,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       joined: false,
       mine: true,
       host: null,
+      my_review: null,
     },
     {
       id: '4',
@@ -64,6 +68,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       joined: false,
       mine: true,
       host: null,
+      my_review: null,
     }
   ];
 
@@ -184,6 +189,10 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
   }
 
   createMeal(meal: Partial<Meal>): Promise<ModelUpdateResult<Meal>> {
+    return Promise.resolve(null);
+  }
+
+  createReview(review: Partial<Review>): Promise<ModelUpdateResult<Review>> {
     return Promise.resolve(null);
   }
 }

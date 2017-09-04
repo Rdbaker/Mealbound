@@ -63,6 +63,9 @@ export class CeraonModel {
       case CeraonActionType.UpdatePaymentInfo:
         this.handleUpdatePaymentInfo(action as Actions.UpdatePaymentInfoAction);
         break;
+      case CeraonActionType.CreateReview:
+        this.handleCreateReview(action as Actions.CreateReviewAction);
+        break;
     }
   }
 
@@ -212,6 +215,14 @@ export class CeraonModel {
   private handleUpdatePaymentInfo(action: Actions.UpdatePaymentInfoAction) {
     let updateTask = new Tasks.UpdatePaymentInfoTask(this._api, action.stripeToken, true);
     this.runTask(true, updateTask, ()=>{});
+  }
+
+  private handleCreateReview(action: Actions.CreateReviewAction) {
+    console.log('heres the action');
+    console.log(action);
+    console.log('I think the meal ID should be passed here');
+    let createTask = new Tasks.CreateReviewTask(this._api, action.review, true);
+    this.runTask(true, createTask, ()=>{});
   }
 
 

@@ -13,6 +13,8 @@ import { defaultLandingPageState } from '../../State/Pages/LandingPageState';
 import { defaultSearchPageState } from '../../State/Pages/SearchPageState';
 import { defaultViewMealPageState } from '../../State/Pages/ViewMealPageState';
 import { defaultEditMealPageState } from '../../State/Pages/EditMealPageState';
+import { defaultCreateMealPageState } from '../../State/Pages/CreateMealPageState';
+import { defaultSettingsPageState } from '../../State/Pages/SettingsPageState';
 
 import assert from '../../Utils/Assert';
 import mixpanel from '../../Utils/Mixpanel';
@@ -90,6 +92,12 @@ export default function ceraonReducer(state: CeraonState, action: CeraonAction) 
       break;
     case CeraonActionType.ToggleJoinMeal:
       stateCopy = toggleJoinedMealReducer(stateCopy);
+      break;
+    case CeraonActionType.CreateReview:
+      stateCopy = createReviewReducer(stateCopy, action as Actions.CreateReviewAction);
+      break;
+    case CeraonActionType.ReviewCreated:
+      stateCopy = reviewCreatedReducer(stateCopy, action as Actions.ReviewCreatedAction);
       break;
   }
 
@@ -409,6 +417,19 @@ function mealCreatedReducer(state: CeraonState, action: Actions.MealCreatedActio
   return state;
 }
 
+function createReviewReducer(state: CeraonState, action: Actions.CreateReviewAction) : CeraonState {
+  state.viewMealPageState.isReviewCreatePending = true;
+
+  return state;
+}
+
+function reviewCreatedReducer(state: CeraonState, action: Actions.ReviewCreatedAction) : CeraonState {
+  state.viewMealPageState.isReviewCreatePending = false;
+  state.viewMealPageState.isReviewCreateSuccess = true;
+
+  return state;
+}
+
 function resetOtherPageState(state: CeraonState, currentPage: CeraonPage) : CeraonState {
   const newState = state;
 
@@ -430,6 +451,18 @@ function resetOtherPageState(state: CeraonState, currentPage: CeraonPage) : Cera
 
   if (currentPage !== CeraonPage.EditMeal) {
     newState.editMealPageState = defaultEditMealPageState();
+  }
+
+  if (currentPage !== CeraonPage.ViewMeal) {
+    newState.viewMealPageState = defaultViewMealPageState();
+  }
+
+  if (currentPage !== CeraonPage.CreateMeal) {
+    newState.createMealPageState = defaultCreateMealPageState();
+  }
+
+  if (currentPage !== CeraonPage.Settings) {
+    newState.settingsPageState = defaultSettingsPageState();
   }
 
   return newState;

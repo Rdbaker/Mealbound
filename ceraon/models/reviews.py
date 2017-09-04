@@ -17,7 +17,7 @@ class Review(UUIDModel):
     rating = Column(db.Float(), nullable=False)
     description = Column(db.Text, nullable=False)
     meal_id = reference_col('meal', nullable=False)
-    meal = relationship('Meal')
+    meal = relationship('Meal', backref='reviews')
     user_id = reference_col('users', nullable=False)
     user = relationship('User')
 

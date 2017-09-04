@@ -71,8 +71,8 @@ def list_meal_reviews(meal_id):
     meal = Meal.find(meal_id)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
-    page = Review.query.filter(meal_id=meal_id).paginate(page=page_num,
-                                                         per_page=per_page)
+    page = Review.query.filter_by(meal_id=meal_id).paginate(page=page_num,
+                                                            per_page=per_page)
     base_url = request.path + '?meal_id={}'.format(meal_id)
     meta_pagination = {
         'first': base_url + '&page={page}&per_page={per_page}'.format(
