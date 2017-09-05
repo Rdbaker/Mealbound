@@ -18,65 +18,94 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
   constructor() {
     super();
     this.onMealSearch = this.onMealSearch.bind(this);
+    this.joinNewMeal = this.joinNewMeal.bind(this);
+    this.createNewMeal = this.createNewMeal.bind(this);
+  }
+
+  joinNewMeal() {
+    this.onMealSearch(MealTime.Any);
+  }
+
+  createNewMeal() {
+    CeraonDispatcher(Actions.createGoToCreateMealAction());
   }
 
   onMealSearch(mealTime: MealTime) {
     CeraonDispatcher(Actions.createMealSearchAction({mealTime: mealTime, textFilter: []}));
   }
 
+  renderMyHostMeals() {
+    if (this.props.hostedMealsLoading) {
+      return <LoadingSpinner loadingStatusMessage='finding your hosted meals...'/>
+    }
+
+    let segmentContent = <div>You haven't hosted any meals. <a href="javascript:void(0)" onClick={this.createNewMeal}>Host one now!</a></div>
+
+    if (this.props.myHostedMeals.length > 0) {
+      segmentContent = (
+        <div className='meal-card-grid'>
+          {this.props.myHostedMeals.map((meal: Meal) =>
+            <MealCard
+              key={meal.id}
+              meal={meal}
+              mealCardMode={MealCardMode.Summary}
+              onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
+          )}
+        </div>
+      );
+    }
+
+    return (<Segment basic className='home-page-meals' textAlign='center'>
+      <Header as='h3'>
+        <Header.Content>
+            Meals You're Hosting
+        </Header.Content>
+      </Header>
+      {segmentContent}
+    </Segment>);
+  }
+
+  renderMyGuestMeals() {
+    if (this.props.joinedMealsLoading) {
+      return <LoadingSpinner loadingStatusMessage='finding meals you joined...'/>
+    }
+
+    let segmentContent = <div>You haven't joined any meals. <a href="javascript:void(0)" onClick={this.joinNewMeal}>Find one now!</a></div>
+
+    if (this.props.myJoinedMeals.length > 0) {
+      segmentContent = (
+        <div className='meal-card-grid'>
+          {this.props.myJoinedMeals.map((meal: Meal) =>
+            <MealCard
+              key={meal.id}
+              meal={meal}
+              mealCardMode={MealCardMode.Summary}
+              onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
+          )}
+        </div>
+      );
+    }
+
+    return (<Segment basic className='home-page-meals' textAlign='center'>
+      <Header as='h3'>
+        <Header.Content>
+          Meals You've Joined
+        </Header.Content>
+      </Header>
+      {segmentContent}
+    </Segment>);
+  }
+
   render() {
     let mealInfo = <div/>;
 
     if (this.props.showMyMealInfo) {
-      if (this.props.myMealInfoLoading) {
-        mealInfo = <LoadingSpinner loadingStatusMessage=''/>
-      } else {
-        mealInfo = (
-        <Segment.Group style={{border:'none', boxShadow:'0 0'}}>
-          { this.props.myJoinedMeals.length == 0 ?
-            <div/> :
-            (
-              <Segment basic className='home-page-meals'>
-                <Header as='h3' textAlign='center'>
-                  <Header.Content>
-                    Meals You've Joined
-                  </Header.Content>
-                  <div className='meal-card-grid'>
-                    {this.props.myJoinedMeals.map((meal: Meal) =>
-                      <MealCard
-                        key={meal.id}
-                        meal={meal}
-                        mealCardMode={MealCardMode.Summary}
-                        onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
-                    )}
-                  </div>
-                </Header>
-              </Segment>
-            )
-          }
-          { this.props.myHostedMeals.length == 0 ?
-            <div/> :
-            (
-              <Segment basic className='home-page-meals'>
-                <Header as='h3' textAlign='center'>
-                  <Header.Content>
-                      Meals You're Hosting
-                  </Header.Content>
-                    <div className='meal-card-grid'>
-                      {this.props.myHostedMeals.map((meal: Meal) =>
-                        <MealCard key={meal.id}
-                          meal={meal}
-                          mealCardMode={MealCardMode.Summary}
-                          onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
-                        )}
-                    </div>
-                </Header>
-              </Segment>
-            )
-          }
-        </Segment.Group>
-        );
-      }
+      mealInfo = (
+      <Segment.Group style={{border:'none', boxShadow:'0 0'}}>
+        {this.renderMyGuestMeals()}
+        {this.renderMyHostMeals()}
+      </Segment.Group>
+      );
     }
 
     return (

@@ -54,9 +54,6 @@ export default function ceraonReducer(state: CeraonState, action: CeraonAction) 
     case CeraonActionType.SearchResultsLoaded:
       stateCopy = searchResultsLoadedReducer(stateCopy, action as Actions.SearchResultsLoadedAction);
       break;
-    case CeraonActionType.MyMealsLoaded:
-      stateCopy = myMealsLoadedReducer(stateCopy, action as Actions.MyMealsLoadedAction);
-      break;
     case CeraonActionType.UpdateMeal:
       stateCopy = updateMealReducer(stateCopy, action as Actions.UpdateMealAction);
       break;
@@ -98,6 +95,12 @@ export default function ceraonReducer(state: CeraonState, action: CeraonAction) 
       break;
     case CeraonActionType.ReviewCreated:
       stateCopy = reviewCreatedReducer(stateCopy, action as Actions.ReviewCreatedAction);
+      break;
+    case CeraonActionType.JoinedMealsLoaded:
+      stateCopy = joinedMealsLoadedReducer(stateCopy, action as Actions.JoinedMealsLoadedAction);
+      break;
+    case CeraonActionType.HostedMealsLoaded:
+      stateCopy = hostedMealsLoadedReducer(stateCopy, action as Actions.HostedMealsLoadedAction);
       break;
   }
 
@@ -165,7 +168,8 @@ function goHomeReducer(state: CeraonState) : CeraonState {
 
     newState.homePageState.myHostedMeals = [];
     newState.homePageState.myJoinedMeals = [];
-    newState.homePageState.myMealInfoLoading = false;
+    newState.homePageState.joinedMealsLoading = true;
+    newState.homePageState.hostedMealsLoading = true;
     newState.homePageState.showMyMealInfo = newState.userSessionInfo.isUserAuthenticated;
 
     return newState;
@@ -200,7 +204,8 @@ function startLoadingReducer(state: CeraonState) : CeraonState {
   } else if (state.activePage == CeraonPage.Search) {
     state.searchPageState.isLoading = true;
   } else if (state.activePage == CeraonPage.Home) {
-    state.homePageState.myMealInfoLoading = true;
+    state.homePageState.joinedMealsLoading = true;
+    state.homePageState.hostedMealsLoading = true;
   } else if (state.activePage == CeraonPage.CreateMeal) {
     state.createMealPageState.isCreateLoading = true;
   } else if (state.activePage == CeraonPage.EditMeal) {
@@ -240,19 +245,6 @@ function searchResultsLoadedReducer(state: CeraonState, action: Actions.SearchRe
     state.searchPageState.totalResults = action.meals.length;
     state.searchPageState.currentResultsStartingIndex = 0;
     state.searchPageState.isLoading = false;
-  }
-
-  return state;
-}
-
-function myMealsLoadedReducer(state: CeraonState, action: Actions.MyMealsLoadedAction) : CeraonState {
-  assert(state.userSessionInfo.isUserAuthenticated,
-    'User should be authenticated before we attempt to load their meals');
-
-  if (state.activePage == CeraonPage.Home) {
-    state.homePageState.myHostedMeals = action.hostedMeals;
-    state.homePageState.myJoinedMeals = action.joinedMeals;
-    state.homePageState.myMealInfoLoading = false;
   }
 
   return state;
@@ -427,6 +419,18 @@ function reviewCreatedReducer(state: CeraonState, action: Actions.ReviewCreatedA
   state.viewMealPageState.isReviewCreatePending = false;
   state.viewMealPageState.isReviewCreateSuccess = true;
 
+  return state;
+}
+
+function joinedMealsLoadedReducer(state: CeraonState, action: Actions.JoinedMealsLoadedAction): CeraonState {
+  state.homePageState.myJoinedMeals = action.joinedMeals;
+  state.homePageState.joinedMealsLoading = false;
+  return state;
+}
+
+function hostedMealsLoadedReducer(state: CeraonState, action: Actions.HostedMealsLoadedAction): CeraonState {
+  state.homePageState.myHostedMeals = action.hostedMeals;
+  state.homePageState.hostedMealsLoading = false;
   return state;
 }
 

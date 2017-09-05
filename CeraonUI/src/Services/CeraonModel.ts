@@ -14,6 +14,8 @@ import * as Tasks from './Model/Tasks/Index';
 export class CeraonModel {
   private _cachedMeals: Meal[] = [];
   private _myCachedMeals: Array<Array<Meal>> = [];
+  private _hostedCachedMeals: Array<Meal> = [];
+  private _joinedCachedMeals: Array<Meal> = [];
   private _primaryTask : Tasks.ModelTask<any> = null;
 
   constructor(private _api: ICeraonModelAPI) {
@@ -98,17 +100,27 @@ export class CeraonModel {
     }
 
     let startLoading = true;
-    if (this._myCachedMeals.length == 2) {
-      CeraonDispatcher(Actions.createMyMealsLoadedAction(this._myCachedMeals[0], this._myCachedMeals[1]));
+    if (this._hostedCachedMeals.length != 0) {
+      CeraonDispatcher(Actions.createHostedMealsLoadedAction(this._hostedCachedMeals));
+      startLoading = false;
+    }
+
+    if (this._joinedCachedMeals.length != 0) {
+      CeraonDispatcher(Actions.createJoinedMealsLoadedAction(this._joinedCachedMeals));
       startLoading = false;
     }
 
     // Refresh in case they've changed
-    let loadTask = new Tasks.MyMealLoadTask(this._api, startLoading);
-    this.runTask(true, loadTask, (task: Tasks.ModelTask<Array<Meal[]>>, result: Array<Meal[]>) => {
-      this._myCachedMeals = result;
-      this.cacheMeals(result[0]);
-      this.cacheMeals(result[1]);
+    let loadHostedTask = new Tasks.HostedMealsLoadTask(this._api, startLoading);
+    this.runTask(false, loadHostedTask, (task: Tasks.ModelTask<Meal[]>, result: Meal[]) => {
+      this._hostedCachedMeals = result;
+      this.cacheMeals(result);
+    });
+
+    let loadJoinedTask = new Tasks.JoinedMealsLoadTask(this._api, startLoading);
+    this.runTask(true, loadJoinedTask, (task: Tasks.ModelTask<Meal[]>, result: Meal[]) => {
+      this._joinedCachedMeals = result;
+      this.cacheMeals(result);
     });
   }
 
@@ -218,9 +230,6 @@ export class CeraonModel {
   }
 
   private handleCreateReview(action: Actions.CreateReviewAction) {
-    console.log('heres the action');
-    console.log(action);
-    console.log('I think the meal ID should be passed here');
     let createTask = new Tasks.CreateReviewTask(this._api, action.review, true);
     this.runTask(true, createTask, ()=>{});
   }

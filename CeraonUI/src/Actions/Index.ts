@@ -27,3 +27,5 @@ export * from './ActionDefs/ToggleJoinMeal';
 export * from './ActionDefs/UpdatePaymentInfoAction';
 export * from './ActionDefs/CreateReviewAction';
 export * from './ActionDefs/ReviewCreatedAction';
+export * from './ActionDefs/HostedMealsLoadedAction';
+export * from './ActionDefs/JoinedMealsLoadedAction';

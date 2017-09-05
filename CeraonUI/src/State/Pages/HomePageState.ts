@@ -9,6 +9,8 @@ interface HomePageState {
   myHostedMeals: Meal[];
   showMyMealInfo: boolean;
   myMealInfoLoading: boolean;
+  joinedMealsLoading: boolean;
+  hostedMealsLoading: boolean;
 }
 
 export function defaultHomePageState() : HomePageState {
@@ -20,6 +22,8 @@ export function defaultHomePageState() : HomePageState {
   myHostedMeals: [],
   myMealInfoLoading: false,
   showMyMealInfo: false,
+  joinedMealsLoading: false,
+  hostedMealsLoading: false,
   };
 }
 

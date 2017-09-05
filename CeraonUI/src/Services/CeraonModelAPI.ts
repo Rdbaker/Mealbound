@@ -130,8 +130,6 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
   createReview(review: Partial<Review>): Promise<ModelUpdateResult<Partial<Review>>> {
     return new Promise((resolve) => {
       this.pushJob(() => axios.post(`/api/v1/meals/${review.meal.id}/reviews`, review, this.getRequestConfig()).then((res) => {
-        console.log('heres the response!');
-        console.log(res);
         resolve({
           modelOnServer: res.data,
           success: true,
