@@ -132,7 +132,7 @@ export default class MealCard extends React.Component<MealCardProps, any> {
           <input type='text'
             placeholder='meal review'
             name='review-description'
-            value={this.state.reviewDescription}
+            value={this.state.reviewDescription || ''}
             onChange={this.onReviewDescriptionChange}/>
         </div>
         <div className="field">
