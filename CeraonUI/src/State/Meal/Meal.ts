@@ -13,6 +13,8 @@ interface Meal {
   joined: boolean;
   mine: boolean;
   my_review: Review;
+  num_reviews: number;
+  avg_rating: number;
 }
 
 export default Meal;

@@ -95,8 +95,8 @@ export default class MealCard extends React.Component<MealCardProps, any> {
       return this.state.pendingReviewRating;
     }
 
-    if (this.props.meal.my_review) {
-      return this.props.meal.my_review.rating;
+    if (this.props.meal.num_reviews > 0) {
+      return this.props.meal.avg_rating;
     } else {
       return null;
     }
@@ -108,7 +108,6 @@ export default class MealCard extends React.Component<MealCardProps, any> {
       return (<Rating icon='star' rating={this.getMealRating()} maxRating={5} disabled/>);
     } else {
       if (this.props.meal.joined) {
-        // TODO: this should display the avg aggregate rating if the user has already reviewed the meal
         return (<Rating icon='star' rating={this.getMealRating()} maxRating={5} onRate={this.onRatingChange} />);
       } else {
         return (<Rating icon='star' rating={this.getMealRating()} maxRating={5} disabled/>);
@@ -121,6 +120,14 @@ export default class MealCard extends React.Component<MealCardProps, any> {
       return 'hidden';
     } else {
       return '';
+    }
+  }
+
+  renderNumReviews() {
+    if (this.props.meal.num_reviews && !this.state.pendingReviewRating) {
+      return (<span>({this.props.meal.num_reviews})</span>);
+    } else {
+      return null;
     }
   }
 
@@ -167,6 +174,7 @@ export default class MealCard extends React.Component<MealCardProps, any> {
           </Card.Content>
           <Card.Content extra className="ui vertical accordion menu">
             {this.renderRating()}
+            {this.renderNumReviews()}
             {this.renderReviewForm()}
           </Card.Content>
         </Card>
