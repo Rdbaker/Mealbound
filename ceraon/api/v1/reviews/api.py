@@ -51,6 +51,7 @@ def update_or_replace_review(review_id, data, replace=False):
     # i.e. we are updating
     review_data = REVIEW_SCHEMA.load(request.json, partial=(not replace)).data
     review.update(**review_data)
+    review.meal.update_reviews()
     return REVIEW_SCHEMA.dump(review).data
 
 
@@ -125,6 +126,7 @@ def create_review_from_meal_id(meal_id):
     if review is None:
         review = Review.create(meal_id=meal.id, user_id=current_user.id,
                                **review_data)
+        meal.update_reviews()
         return jsonify(data=REVIEW_SCHEMA.dump(review).data,
                        message=Success.REVIEW_CREATED), 201
     else:
@@ -170,8 +172,10 @@ def destroy_review(uid):
     if review is None:
         raise NotFound(Errors.REVIEW_NOT_FOUND)
     if current_user.id != review.user_id:
-        raise Forbidden(Errors.NOT_YOUR_MEAL)
+        raise Forbidden(Errors.NOT_YOUR_REVIEW)
+    meal = review.meal
     review.delete()
+    meal.update_reviews()
     return jsonify(data=None, message=Success.REVIEW_DELETED), 204
 
 

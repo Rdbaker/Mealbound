@@ -39,6 +39,9 @@ class Meal(UUIDModel):
 
     user_meals = relationship('UserMeal', cascade='delete')
 
+    num_reviews = Column(db.Integer(), default=0)
+    avg_rating = Column(db.Float())
+
     @property
     def host(self):
         """Get the host of the meal."""
@@ -61,6 +64,15 @@ class Meal(UUIDModel):
             return next(review)
         except StopIteration:
             return None
+
+    def update_reviews(self):
+        """Update the reviews columns based on the latest reviews."""
+        if len(self.reviews) == 0:
+            return
+        self.update(
+            num_reviews=len(self.reviews),
+            avg_rating=sum([r.rating for r in self.reviews])/len(self.reviews)
+        )
 
     def joined(self, user):
         """Return True if the given user has joined the meal already."""
