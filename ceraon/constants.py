@@ -34,6 +34,7 @@ class Errors(object):
                       'We couldn\'t find that meal, sorry about that')
     MEAL_CREATE_IN_PAST = ('meal-create-in-past',
                            'You can\'t create a meal in the past!')
+    MEAL_FULL = ('meal-full', 'This meal cannot have more guests.')
     NOT_YOUR_MEAL = ('not-your-meal', 'You can\'t do that to somebody else\'s'
                                       ' meal!')
     USER_NOT_FOUND = ('user-not-found', 'That user doesn\'t exist')

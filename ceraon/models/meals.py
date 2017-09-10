@@ -42,6 +42,8 @@ class Meal(UUIDModel):
     num_reviews = Column(db.Integer(), default=0)
     avg_rating = Column(db.Float())
 
+    max_guests = Column(db.Integer())
+
     @property
     def host(self):
         """Get the host of the meal."""
@@ -95,11 +97,11 @@ class Meal(UUIDModel):
 
     def is_host(self, user):
         """Returns whether or not the given user is the host."""
-        return user is self.host
+        return user.id == self.host.id
 
     def is_guest(self, user):
         """Returns whether or not the given user is a guest."""
-        return user in [um.user for um in self.user_meals]
+        return user.id in [um.user.id for um in self.user_meals]
 
     def is_upcoming(self):
         """Returns whether or not the meal is upcoming."""

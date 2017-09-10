@@ -7,6 +7,7 @@ from flask import jsonify, request
 from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 
+from ceraon.api.v1.users.schema import UserSchema
 from ceraon.constants import Errors, Success
 from ceraon.errors import (BadRequest, Conflict, Forbidden, NotFound,
                            PreconditionRequired, TransactionVendorError)
@@ -21,6 +22,7 @@ blueprint = RESTBlueprint('meals', __name__, version='v1')
 MEAL_SCHEMA = MealSchema(exclude=MealSchema.private_fields)
 PRIVATE_MEAL_SCHEMA = MealSchema()
 MEAL_SCHEMA_AS_HOST = MealSchema(exclude=MealSchema.guest_fields)
+USER_SCHEMA = UserSchema(exclude=UserSchema.private_fields)
 
 
 def update_or_replace_meal(meal_id, data, replace=False):
@@ -271,6 +273,8 @@ def join_meal(uid):
         raise BadRequest(Errors.MEAL_ALREADY_HAPPENED)
     if meal.host.id == current_user.id:
         raise BadRequest(Errors.JOIN_HOSTED_MEAL)
+    if meal.max_guests and meal.num_guests >= meal.max_guests:
+        raise BadRequest(Errors.MEAL_FULL)
     try:
         um = UserMeal.create(meal=meal, user=current_user)
     except IntegrityError:
@@ -511,3 +515,38 @@ def get_user_meals(role):
         meals = current_user.get_hosted_meals()
         schema = MEAL_SCHEMA_AS_HOST
     return jsonify(data=schema.dump(meals, many=True).data)
+
+
+@blueprint.flexible_route('/<string:uid>/guests')
+@login_required
+def get_meal_guests(uid):
+    """Get the guests for a meal.
+
+    ---
+    tags:
+      - meals
+    parameters:
+      - in: path
+        name: uid
+        description: The meal's id
+        required: true
+    responses:
+      200:
+        description: Meal reservation successfully cancelled
+        schema:
+          id: Meal
+      401:
+        description: The user is not authenticated
+      403:
+        description: The user is not allowed to see the guests
+      404:
+        description: No meal with the specified ID exists
+    """
+    meal = Meal.find(uid)
+    if meal is None:
+        raise NotFound(Errors.MEAL_NOT_FOUND)
+    if not meal.is_host(current_user):
+        raise Forbidden(Errors.NOT_YOUR_MEAL)
+    return jsonify(
+        data=USER_SCHEMA.dump([um.user for um in meal.user_meals],
+                              many=True).data)

@@ -20,8 +20,11 @@ class MealSchema(Schema):
     host = fields.Nested(UserSchema, dump_only=True)
     location = fields.Nested(LocationSchema, dump_only=True,
                              load_from='user.location')
-    my_review = fields.Nested('ReviewSchema', dump_only=True, exclude=('meal',))
+    my_review = fields.Nested('ReviewSchema', dump_only=True,
+                              exclude=('meal',))
     num_reviews = fields.Int(dump_only=True)
+    num_guests = fields.Int(dump_only=True)
+    max_guests = fields.Int(dump_only=True)
     avg_rating = fields.Float(places=2, dump_only=True)
 
     guest_fields = ['my_review']
