@@ -825,6 +825,9 @@ class MealForm extends React.Component {
         }
     }
     static isSubmitEnabled(title, description, time, price, maxGuests) {
+        console.log(maxGuests === undefined);
+        console.log(typeof (maxGuests) === "number");
+        console.log(maxGuests > 0);
         return time.isAfter(Moment.now()) &&
             title.length > 0 &&
             description.length > 0 &&
@@ -844,13 +847,16 @@ class MealForm extends React.Component {
     onMaxGuestsChange(evt) {
         let maxGuestValue = evt.target.value;
         let castedNum = Number(maxGuestValue);
+        let finalVal;
         if (!isNaN(castedNum)) {
+            finalVal = castedNum;
             this.setState({ maxGuests: castedNum });
         }
         else {
+            finalVal = maxGuestValue;
             this.setState({ maxGuests: maxGuestValue });
         }
-        this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, this.state.price, this.state.maxGuests);
+        this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, this.state.price, finalVal);
     }
     onDescriptionChanged(event) {
         let value = event.target.value;

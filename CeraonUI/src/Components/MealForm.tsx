@@ -87,13 +87,16 @@ export default class MealForm extends React.Component<MealFormProps, MealFormSta
   private onMaxGuestsChange(evt) {
     let maxGuestValue = evt.target.value;
     let castedNum = Number(maxGuestValue);
+    let finalVal;
     if (!isNaN(castedNum)) {
+      finalVal = castedNum;
       this.setState({maxGuests: castedNum});
     } else {
+      finalVal = maxGuestValue;
       this.setState({maxGuests: maxGuestValue});
     }
 
-    this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, this.state.price, this.state.maxGuests);
+    this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, this.state.price, finalVal);
   }
 
   private onDescriptionChanged(event) {
