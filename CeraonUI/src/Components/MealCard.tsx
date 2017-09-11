@@ -90,7 +90,6 @@ export default class MealCard extends React.Component<MealCardProps, any> {
   }
 
   private getMealRating() {
-    // TODO: get & return aggregate rating
     if (this.state.pendingReviewRating) {
       return this.state.pendingReviewRating;
     }
@@ -161,6 +160,18 @@ export default class MealCard extends React.Component<MealCardProps, any> {
     )
   }
 
+  renderGuestCount() {
+    if (!!this.props.meal.max_guests) {
+      return (
+        <span><i className="icon user"></i>{this.props.meal.num_guests} / {this.props.meal.max_guests}</span>
+      )
+    } else {
+      return (
+        <span><i className="icon user"></i>{this.props.meal.num_guests}</span>
+      )
+    }
+  }
+
   render() {
     let card = (
       <Card.Group>
@@ -173,6 +184,7 @@ export default class MealCard extends React.Component<MealCardProps, any> {
             <Card.Description>{this.props.meal.description}</Card.Description>
           </Card.Content>
           <Card.Content extra className="ui vertical accordion menu">
+            {this.renderGuestCount()} | 
             {this.renderRating()}
             {this.renderNumReviews()}
             {this.renderReviewForm()}

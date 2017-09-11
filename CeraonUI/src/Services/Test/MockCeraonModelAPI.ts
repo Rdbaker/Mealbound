@@ -35,6 +35,8 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       my_review: null,
       num_reviews: null,
       avg_rating: null,
+      num_guests: null,
+      max_guests: null,
     },
     {
       id: '2',
@@ -49,6 +51,8 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       my_review: null,
       num_reviews: null,
       avg_rating: null,
+      num_guests: null,
+      max_guests: null,
     },
     {
       id: '3',
@@ -63,6 +67,8 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       my_review: null,
       num_reviews: null,
       avg_rating: null,
+      num_guests: null,
+      max_guests: null,
     },
     {
       id: '4',
@@ -77,6 +83,8 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       my_review: null,
       num_reviews: null,
       avg_rating: null,
+      num_guests: null,
+      max_guests: null,
     }
   ];
 

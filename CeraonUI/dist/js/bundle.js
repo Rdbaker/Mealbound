@@ -735,6 +735,20 @@ class MealCard extends React.Component {
                     :
                         null)));
     }
+    renderGuestCount() {
+        if (!!this.props.meal.max_guests) {
+            return (React.createElement("span", null,
+                React.createElement("i", { className: "icon user" }),
+                this.props.meal.num_guests,
+                " / ",
+                this.props.meal.max_guests));
+        }
+        else {
+            return (React.createElement("span", null,
+                React.createElement("i", { className: "icon user" }),
+                this.props.meal.num_guests));
+        }
+    }
     render() {
         let card = (React.createElement(semantic_ui_react_1.Card.Group, null,
             React.createElement(semantic_ui_react_1.Card, { fluid: true },
@@ -750,6 +764,8 @@ class MealCard extends React.Component {
                     this.renderLocation(),
                     React.createElement(semantic_ui_react_1.Card.Description, null, this.props.meal.description)),
                 React.createElement(semantic_ui_react_1.Card.Content, { extra: true, className: "ui vertical accordion menu" },
+                    this.renderGuestCount(),
+                    " |",
                     this.renderRating(),
                     this.renderNumReviews(),
                     this.renderReviewForm()))));
@@ -783,6 +799,7 @@ class MealForm extends React.Component {
             price: 0.00,
             isSubmitEnabled: false,
             datePickerFocused: false,
+            maxGuests: undefined,
         };
         if (this.props.meal) {
             state = {
@@ -790,41 +807,55 @@ class MealForm extends React.Component {
                 mealDescription: this.props.meal.description,
                 mealTime: Moment(this.props.meal.scheduled_for),
                 price: this.props.meal.price,
+                maxGuests: this.props.meal.max_guests || undefined,
                 isSubmitEnabled: false,
                 datePickerFocused: false,
             };
         }
-        state.isSubmitEnabled = MealForm.isSubmitEnabled(state.mealTitle, state.mealDescription, state.mealTime, state.price);
+        state.isSubmitEnabled = MealForm.isSubmitEnabled(state.mealTitle, state.mealDescription, state.mealTime, state.price, state.maxGuests);
         this.state = state;
         this.onDescriptionChanged = this.onDescriptionChanged.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
+        this.onMaxGuestsChange = this.onMaxGuestsChange.bind(this);
     }
     onSubmitForm() {
         if (this.props.onSubmit) {
-            this.props.onSubmit(this.state.mealTitle, this.state.mealDescription, this.state.mealTime.format(), this.state.price);
+            this.props.onSubmit(this.state.mealTitle, this.state.mealDescription, this.state.mealTime.format(), this.state.price, this.state.maxGuests);
         }
     }
-    static isSubmitEnabled(title, description, time, price) {
+    static isSubmitEnabled(title, description, time, price, maxGuests) {
         return time.isAfter(Moment.now()) &&
             title.length > 0 &&
             description.length > 0 &&
+            (maxGuests === undefined || (typeof (maxGuests) === "number" && maxGuests > 0)) &&
             price > 0;
     }
-    updateIsSubmitEnabled(title, description, time, price) {
+    updateIsSubmitEnabled(title, description, time, price, maxGuests) {
         this.setState({
-            isSubmitEnabled: MealForm.isSubmitEnabled(title, description, time, price),
+            isSubmitEnabled: MealForm.isSubmitEnabled(title, description, time, price, maxGuests),
         });
     }
     onTitleChange(event) {
         let titleValue = event.target.value;
         this.setState({ mealTitle: titleValue });
-        this.updateIsSubmitEnabled(titleValue, this.state.mealDescription, this.state.mealTime, this.state.price);
+        this.updateIsSubmitEnabled(titleValue, this.state.mealDescription, this.state.mealTime, this.state.price, this.state.maxGuests);
+    }
+    onMaxGuestsChange(evt) {
+        let maxGuestValue = evt.target.value;
+        let castedNum = Number(maxGuestValue);
+        if (!isNaN(castedNum)) {
+            this.setState({ maxGuests: castedNum });
+        }
+        else {
+            this.setState({ maxGuests: maxGuestValue });
+        }
+        this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, this.state.price, this.state.maxGuests);
     }
     onDescriptionChanged(event) {
         let value = event.target.value;
         this.setState({ mealDescription: value });
-        this.updateIsSubmitEnabled(this.state.mealDescription, value, this.state.mealTime, this.state.price);
+        this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, this.state.price, this.state.maxGuests);
     }
     render() {
         return (React.createElement(semantic_ui_react_1.Segment, null,
@@ -840,15 +871,18 @@ class MealForm extends React.Component {
                     React.createElement("label", null, "Meal Time*"),
                     React.createElement(DateTimePicker, { isValidDate: moment => moment.isAfter(Moment.now()), value: this.state.mealTime.toDate(), onChange: moment => {
                             this.setState({ mealTime: moment });
-                            this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, moment, this.state.price);
+                            this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, moment, this.state.price, this.state.maxGuests);
                             ;
                         } })),
                 React.createElement("div", { className: 'field' },
                     React.createElement("label", null, "Meal Price*"),
                     React.createElement(react_number_input_1.default, { value: this.state.price, placeholder: 'Meal Price', format: '$0,0.00', min: 0, max: 50, onChange: (price) => {
                             this.setState({ price: price });
-                            this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, price);
+                            this.updateIsSubmitEnabled(this.state.mealTitle, this.state.mealDescription, this.state.mealTime, price, this.state.maxGuests);
                         } })),
+                React.createElement("div", { className: 'field' },
+                    React.createElement("label", null, "Max Guests"),
+                    React.createElement("input", { type: 'text', placeholder: 'maximum buyers', name: 'max-buyers', value: this.state.maxGuests, onChange: this.onMaxGuestsChange })),
                 React.createElement(semantic_ui_react_1.Button, { onClick: this.onSubmitForm, disabled: !this.state.isSubmitEnabled }, this.props.submitText))));
     }
 }
@@ -1052,12 +1086,13 @@ class EditMealPage extends React.Component {
         super(props);
         this.onMealEdited = this.onMealEdited.bind(this);
     }
-    onMealEdited(title, descr, time, price) {
+    onMealEdited(title, descr, time, price, maxGuests) {
         CeraonDispatcher_1.default(Actions.createUpdateMealAction({
             id: this.props.meal.id,
             name: title,
             description: descr,
             price: price,
+            max_guests: maxGuests,
             scheduled_for: time
         }));
         CeraonDispatcher_1.default(Actions.createViewMealAction(this.props.meal.id));

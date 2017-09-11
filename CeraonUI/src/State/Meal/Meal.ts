@@ -15,6 +15,8 @@ interface Meal {
   my_review: Review;
   num_reviews: number;
   avg_rating: number;
+  num_guests: number;
+  max_guests: number;
 }
 
 export default Meal;

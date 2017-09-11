@@ -13,12 +13,13 @@ export default class EditMealPage extends React.Component<EditMealPageState, und
     this.onMealEdited = this.onMealEdited.bind(this);
   }
 
-  private onMealEdited(title: string, descr: string, time: string, price: number) {
+  private onMealEdited(title: string, descr: string, time: string, price: number, maxGuests: number) {
     CeraonDispatcher(Actions.createUpdateMealAction({
       id: this.props.meal.id,
       name: title,
       description: descr,
       price: price,
+      max_guests: maxGuests,
       scheduled_for: time
     }));
 

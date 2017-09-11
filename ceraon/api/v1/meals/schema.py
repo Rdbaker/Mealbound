@@ -24,7 +24,7 @@ class MealSchema(Schema):
                               exclude=('meal',))
     num_reviews = fields.Int(dump_only=True)
     num_guests = fields.Int(dump_only=True)
-    max_guests = fields.Int(dump_only=True)
+    max_guests = fields.Int()
     avg_rating = fields.Float(places=2, dump_only=True)
 
     guest_fields = ['my_review']
@@ -63,3 +63,9 @@ class MealSchema(Schema):
             value = value.astimezone()
         if value <= dt.now().astimezone():
             raise ValidationError(Errors.MEAL_CREATE_IN_PAST[1])
+
+    @validates('max_guests')
+    def validate_max_guests(self, value):
+        """Validate the max_guests field."""
+        if value is not None and value < 1:
+            raise ValidationError(Errors.BAD_MAX_GUESTS)
