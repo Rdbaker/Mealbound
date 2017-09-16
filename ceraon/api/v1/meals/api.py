@@ -111,7 +111,8 @@ def find_meal(uid):
     meal = Meal.find(uid)
     if meal is None:
         raise NotFound(Errors.MEAL_NOT_FOUND)
-    if meal.is_host(current_user) or meal.is_guest(current_user):
+    if current_user.is_authenticated and \
+            (meal.is_host(current_user) or meal.is_guest(current_user)):
         meal_data = PRIVATE_MEAL_SCHEMA.dump(meal).data
     else:
         meal_data = MEAL_SCHEMA.dump(meal).data

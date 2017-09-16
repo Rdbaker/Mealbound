@@ -22,6 +22,7 @@ from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.models import locations as locations_models  # noqa
 from ceraon.models import meals as meals_models  # noqa
 from ceraon.models import reviews as reviews_models  # noqa
+from ceraon.models import tags as tags_models  # noqa
 from ceraon.models import transactions as transactions_models  # noqa
 from ceraon.settings import ProdConfig
 

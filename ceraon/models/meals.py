@@ -43,6 +43,7 @@ class Meal(UUIDModel):
     avg_rating = Column(db.Float())
 
     max_guests = Column(db.Integer())
+    meal_tags = relationship('MealTag', cascade='delete')
 
     @property
     def host(self):
