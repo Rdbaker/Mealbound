@@ -114,6 +114,7 @@ def register_blueprints(app):
     from ceraon.api.v1.users import api as users_views
     from ceraon.api.v1.reviews import api as reviews_views
     from ceraon.api.v1.docs import api as docs_views
+    from ceraon.api.v1.tags import api as tags_views
 
     app.register_blueprint(locations_views.blueprint)
     app.register_blueprint(token_views.blueprint)
@@ -122,6 +123,7 @@ def register_blueprints(app):
     app.register_blueprint(users_views.blueprint)
     app.register_blueprint(reviews_views.blueprint)
     app.register_blueprint(docs_views.blueprint)
+    app.register_blueprint(tags_views.blueprint)
 
     return None
 
@@ -176,7 +178,9 @@ def register_admin(app):
         meals_models.Meal,
         meals_models.UserMeal,
         reviews_models.Review,
-        transactions_models.Transaction
+        transactions_models.Transaction,
+        tags_models.Tag,
+        tags_models.MealTag
     ]:
         admin.add_view(AdminModelView(
             model,

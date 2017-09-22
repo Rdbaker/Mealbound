@@ -21,6 +21,11 @@ class Tag(Model, SurrogatePK):
             title=self.title.encode('ascii', 'ignore'),
             alias=self.alias.encode('ascii', 'ignore'))
 
+    @classmethod
+    def search(cls, query):
+        """Search for a Tag by substring match of the title."""
+        return cls.query.filter(cls.title.ilike('%{}%'.format(query)))
+
 
 class MealTag(Model):
     """A join table for a Meal <-> Tag relation."""
