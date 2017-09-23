@@ -45,7 +45,12 @@ def update_or_replace_meal(meal_id, data, replace=False):
     # we want to indicate the data is "partial" if we are *not* replacing.
     # i.e. we are updating
     meal_data = MEAL_SCHEMA.load(request.json, partial=(not replace)).data
-    meal.update(**meal_data)
+    if 'tags' in meal_data:
+        tags = meal_data.pop('tags')
+        meal.update(**meal_data)
+        meal.tags = tags
+    else:
+        meal.update(**meal_data)
     return MEAL_SCHEMA.dump(meal).data
 
 
@@ -230,7 +235,12 @@ def create_meal():
     if current_user.location is None:
         raise PreconditionRequired(Errors.LOCATION_NOT_CREATED_YET)
     meal_data = MEAL_SCHEMA.load(request.json).data
-    meal = Meal.create(location_id=current_user.location.id, **meal_data)
+    if 'tags' in meal_data:
+        tags = meal_data.pop('tags')
+        meal = Meal.create(location_id=current_user.location.id, **meal_data)
+        meal.tags = tags
+    else:
+        meal = Meal.create(location_id=current_user.location.id, **meal_data)
     return jsonify(data=MEAL_SCHEMA.dump(meal).data,
                    message=Success.MEAL_CREATED), 201
 

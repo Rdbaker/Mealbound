@@ -7,6 +7,7 @@ from sqlalchemy import Time, and_, cast
 
 from ceraon.database import (Column, Model, UUIDModel, db, reference_col,
                              relationship)
+from ceraon.models.tags import Tag, MealTag
 
 
 class UserMeal(Model):
@@ -54,6 +55,28 @@ class Meal(UUIDModel):
     def num_guests(self):
         """Get the count of the guests."""
         return len(self.user_meals)
+
+    @property
+    def tags(self):
+        """Get the tags for the meal."""
+        if self.meal_tags:
+            return [mt.tag for mt in self.meal_tags]
+        else:
+            return []
+
+    @tags.setter
+    def tags(self, newtags):
+        """Set the tags on the meal, deleting the old tags.
+
+        :param newtags [{'id': int}]: the list of tag IDs to update the meal
+        """
+        tags = [Tag.find(t.get('id')) for t in newtags]
+        if any([t is None for t in tags]):
+            raise RuntimeError('Tag not found')
+        for mt in self.meal_tags:
+            mt.delete()
+        for t in tags:
+            MealTag.create(meal=self, tag=t)
 
     @property
     def my_review(self):

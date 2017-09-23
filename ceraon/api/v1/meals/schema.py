@@ -6,6 +6,7 @@ from marshmallow import Schema, ValidationError, fields, validates
 
 from ceraon.api.v1.locations.schema import LocationSchema
 from ceraon.api.v1.users.schema import UserSchema
+from ceraon.api.v1.tags.schema import TagSchema
 from ceraon.constants import Errors
 
 
@@ -26,6 +27,7 @@ class MealSchema(Schema):
     num_guests = fields.Int(dump_only=True)
     max_guests = fields.Int()
     avg_rating = fields.Float(places=2, dump_only=True)
+    tags = fields.Nested(TagSchema, many=True)
 
     guest_fields = ['my_review']
 

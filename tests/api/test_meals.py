@@ -71,6 +71,15 @@ class TestCreateMeal(BaseViewTest):
         res = testapp.post_json(self.base_url, self.valid_data, status=422)
         assert 'name' in res.json['error_message']
 
+    def test_meal_with_tags(self, testapp, host, hosted_location, tag_one):
+        """Test creating a meal with a tag associated."""
+        post_data = {'tags': [{'id': tag_one.id}]}
+        post_data.update(self.valid_data)
+        self.login(host, testapp)
+        res = testapp.post_json(self.base_url, post_data)
+        assert 'tags' in res.json['data']
+        assert res.json['data']['tags'][0]['id'] == tag_one.id
+
     def test_meal_needs_price(self, testapp, host, hosted_location):
         """Test that a meal needs a price."""
         del self.valid_data['price']
@@ -159,6 +168,16 @@ class TestUpdateMeal(BaseViewTest):
         assert res.status_code == 200
         assert meal.price == self.valid_data['price']
 
+    def test_meal_with_tags(self, testapp, host, meal, hosted_location,
+                            tag_one):
+        """Test updating a meal with a tag associated."""
+        patch_data = {'tags': [{'id': tag_one.id}]}
+        patch_data.update(self.valid_data)
+        self.login(host, testapp)
+        res = testapp.patch_json(self.base_url.format(meal.id), patch_data)
+        assert 'tags' in res.json['data']
+        assert res.json['data']['tags'][0]['id'] == tag_one.id
+
     def test_partial_update_works(self, testapp, host, hosted_location, meal):
         """Test that only partially updating a meal works."""
         self.login(host, testapp)
@@ -210,6 +229,16 @@ class TestReplaceMeal(BaseViewTest):
                                self.valid_data)
         assert res.status_code == 200
         assert meal.price == self.valid_data['price']
+
+    def test_meal_with_tags(self, testapp, host, meal, hosted_location,
+                            tag_one):
+        """Test replacing a meal with a tag associated."""
+        put_data = {'tags': [{'id': tag_one.id}]}
+        put_data.update(self.valid_data)
+        self.login(host, testapp)
+        res = testapp.put_json(self.base_url.format(meal.id), put_data)
+        assert 'tags' in res.json['data']
+        assert res.json['data']['tags'][0]['id'] == tag_one.id
 
     def test_partial_replace_fails(self, testapp, host, hosted_location, meal):
         """Test that only partially replacing a meal fails."""

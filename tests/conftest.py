@@ -12,7 +12,7 @@ from ceraon.models.meals import UserMeal
 from ceraon.settings import TestConfig
 
 from .factories import (LocationFactory, MealFactory, ReviewFactory,
-                        UserFactory, TransactionFactory)
+                        UserFactory, TagFactory, TransactionFactory)
 
 
 @pytest.yield_fixture(scope='function')
@@ -136,3 +136,11 @@ def transaction(host, guest, meal):
     transaction = TransactionFactory(meal=meal, payer=guest, payee=host)
     transaction.save()
     return transaction
+
+
+@pytest.fixture
+def tag_one():
+    """A tag for the tests."""
+    tag = TagFactory()
+    tag.save()
+    return tag

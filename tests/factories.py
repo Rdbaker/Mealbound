@@ -11,6 +11,7 @@ from ceraon.database import db
 from ceraon.models.locations import Location
 from ceraon.models.meals import Meal
 from ceraon.models.reviews import Review
+from ceraon.models.tags import Tag
 from ceraon.models.transactions import Transaction
 from ceraon.user.models import User
 
@@ -89,3 +90,15 @@ class TransactionFactory(BaseFactory):
         """Factory configuration."""
 
         model = Transaction
+
+
+class TagFactory(BaseFactory):
+    """Tag factory."""
+
+    title = Sequence(lambda n: 'tag{0}'.format(n))
+    alias = Sequence(lambda n: 'tag{0}'.format(n))
+
+    class Meta:
+        """Factory configuration."""
+
+        model = Tag
