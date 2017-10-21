@@ -17,8 +17,6 @@ from ceraon.eager_loader import assign_requested_entity
 from ceraon.errors import APIException
 from ceraon.extensions import (bcrypt, cache, csrf_protect, db, debug_toolbar,
                                login_manager, migrate, sentry)
-from ceraon.locations.views import blueprint as location_blueprint
-from ceraon.meals.views import blueprint as meal_blueprint
 from ceraon.models import locations as locations_models  # noqa
 from ceraon.models import meals as meals_models  # noqa
 from ceraon.models import reviews as reviews_models  # noqa
@@ -51,6 +49,7 @@ def create_app(config_object=ProdConfig):
             embed_entity=json.dumps(g.embed_entity),
             current_user_json=json.dumps(g.current_user_json),
             mixpanel_enabled=app.config['MIXPANEL_ENABLED'],
+            mixpanel_id=app.config['MIXPANEL_ID'],
         )
 
     @app.before_request
@@ -103,9 +102,6 @@ def register_extensions(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
-    app.register_blueprint(user.views.blueprint)
-    app.register_blueprint(location_blueprint)
-    app.register_blueprint(meal_blueprint)
 
     from ceraon.api.v1.locations import views as locations_views
     from ceraon.api.v1.token import views as token_views
