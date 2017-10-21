@@ -6,6 +6,7 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css";
 @import "./Landing.scss";
 @import "../../node_modules/react-datetime/css/react-datetime";
+@import "../../node_modules/react-select-plus/dist/react-select-plus";
 
 /* universal */
 
@@ -89,7 +90,7 @@ body {
     margin-left:auto;
     margin-right:auto;
   }
-  
+
   .meal-card-summary {
     width:250px;
   }
@@ -118,4 +119,8 @@ body {
 .hidden {
   display: none;
   visibility: hidden;
+}
+
+.Select.Select--multi .Select-control input {
+  border: none;
 }

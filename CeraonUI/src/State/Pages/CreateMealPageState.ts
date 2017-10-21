@@ -1,7 +1,11 @@
+import Tag from '../Meal/Tag';
+
+
 interface CreateMealPageState {
   isUserUpdateLoading: boolean;
   showAddLocationPrompt: boolean;
   isCreateLoading: boolean;
+  mealTagOptions: Tag[];
 }
 
 export function defaultCreateMealPageState() : CreateMealPageState {
@@ -9,6 +13,7 @@ export function defaultCreateMealPageState() : CreateMealPageState {
     isUserUpdateLoading: false,
     showAddLocationPrompt: true,
     isCreateLoading: false,
+    mealTagOptions: [],
   };
 }
 

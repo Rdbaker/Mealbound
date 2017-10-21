@@ -4,6 +4,7 @@ import Meal from '../State/Meal/Meal';
 import Review from '../State/Meal/Review';
 import MealTime from '../State/Meal/Filters/MealTime';
 import Location from '../State/Meal/Location';
+import Tag from '../State/Meal/Tag';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
 import UserIdentity, { UserIdentityUpdateModel } from '../State/Identity/UserIdentity';
 import axios from 'axios';
@@ -65,9 +66,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
     this.updateUserInfo = this.updateUserInfo.bind(this);
     this.updatePaymentInfo = this.updatePaymentInfo.bind(this);
     this.createReview = this.createReview.bind(this);
-
-    this.pushJob(() => this.getMyHostedMeals());
-    this.pushJob(() => this.getMyJoinedMeals());
+    this.getMealTags = this.getMealTags.bind(this);
   }
 
   private pushJob(job: any) {
@@ -127,7 +126,7 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
     });
   }
 
-  createReview(review: Partial<Review>): Promise<ModelUpdateResult<Partial<Review>>> {
+  createReview(review: Partial<Review>): Promise<ModelUpdateResult<Review>> {
     return new Promise((resolve) => {
       this.pushJob(() => axios.post(`/api/v1/meals/${review.meal.id}/reviews`, review, this.getRequestConfig()).then((res) => {
         resolve({
@@ -230,6 +229,10 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
         case MealTime.Dinner:
           params.meal = 'dinner';
           break;
+      }
+
+      if(filters.tagsFilter.length) {
+        params.tag = filters.tagsFilter[0].id;
       }
 
       let requestConfig : any = this.getRequestConfig();
@@ -339,6 +342,14 @@ export default class CeraonModelAPI implements ICeraonModelAPI {
           errorCode: ModelUpdateErrorCode.Success,
           errorString: ''
         });
+      }));
+    });
+  }
+
+  getMealTags(): Promise<Tag[]> {
+    return new Promise<Tag[]>((resolve) => {
+      this.pushJob(() => axios.get('/api/v1/tags', this.getRequestConfig()).then((response) => {
+        resolve(<Tag[]>response.data.data);
       }));
     });
   }

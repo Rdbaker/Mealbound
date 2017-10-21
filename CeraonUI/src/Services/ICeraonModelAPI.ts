@@ -2,6 +2,7 @@ import UserSessionInfo from '../State/Identity/UserSessionInfo';
 import Meal from '../State/Meal/Meal';
 import Review from '../State/Meal/Review';
 import Location from '../State/Meal/Location';
+import Tag from '../State/Meal/Tag';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
 import UserIdentity, { UserIdentityUpdateModel } from '../State/Identity/UserIdentity';
 
@@ -40,4 +41,5 @@ export interface ICeraonModelAPI {
   createMeal(meal: Partial<Meal>): Promise<ModelUpdateResult<Meal>>;
 
   createReview(review: Partial<Review>): Promise<ModelUpdateResult<Review>>;
+  getMealTags(): Promise<Tag[]>;
 };

@@ -18,7 +18,7 @@ export default class LandingPage extends React.Component<LandingPageProps, {}> {
   }
 
   onMealSearch(mealTime: MealTime) {
-    CeraonDispatcher(Actions.createMealSearchAction({ mealTime: mealTime, textFilter: []}));
+    CeraonDispatcher(Actions.createMealSearchAction({ mealTime: mealTime, textFilter: [], tagsFilter: []}));
   }
 
   scaleVideoContainer() {

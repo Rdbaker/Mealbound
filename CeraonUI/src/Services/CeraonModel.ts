@@ -4,6 +4,7 @@ import CeraonState from '../State/CeraonState';
 import { ICeraonModelAPI, ModelUpdateResult } from './ICeraonModelAPI';
 import CeraonModelAPI from './CeraonModelAPI';
 import Meal from '../State/Meal/Meal';
+import Tag from '../State/Meal/Tag';
 import CeraonDispatcher from '../Store/CeraonDispatcher';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
 import CeraonPage from '../State/CeraonPage';
@@ -13,6 +14,7 @@ import * as Tasks from './Model/Tasks/Index';
 
 export class CeraonModel {
   private _cachedMeals: Meal[] = [];
+  private _cachedMealTags: Tag[] = [];
   private _myCachedMeals: Array<Array<Meal>> = [];
   private _hostedCachedMeals: Array<Meal> = [];
   private _joinedCachedMeals: Array<Meal> = [];
@@ -68,6 +70,9 @@ export class CeraonModel {
       case CeraonActionType.CreateReview:
         this.handleCreateReview(action as Actions.CreateReviewAction);
         break;
+      case CeraonActionType.FetchTags:
+        this.handleGetTags();
+        break;
     }
   }
 
@@ -91,6 +96,19 @@ export class CeraonModel {
     let loadTask = new Tasks.MealLoadTask(this._api, id, true);
     this.runTask(true, loadTask, (task: Tasks.ModelTask<Meal>, result: Meal) => {
       this.cacheMeals([result]);
+    });
+  }
+
+  private handleGetTags() {
+    let startLoading = true;
+    if (this._cachedMealTags.length != 0) {
+      CeraonDispatcher(Actions.createMealTagsLoadedAction(this._cachedMealTags));
+      startLoading = false;
+    }
+
+    let loadTagTask = new Tasks.MealTagsLoadTask(this._api, startLoading);
+    this.runTask(false, loadTagTask , (task: Tasks.ModelTask<Tag[]>, result: Tag[]) => {
+      this._cachedMealTags = result;
     });
   }
 

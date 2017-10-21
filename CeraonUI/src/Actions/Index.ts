@@ -29,3 +29,5 @@ export * from './ActionDefs/CreateReviewAction';
 export * from './ActionDefs/ReviewCreatedAction';
 export * from './ActionDefs/HostedMealsLoadedAction';
 export * from './ActionDefs/JoinedMealsLoadedAction';
+export * from './ActionDefs/MealTagsLoadedAction';
+export * from './ActionDefs/FetchTagsAction';

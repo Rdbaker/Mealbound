@@ -1,6 +1,7 @@
 import Location from './Location';
 import Review from './Review';
 import UserIdentity from '../Identity/UserIdentity';
+import Tag from './Tag';
 
 interface Meal {
   id: string;
@@ -17,6 +18,7 @@ interface Meal {
   avg_rating: number;
   num_guests: number;
   max_guests: number;
+  tags: Tag[];
 }
 
 export default Meal;

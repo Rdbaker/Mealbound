@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Menu, Container, Checkbox, Icon } from 'semantic-ui-react';
+import * as SelectRP from 'react-select-plus';
 import SearchPageState from '../State/Pages/SearchPageState';
 import MealSearchFilter from '../State/Meal/Filters/MealSearchFilter';
 import { MealTime } from '../State/Meal/Filters/MealTime';
@@ -8,6 +9,7 @@ import CeraonDispatcher from '../Store/CeraonDispatcher';
 import * as Actions from '../Actions/Index';
 import LoadingSpinner from '../Components/LoadingSpinner';
 import Meal from '../State/Meal/Meal';
+import Tag from '../State/Meal/Tag';
 import MealCard, { MealCardMode } from '../Components/MealCard';
 
 export interface SearchPageProps extends SearchPageState, React.Props<SearchPage> {
@@ -16,6 +18,7 @@ export interface SearchPageProps extends SearchPageState, React.Props<SearchPage
 
 interface SearchPageInternalState {
   searchValue: string;
+  tagsFilter: Tag;
 }
 
 export default class SearchPage extends React.Component<SearchPageProps, SearchPageInternalState> {
@@ -25,12 +28,14 @@ export default class SearchPage extends React.Component<SearchPageProps, SearchP
 
     this.onSearchTextInput = this.onSearchTextInput.bind(this);
     this.onSearchTextEnter = this.onSearchTextEnter.bind(this);
+    this.onTagFilterChange = this.onTagFilterChange .bind(this);
 
     this.removeTextFilter = this.removeTextFilter.bind(this);
 
     this.viewMeal = this.viewMeal.bind(this);
+    CeraonDispatcher(Actions.createFetchTagsAction());
 
-    this.state = {searchValue: ''};
+    this.state = {searchValue: '', tagsFilter: {id: null, title: null, alias: null}};
   }
 
   viewMeal(id: string) {
@@ -64,6 +69,17 @@ export default class SearchPage extends React.Component<SearchPageProps, SearchP
   onSearchTextInput(event: any) {
     let searchValue = event.target.value;
     this.setState({searchValue: searchValue});
+  }
+
+  onTagFilterChange(tag: Tag) {
+    this.setState({tagsFilter: tag});
+    let newFilters = Object.assign({}, this.props.filters);
+    if(tag.id === null) {
+      newFilters.tagsFilter = [];
+    } else {
+      newFilters.tagsFilter = [tag];
+    }
+    CeraonDispatcher(Actions.createMealSearchAction(newFilters));
   }
 
   onMealTimeClicked(event: any, data: any) {
@@ -106,7 +122,7 @@ export default class SearchPage extends React.Component<SearchPageProps, SearchP
                 <input
                   className='prompt'
                   type='text'
-                  placeholder='Filter...'
+                  placeholder='Filter by name'
                   value={this.state.searchValue}
                   onChange={this.onSearchTextInput}
                   onKeyUp={this.onSearchTextEnter}/>
@@ -145,18 +161,22 @@ export default class SearchPage extends React.Component<SearchPageProps, SearchP
               </Menu.Item>
             </Menu.Item>
             <Menu.Item>
-              <Menu.Header>Meal Location</Menu.Header>
-            </Menu.Item>
-            <Menu.Item>
               <Menu.Header>Food Type</Menu.Header>
-            </Menu.Item>
-            <Menu.Item>
-              <Menu.Header>Price</Menu.Header>
+              <SelectRP
+                multi={false}
+                valueKey='id'
+                labelKey='title'
+                options={this.props.mealTags}
+                onChange={this.onTagFilterChange}
+                label={this.state.tagsFilter.title}
+                value={this.state.tagsFilter.id}
+                resetValue={{id: null, title: 'Select a type', alias: null}}
+                />
             </Menu.Item>
           </div>
         </div>
         <div className='column search-results-wrapper'>
-          {this.props.isLoading ? 
+          {this.props.isLoading ?
             <LoadingSpinner loadingStatusMessage={'Searching through thousands of meals..'}/>
             : resultCards
           }

@@ -102,6 +102,9 @@ export default function ceraonReducer(state: CeraonState, action: CeraonAction) 
     case CeraonActionType.HostedMealsLoaded:
       stateCopy = hostedMealsLoadedReducer(stateCopy, action as Actions.HostedMealsLoadedAction);
       break;
+    case CeraonActionType.MealTagsLoaded:
+      stateCopy = mealTagsLoadedReducer(stateCopy, action as Actions.MealTagsLoadedAction);
+      break;
   }
 
   stateCopy.pageUrl = CeraonPageUtils.CeraonPageToUrl[stateCopy.activePage](stateCopy);
@@ -156,6 +159,13 @@ function mealSearchReducer(state: CeraonState, action: Actions.MealSearchAction)
   newState.searchPageState.filters = action.filter;
 
   return newState;
+}
+
+function mealTagsLoadedReducer(state: CeraonState, action: Actions.MealTagsLoadedAction) : CeraonState {
+  state.searchPageState.mealTags = action.tags;
+  state.createMealPageState.mealTagOptions = action.tags;
+
+  return state;
 }
 
 function goHomeReducer(state: CeraonState) : CeraonState {

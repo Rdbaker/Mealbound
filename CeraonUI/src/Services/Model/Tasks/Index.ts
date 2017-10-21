@@ -10,3 +10,4 @@ export * from './UpdatePaymentInfoTask';
 export * from './CreateReviewTask';
 export * from './HostedMealsLoadTask';
 export * from './JoinedMealsLoadTask';
+export * from './MealTagsLoadTask';

@@ -1,32 +1,39 @@
 import * as React from 'react';
+import * as SelectRP from 'react-select-plus';
 import { Segment, Header, Button } from 'semantic-ui-react';
 import Meal from '../State/Meal/Meal';
+import Tag from '../State/Meal/Tag';
 import UrlProvider from '../Services/UrlProvider';
 import * as DateTimePicker from 'react-datetime';
 import CurrencyInput from 'react-number-input';
 import * as  Moment from 'moment';
+import * as Actions from '../Actions/Index';
+import CeraonDispatcher from '../Store/CeraonDispatcher';
 
 interface MealFormProps extends React.Props<MealForm> {
   meal?: Meal;
   headerText: string;
   submitText: string;
-  onSubmit?: (title: string, descr: string, time: string, price: number, maxGuests: number) => void;
+  onSubmit?: (title: string, descr: string, time: string, price: number, maxGuests: number, mealTags: Tag[]) => void;
+  mealTagOptions: Tag[];
 }
 
 interface MealFormState {
   mealTitle: string;
   mealDescription: string;
-  mealTime: Moment.Moment;
+  mealTime: any;
   price: number;
   maxGuests: number;
   isSubmitEnabled: boolean;
   datePickerFocused: boolean;
+  mealTags: Tag[];
 }
 
 export default class MealForm extends React.Component<MealFormProps, MealFormState> {
   constructor(props: MealFormProps) {
     super(props);
 
+    CeraonDispatcher(Actions.createFetchTagsAction());
     let state : MealFormState = {
         mealTitle: '',
         mealDescription: '',
@@ -35,6 +42,7 @@ export default class MealForm extends React.Component<MealFormProps, MealFormSta
         isSubmitEnabled: false,
         datePickerFocused: false,
         maxGuests: undefined,
+        mealTags: [],
     }
 
     if (this.props.meal) {
@@ -46,6 +54,7 @@ export default class MealForm extends React.Component<MealFormProps, MealFormSta
         maxGuests: this.props.meal.max_guests || undefined,
         isSubmitEnabled: false,
         datePickerFocused: false,
+        mealTags: this.props.meal.tags,
       }
     }
 
@@ -55,11 +64,19 @@ export default class MealForm extends React.Component<MealFormProps, MealFormSta
     this.onSubmitForm = this.onSubmitForm.bind(this);
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onMaxGuestsChange = this.onMaxGuestsChange.bind(this);
+    this.onTagChange = this.onTagChange.bind(this);
   }
 
   private onSubmitForm() {
     if (this.props.onSubmit) {
-      this.props.onSubmit(this.state.mealTitle, this.state.mealDescription, this.state.mealTime.format(), this.state.price, this.state.maxGuests);
+      this.props.onSubmit(
+        this.state.mealTitle,
+        this.state.mealDescription,
+        this.state.mealTime.format(),
+        this.state.price,
+        this.state.maxGuests,
+        this.state.mealTags,
+      );
     }
   }
 
@@ -71,7 +88,16 @@ export default class MealForm extends React.Component<MealFormProps, MealFormSta
         price > 0;
   }
 
-  private updateIsSubmitEnabled(title: string, description: string, time: Moment.Moment, price: number, maxGuests: number) {
+  private onTagChange(tags) {
+    if(!Array.isArray(tags)) {
+      tags = [tags];
+    }
+    this.setState({
+      mealTags: tags
+    })
+  }
+
+  private updateIsSubmitEnabled(title: string, description: string, time: any, price: number, maxGuests: number) {
     this.setState({
       isSubmitEnabled: MealForm.isSubmitEnabled(title, description, time, price, maxGuests),
     });
@@ -156,6 +182,19 @@ export default class MealForm extends React.Component<MealFormProps, MealFormSta
                     name='max-buyers'
                     value={this.state.maxGuests}
                     onChange={this.onMaxGuestsChange}/>
+            </div>
+            <div className='field'>
+              <label>Cuisine Type</label>
+              <SelectRP
+                multi={true}
+                valueKey='id'
+                labelKey='title'
+                options={this.props.mealTagOptions}
+                onChange={this.onTagChange}
+                label={this.state.mealTags.map(tag => tag.title)}
+                value={this.state.mealTags.map(tag => tag.id)}
+                resetValue={{id: null, title: 'Select a type', alias: null}}
+                />
             </div>
             <Button onClick={this.onSubmitForm} disabled={!this.state.isSubmitEnabled}>{this.props.submitText}</Button>
           </div>

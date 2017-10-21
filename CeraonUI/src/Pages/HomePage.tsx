@@ -31,7 +31,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
   }
 
   onMealSearch(mealTime: MealTime) {
-    CeraonDispatcher(Actions.createMealSearchAction({mealTime: mealTime, textFilter: []}));
+    CeraonDispatcher(Actions.createMealSearchAction({mealTime: mealTime, textFilter: [], tagsFilter: []}));
   }
 
   renderMyHostMeals() {

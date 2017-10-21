@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import CeraonDispatcher from '../Store/CeraonDispatcher';
 import UserIdentity from '../State/Identity/UserIdentity';
+import Tag from '../State/Meal/Tag';
 import { Button, Segment, Header } from 'semantic-ui-react';
 import MealForm from '../Components/MealForm';
 import CreateMealPageState from '../State/Pages/CreateMealPageState';
@@ -45,12 +46,14 @@ export default class CreateMealPage extends React.Component<CreateMealPageState,
     CeraonDispatcher(Actions.createUpdateUserAction(userIdentity));
   }
 
-  private onCreateMeal(title: string, descr: string, time: string, price: number) {
+  private onCreateMeal(title: string, descr: string, time: string, price: number, maxGuests: number, mealTags: Tag[]) {
     CeraonDispatcher(Actions.createCreateMealAction({
       name: title,
       description: descr,
       scheduled_for: time,
       price: price,
+      max_guests: maxGuests,
+      tags: mealTags,
     }));
   }
 
@@ -61,7 +64,11 @@ export default class CreateMealPage extends React.Component<CreateMealPageState,
       if (this.props.isCreateLoading) {
         pageContent = <LoadingSpinner loadingStatusMessage='Creating your meal...'/>
       } else {
-        pageContent = <MealForm headerText='Host a new meal' onSubmit={this.onCreateMeal} submitText='Host Meal'/>
+        pageContent = <MealForm
+                        headerText='Host a new meal'
+                        onSubmit={this.onCreateMeal}
+                        submitText='Host Meal'
+                        mealTagOptions={this.props.mealTagOptions}/>
       }
     } else {
       pageContent = (

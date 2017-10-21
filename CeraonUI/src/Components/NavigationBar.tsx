@@ -36,7 +36,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps, N
     let searchValue = this.state.searchValue;
     if (searchValue.length > 0 && event.keyCode === 13) {
       this.setState({searchValue: ''});
-      CeraonDispatcher(Actions.createMealSearchAction({mealTime: MealTime.Any, textFilter:[searchValue]}));
+      CeraonDispatcher(Actions.createMealSearchAction({mealTime: MealTime.Any, textFilter:[searchValue], tagsFilter: []}));
     }
   }
 

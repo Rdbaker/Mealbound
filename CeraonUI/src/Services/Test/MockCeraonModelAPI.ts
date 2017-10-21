@@ -3,6 +3,7 @@ import UserSessionInfo from '../../State/Identity/UserSessionInfo';
 import Meal from '../../State/Meal/Meal';
 import Review from '../../State/Meal/Review';
 import Location from '../../State/Meal/Location';
+import Tag from '../../State/Meal/Tag';
 import MealSearchFilter from '../../State/Meal/Filters/MealSearchFilter';
 import UserIdentity, { UserIdentityUpdateModel } from '../../State/Identity/UserIdentity';
 
@@ -37,6 +38,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       avg_rating: null,
       num_guests: null,
       max_guests: null,
+      tags: [],
     },
     {
       id: '2',
@@ -53,6 +55,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       avg_rating: null,
       num_guests: null,
       max_guests: null,
+      tags: [],
     },
     {
       id: '3',
@@ -69,6 +72,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       avg_rating: null,
       num_guests: null,
       max_guests: null,
+      tags: [],
     },
     {
       id: '4',
@@ -85,6 +89,7 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
       avg_rating: null,
       num_guests: null,
       max_guests: null,
+      tags: [],
     }
   ];
 
@@ -210,5 +215,9 @@ export default class MockCeraonModelAPI implements ICeraonModelAPI {
 
   createReview(review: Partial<Review>): Promise<ModelUpdateResult<Review>> {
     return Promise.resolve(null);
+  }
+
+  getMealTags(): Promise<Tag[]> {
+    return Promise.resolve([]);
   }
 }

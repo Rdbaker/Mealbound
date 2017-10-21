@@ -11,7 +11,7 @@ from ceraon.api.v1.users.schema import UserSchema
 from ceraon.constants import Errors, Success
 from ceraon.errors import (BadRequest, Conflict, Forbidden, NotFound,
                            PreconditionRequired, TransactionVendorError)
-from ceraon.models.meals import Meal, UserMeal
+from ceraon.models.meals import Meal, UserMeal, MealTag
 from ceraon.models.transactions import Transaction
 from ceraon.utils import RESTBlueprint, friendly_arg_get
 
@@ -142,6 +142,9 @@ def list_meals():
        description: the number of results to return per page
        default: 10
      - in: query
+       name: tag
+       description: the ID(s) of meal tags to use to search
+     - in: query
        name: meal
        description: the meal of day that should be returned
        enum:
@@ -159,6 +162,7 @@ def list_meals():
     """
     page_num = friendly_arg_get('page', 1, int)
     per_page = friendly_arg_get('per_page', 10, int)
+    tag = request.args.get('tag')
     requested_meal = request.args.get('meal')
     if requested_meal == 'breakfast':
         query = Meal.breakfast()
@@ -168,6 +172,8 @@ def list_meals():
         query = Meal.dinner()
     else:
         query = Meal.query
+    if tag:
+        query = query.join(MealTag).filter_by(tag_id=tag)
     page = Meal.upcoming_filter(query).order_by(Meal.scheduled_for)\
         .paginate(page=page_num, per_page=per_page)
 

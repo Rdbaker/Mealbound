@@ -20,9 +20,9 @@ const ceraonStore : Redux.Store<CeraonState> = Redux.createStore(
     CeraonReducer,
     state,
     Redux.applyMiddleware(
-      ReduxLogger,
-      APIDispatcher,
-      HistoryTracker
+      <Redux.Middleware> ReduxLogger,
+      <Redux.Middleware> APIDispatcher,
+      <Redux.Middleware> HistoryTracker
     )
   );;
 

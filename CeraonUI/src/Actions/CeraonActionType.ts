@@ -29,6 +29,8 @@ export enum CeraonActionType {
   ReviewCreated = 24,
   HostedMealsLoaded = 25,
   JoinedMealsLoaded = 26,
+  MealTagsLoaded = 27,
+  FetchTags = 28,
 }
 
 export default CeraonActionType;
