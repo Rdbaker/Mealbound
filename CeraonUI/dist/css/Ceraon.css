@@ -78,17 +78,38 @@
 /* THEMED YELLOWS */
 /* THEMED BLUES */
 /* THEMED GREENS */
+.ceraon-nav-bar.menu.ui .menu.transition.visible {
+  background-color: #fce1e1;
+  border-color: #dfdfdd; }
+
 .ceraon-nav-bar.menu.ui {
-  border-color: #dfdfdd;
-  box-shadow: 0 1px 2px 0 #dfdfdd; }
+  background-color: #f25f5c;
+  border-color: #fce1e1; }
+
+.ceraon-nav-bar.menu.ui,
+.ceraon-nav-bar.menu.ui .menu.transition.visible {
+  box-shadow: 0 1px 2px 0 #fce1e1;
+  color: #fff9e3; }
 
 .ceraon-nav-bar.menu.ui > .ceraon-brand-label {
-  color: #2c1211; }
+  color: white; }
+  .ceraon-nav-bar.menu.ui > .ceraon-brand-label:hover {
+    color: #fff9e3; }
+
+.ceraon-nav-bar.menu.ui .ceraon-nav-cta.ui.item:hover {
+  color: #fff9e3; }
 
 .ceraon-nav-bar.menu.ui *,
-.ceraon-nav-bar.menu.ui .ui.dropdown .menu > .item {
-  color: #505146;
-  border-color: #dfdfdd; }
+.ceraon-nav-bar.menu.ui .ui.dropdown .menu > .item,
+.ceraon-nav-bar .menu.ui .ui.dropdown .menu > .item {
+  color: white;
+  border-color: #fce1e1; }
+
+.ceraon-nav-bar.menu.ui .input input {
+  color: #505146 !important; }
+
+.ceraon-nav-bar.menu.ui .input .search.icon {
+  color: #7f8078 !important; }
 
 /* THEMED BROWNS */
 /* THEMED REDS */
@@ -715,7 +736,7 @@ body {
 
 .ui.header.ceraon-home-page-meal-section-header {
   margin: 25px 0;
-  border-bottom: 1px solid #97d1c7;
+  border-bottom: 1px solid #afafaa;
   padding-bottom: 15px; }
 
 .meal-card-grid > * {

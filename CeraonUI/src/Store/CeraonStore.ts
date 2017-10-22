@@ -16,15 +16,19 @@ for (let action of initialActions) {
   state = CeraonReducer(state, action);
 }
 
+const composeEnhancers = (<any> window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
+
 const ceraonStore : Redux.Store<CeraonState> = Redux.createStore(
     CeraonReducer,
     state,
-    Redux.applyMiddleware(
-      <Redux.Middleware> ReduxLogger,
-      <Redux.Middleware> APIDispatcher,
-      <Redux.Middleware> HistoryTracker
+    composeEnhancers(
+      Redux.applyMiddleware(
+        <Redux.Middleware> ReduxLogger,
+        <Redux.Middleware> APIDispatcher,
+        <Redux.Middleware> HistoryTracker,
+      )
     )
-  );;
+);
 
 function initStore() {
   HistoryService.onPageNavigation(ceraonStore.getState());

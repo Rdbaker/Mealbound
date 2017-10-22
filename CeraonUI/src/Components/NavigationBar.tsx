@@ -100,13 +100,17 @@ export default class NavigationBar extends React.Component<NavigationBarProps, N
         { this.props.showLoginAndCreateAccountButton ? (
           <a className='item' onClick={()=>{window.location.href = "/login/"; }}>Login or Register</a>
         ) : (<div/>)}
+        <a
+          className="ui item ceraon-nav-cta"
+          href={UrlProvider.getCreateMealUrl()}
+          onClick={(event)=> {event.preventDefault(); CeraonDispatcher(Actions.createGoToCreateMealAction())}}
+        >Host a Meal</a>
         { this.props.showLoggedInText ? (
           <div className='item'>{this.props.loggedInText}</div>
         ) : (<div/>)}
         { this.props.showSettingsDropdown ? (
           <Dropdown item icon='settings'>
             <Dropdown.Menu>
-              <Dropdown.Item href={UrlProvider.getCreateMealUrl()} onClick={(event)=> {event.preventDefault(); CeraonDispatcher(Actions.createGoToCreateMealAction())}}>Host Meals</Dropdown.Item>
               <Dropdown.Item href={UrlProvider.getSettingsUrl()} onClick={(event)=> {event.preventDefault(); CeraonDispatcher(Actions.createGoToSettingsAction())}}>Settings</Dropdown.Item>
               <Dropdown.Item href='/logout/' onClick={()=>{window.location.href = '/logout/'; }}>Logout</Dropdown.Item>
             </Dropdown.Menu>

@@ -1,16 +1,44 @@
 @import "./Variables/colors.scss";
 
-.ceraon-nav-bar.menu.ui {
+.ceraon-nav-bar.menu.ui .menu.transition.visible {
+  background-color: $red-off-white;
   border-color: $brown-off-white;
-  box-shadow: 0 1px 2px 0 $brown-off-white;
+}
+
+.ceraon-nav-bar.menu.ui {
+  background-color: $red;
+  border-color: $red-off-white;
+}
+
+.ceraon-nav-bar.menu.ui,
+.ceraon-nav-bar.menu.ui .menu.transition.visible {
+  box-shadow: 0 1px 2px 0 $red-off-white;
+  color: $yellow-off-white;
 }
 
 .ceraon-nav-bar.menu.ui > .ceraon-brand-label {
-  color: $red-off-black;
+  color: white;
+
+  &:hover {
+    color: $yellow-off-white;
+  }
+}
+
+.ceraon-nav-bar.menu.ui .ceraon-nav-cta.ui.item:hover {
+  color: $yellow-off-white;
 }
 
 .ceraon-nav-bar.menu.ui *,
-.ceraon-nav-bar.menu.ui .ui.dropdown .menu > .item {
-  color: $brown;
-  border-color: $brown-off-white;
+.ceraon-nav-bar.menu.ui .ui.dropdown .menu > .item,
+.ceraon-nav-bar .menu.ui .ui.dropdown .menu > .item {
+  color: white;
+  border-color: $red-off-white;
+}
+
+.ceraon-nav-bar.menu.ui .input input {
+  color: $brown !important;
+}
+
+.ceraon-nav-bar.menu.ui .input .search.icon {
+  color: $brown-light !important;
 }

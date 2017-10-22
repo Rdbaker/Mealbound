@@ -1036,10 +1036,10 @@ class NavigationBar extends React.Component {
                     React.createElement("i", { className: 'search icon' })))) : (React.createElement("div", null)),
             React.createElement("div", { className: 'right menu' },
                 this.props.showLoginAndCreateAccountButton ? (React.createElement("a", { className: 'item', onClick: () => { window.location.href = "/login/"; } }, "Login or Register")) : (React.createElement("div", null)),
+                React.createElement("a", { className: "ui item ceraon-nav-cta", href: UrlProvider_1.default.getCreateMealUrl(), onClick: (event) => { event.preventDefault(); CeraonDispatcher_1.default(Actions.createGoToCreateMealAction()); } }, "Host a Meal"),
                 this.props.showLoggedInText ? (React.createElement("div", { className: 'item' }, this.props.loggedInText)) : (React.createElement("div", null)),
                 this.props.showSettingsDropdown ? (React.createElement(semantic_ui_react_1.Dropdown, { item: true, icon: 'settings' },
                     React.createElement(semantic_ui_react_1.Dropdown.Menu, null,
-                        React.createElement(semantic_ui_react_1.Dropdown.Item, { href: UrlProvider_1.default.getCreateMealUrl(), onClick: (event) => { event.preventDefault(); CeraonDispatcher_1.default(Actions.createGoToCreateMealAction()); } }, "Host Meals"),
                         React.createElement(semantic_ui_react_1.Dropdown.Item, { href: UrlProvider_1.default.getSettingsUrl(), onClick: (event) => { event.preventDefault(); CeraonDispatcher_1.default(Actions.createGoToSettingsAction()); } }, "Settings"),
                         React.createElement(semantic_ui_react_1.Dropdown.Item, { href: '/logout/', onClick: () => { window.location.href = '/logout/'; } }, "Logout")))) : (React.createElement("div", null)))));
     }
@@ -3186,8 +3186,8 @@ state.userSessionInfo = CeraonModel_1.default.getUserSessionInfo();
 for (let action of initialActions) {
     state = CeraonReducer_1.default(state, action);
 }
-const ceraonStore = Redux.createStore(CeraonReducer_1.default, state, Redux.applyMiddleware(ReduxLogging_1.default, CeraonAPIDispatcher_1.default, HistoryTracker_1.default));
-;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
+const ceraonStore = Redux.createStore(CeraonReducer_1.default, state, composeEnhancers(Redux.applyMiddleware(ReduxLogging_1.default, CeraonAPIDispatcher_1.default, HistoryTracker_1.default)));
 function initStore() {
     HistoryService_1.default.onPageNavigation(ceraonStore.getState());
     for (let action of initialActions) {
