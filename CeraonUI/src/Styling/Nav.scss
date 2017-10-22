@@ -1,0 +1,16 @@
+@import "./Variables/colors.scss";
+
+.ceraon-nav-bar.menu.ui {
+  border-color: $brown-off-white;
+  box-shadow: 0 1px 2px 0 $brown-off-white;
+}
+
+.ceraon-nav-bar.menu.ui > .ceraon-brand-label {
+  color: $red-off-black;
+}
+
+.ceraon-nav-bar.menu.ui *,
+.ceraon-nav-bar.menu.ui .ui.dropdown .menu > .item {
+  color: $brown;
+  border-color: $brown-off-white;
+}

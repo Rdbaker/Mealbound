@@ -73,6 +73,42 @@
   margin-left: 10%;
   font-size: 1.2em; }
 
+/* THEMED BROWNS */
+/* THEMED REDS */
+/* THEMED YELLOWS */
+/* THEMED BLUES */
+/* THEMED GREENS */
+.ceraon-nav-bar.menu.ui {
+  border-color: #dfdfdd;
+  box-shadow: 0 1px 2px 0 #dfdfdd; }
+
+.ceraon-nav-bar.menu.ui > .ceraon-brand-label {
+  color: #2c1211; }
+
+.ceraon-nav-bar.menu.ui *,
+.ceraon-nav-bar.menu.ui .ui.dropdown .menu > .item {
+  color: #505146;
+  border-color: #dfdfdd; }
+
+/* THEMED BROWNS */
+/* THEMED REDS */
+/* THEMED YELLOWS */
+/* THEMED BLUES */
+/* THEMED GREENS */
+.ceraon-meal-card .ceraon-meal-card-price {
+  background-color: #ffe066;
+  color: #2f2913; }
+
+.ui.ceraon-meal-card.cards > .card > .content > .header.ceraon-meal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+
+/* THEMED BROWNS */
+/* THEMED REDS */
+/* THEMED YELLOWS */
+/* THEMED BLUES */
+/* THEMED GREENS */
 /*!
  * https://github.com/YouCanBookMe/react-datetime
  */
@@ -677,9 +713,10 @@ body {
   margin-top: 2rem !important;
   z-index: 0 !important; }
 
-.meal-card-grid {
-  display: flex;
-  flex-direction: row; }
+.ui.header.ceraon-home-page-meal-section-header {
+  margin: 25px 0;
+  border-bottom: 1px solid #97d1c7;
+  padding-bottom: 15px; }
 
 .meal-card-grid > * {
   margin: 10px; }
@@ -713,6 +750,7 @@ body {
     margin-left: auto;
     margin-right: auto; }
   .meal-card-summary {
+    margin: 20px 0;
     width: 250px; } }
 
 @media only screen and (max-width: 766px) {

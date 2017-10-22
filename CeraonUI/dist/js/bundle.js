@@ -777,13 +777,12 @@ class MealCard extends React.Component {
         }
     }
     render() {
-        let card = (React.createElement(semantic_ui_react_1.Card.Group, null,
+        let card = (React.createElement(semantic_ui_react_1.Card.Group, { className: "ceraon-meal-card" },
             React.createElement(semantic_ui_react_1.Card, { fluid: true },
                 React.createElement(semantic_ui_react_1.Card.Content, null,
-                    React.createElement(semantic_ui_react_1.Card.Header, null,
+                    React.createElement(semantic_ui_react_1.Card.Header, { className: "ceraon-meal-card-header" },
                         this.props.meal.name,
-                        " ",
-                        React.createElement(semantic_ui_react_1.Label, { tag: true },
+                        React.createElement(semantic_ui_react_1.Label, { className: "ceraon-meal-card-price", tag: true },
                             "$",
                             this.props.meal.price)),
                     React.createElement(semantic_ui_react_1.Card.Meta, null, this.props.meal.host.public_name),
@@ -1030,7 +1029,7 @@ class NavigationBar extends React.Component {
     }
     render() {
         return (React.createElement("div", { className: "ui stackable top fixed huge menu ceraon-nav-bar", ref: (divElement) => this._divElement = divElement },
-            React.createElement("a", { className: "item", href: UrlProvider_1.default.getHomePageUrl(), onClick: this.onGoHome }, this.props.navigationTitle),
+            React.createElement("a", { className: "item ceraon-brand-label", href: UrlProvider_1.default.getHomePageUrl(), onClick: this.onGoHome }, this.props.navigationTitle),
             this.props.showSearchBox ? (React.createElement("div", { className: 'item' },
                 React.createElement("div", { className: 'ui icon input' },
                     React.createElement("input", { className: 'prompt', type: 'text', placeholder: 'Search meals...', value: this.state.searchValue, onChange: this.onSearchTextInput, onKeyUp: this.onSearchTextEnter }),
@@ -1200,10 +1199,10 @@ class HomePage extends React.Component {
             "You haven't hosted any meals. ",
             React.createElement("a", { href: "javascript:void(0)", onClick: this.createNewMeal }, "Host one now!"));
         if (this.props.myHostedMeals.length > 0) {
-            segmentContent = (React.createElement("div", { className: 'meal-card-grid' }, this.props.myHostedMeals.map((meal) => React.createElement(MealCard_1.default, { key: meal.id, meal: meal, mealCardMode: MealCard_1.MealCardMode.Summary, onClick: (meal) => CeraonDispatcher_1.default(Actions.createViewMealAction(meal.id)) }))));
+            segmentContent = (React.createElement("div", { className: 'ui grid' }, this.props.myHostedMeals.map((meal) => React.createElement(MealCard_1.default, { key: meal.id, meal: meal, mealCardMode: MealCard_1.MealCardMode.Summary, onClick: (meal) => CeraonDispatcher_1.default(Actions.createViewMealAction(meal.id)) }))));
         }
         return (React.createElement(semantic_ui_react_1.Segment, { basic: true, className: 'home-page-meals', textAlign: 'center' },
-            React.createElement(semantic_ui_react_1.Header, { as: 'h3' },
+            React.createElement(semantic_ui_react_1.Header, { as: 'h3', className: 'ceraon-home-page-meal-section-header' },
                 React.createElement(semantic_ui_react_1.Header.Content, null, "Meals You're Hosting")),
             segmentContent));
     }
@@ -1215,10 +1214,10 @@ class HomePage extends React.Component {
             "You haven't joined any meals. ",
             React.createElement("a", { href: "javascript:void(0)", onClick: this.joinNewMeal }, "Find one now!"));
         if (this.props.myJoinedMeals.length > 0) {
-            segmentContent = (React.createElement("div", { className: 'meal-card-grid' }, this.props.myJoinedMeals.map((meal) => React.createElement(MealCard_1.default, { key: meal.id, meal: meal, mealCardMode: MealCard_1.MealCardMode.Summary, onClick: (meal) => CeraonDispatcher_1.default(Actions.createViewMealAction(meal.id)) }))));
+            segmentContent = (React.createElement("div", { className: 'ui grid' }, this.props.myJoinedMeals.map((meal) => React.createElement(MealCard_1.default, { key: meal.id, meal: meal, mealCardMode: MealCard_1.MealCardMode.Summary, onClick: (meal) => CeraonDispatcher_1.default(Actions.createViewMealAction(meal.id)) }))));
         }
         return (React.createElement(semantic_ui_react_1.Segment, { basic: true, className: 'home-page-meals', textAlign: 'center' },
-            React.createElement(semantic_ui_react_1.Header, { as: 'h3' },
+            React.createElement(semantic_ui_react_1.Header, { as: 'h3', className: 'ceraon-home-page-meal-section-header' },
                 React.createElement(semantic_ui_react_1.Header.Content, null, "Meals You've Joined")),
             segmentContent));
     }
@@ -1230,14 +1229,11 @@ class HomePage extends React.Component {
                 this.renderMyHostMeals()));
         }
         return (React.createElement("div", null,
-            React.createElement(semantic_ui_react_1.Header, { as: 'h2', icon: true, textAlign: 'center' },
+            React.createElement(semantic_ui_react_1.Header, { as: 'h2', icon: true, textAlign: 'center', className: 'ceraon-home-page-meal-section-header' },
                 React.createElement(semantic_ui_react_1.Icon, { name: 'food', circular: true }),
                 React.createElement(semantic_ui_react_1.Header.Content, null,
                     this.props.headerMessage,
                     React.createElement(MealSearchDropdown_1.default, { dropdownHeader: this.props.mealSearchDropdownText, onSearchClicked: this.onMealSearch }))),
-            this.props.showMyMealInfo ?
-                React.createElement(semantic_ui_react_1.Divider, null)
-                : React.createElement("div", null),
             mealInfo));
     }
 }

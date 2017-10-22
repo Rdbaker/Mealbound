@@ -174,17 +174,20 @@ export default class MealCard extends React.Component<MealCardProps, any> {
 
   render() {
     let card = (
-      <Card.Group>
+      <Card.Group className="ceraon-meal-card">
         <Card fluid>
           <Card.Content>
-            <Card.Header>{this.props.meal.name} <Label tag>${this.props.meal.price}</Label></Card.Header>
+            <Card.Header className="ceraon-meal-card-header">
+              {this.props.meal.name}
+              <Label className="ceraon-meal-card-price" tag>${this.props.meal.price}</Label>
+            </Card.Header>
             <Card.Meta>{this.props.meal.host.public_name}</Card.Meta>
             {this.renderScheduledFor()}
             {this.renderLocation()}
             <Card.Description>{this.props.meal.description}</Card.Description>
           </Card.Content>
           <Card.Content extra className="ui vertical accordion menu">
-            {this.renderGuestCount()} | 
+            {this.renderGuestCount()} |
             {this.renderRating()}
             {this.renderNumReviews()}
             {this.renderReviewForm()}

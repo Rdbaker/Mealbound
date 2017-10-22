@@ -1,0 +1,13 @@
+@import "./Variables/colors.scss";
+
+
+.ceraon-meal-card .ceraon-meal-card-price {
+  background-color: $yellow;
+  color: $yellow-off-black;
+}
+
+.ui.ceraon-meal-card.cards > .card > .content > .header.ceraon-meal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -5,6 +5,9 @@
 // @import "../../node_modules/semantic-ui-css/semantic.min";
 @import "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css";
 @import "./Landing.scss";
+@import "./Nav.scss";
+@import "./MealCard.scss";
+@import "./Variables/colors.scss";
 @import "../../node_modules/react-datetime/css/react-datetime";
 @import "../../node_modules/react-select-plus/dist/react-select-plus";
 
@@ -35,9 +38,10 @@ body {
   z-index:0 !important;
 }
 
-.meal-card-grid {
-  display:flex;
-  flex-direction:row;
+.ui.header.ceraon-home-page-meal-section-header {
+  margin: 25px 0;
+  border-bottom: 1px solid $green-light;
+  padding-bottom: 15px;
 }
 
 .meal-card-grid > * {
@@ -92,7 +96,8 @@ body {
   }
 
   .meal-card-summary {
-    width:250px;
+    margin: 20px 0;
+    width: 250px;
   }
 }
 

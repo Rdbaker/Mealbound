@@ -81,7 +81,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps, N
   render() {
     return (
       <div className="ui stackable top fixed huge menu ceraon-nav-bar" ref={ (divElement) => this._divElement = divElement }>
-        <a className="item" href={UrlProvider.getHomePageUrl()} onClick={this.onGoHome}>{this.props.navigationTitle}</a>
+        <a className="item ceraon-brand-label" href={UrlProvider.getHomePageUrl()} onClick={this.onGoHome}>{this.props.navigationTitle}</a>
         { this.props.showSearchBox ? (
           <div className='item'>
             <div className='ui icon input'>

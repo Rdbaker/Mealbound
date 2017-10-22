@@ -43,7 +43,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
 
     if (this.props.myHostedMeals.length > 0) {
       segmentContent = (
-        <div className='meal-card-grid'>
+        <div className='ui grid'>
           {this.props.myHostedMeals.map((meal: Meal) =>
             <MealCard
               key={meal.id}
@@ -56,7 +56,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
     }
 
     return (<Segment basic className='home-page-meals' textAlign='center'>
-      <Header as='h3'>
+      <Header as='h3' className='ceraon-home-page-meal-section-header'>
         <Header.Content>
             Meals You're Hosting
         </Header.Content>
@@ -74,7 +74,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
 
     if (this.props.myJoinedMeals.length > 0) {
       segmentContent = (
-        <div className='meal-card-grid'>
+        <div className='ui grid'>
           {this.props.myJoinedMeals.map((meal: Meal) =>
             <MealCard
               key={meal.id}
@@ -87,7 +87,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
     }
 
     return (<Segment basic className='home-page-meals' textAlign='center'>
-      <Header as='h3'>
+      <Header as='h3' className='ceraon-home-page-meal-section-header'>
         <Header.Content>
           Meals You've Joined
         </Header.Content>
@@ -110,7 +110,7 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
 
     return (
       <div>
-        <Header as='h2' icon textAlign='center'>
+        <Header as='h2' icon textAlign='center' className='ceraon-home-page-meal-section-header'>
           <Icon name='food' circular />
           <Header.Content>
             {this.props.headerMessage}
@@ -119,9 +119,6 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
               onSearchClicked={this.onMealSearch} />
           </Header.Content>
         </Header>
-        { this.props.showMyMealInfo ?
-           <Divider/>
-           : <div/> }
         {mealInfo}
       </div>
     )
