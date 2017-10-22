@@ -14,6 +14,7 @@ class Tag(Model, SurrogatePK):
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)
     meal_tags = relationship('MealTag', cascade='delete')
+    active = Column(db.Boolean, default=False, index=True)
 
     def __repr__(self):
         """Get the tag as a string."""

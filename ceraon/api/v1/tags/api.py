@@ -45,7 +45,8 @@ def search_tags():
     """
     query = request.args.get('q')
     if not query:
-        tags = Tag.query.all()
+        tag_query = Tag.query
     else:
-        tags = Tag.search(query)
+        tag_query = Tag.search(query)
+    tags = tag_query.filter_by(active=True).all()
     return jsonify(data=TAG_SCHEMA.dump(tags, many=True).data)
