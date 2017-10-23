@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Header, Icon, Divider, Segment } from 'semantic-ui-react';
+import { Header, Card, Icon, Divider, Segment } from 'semantic-ui-react';
 import HomePageState from '../State/Pages/HomePageState';
 import MealSearchDropdown from '../Components/MealSearchDropdown';
 import MealTime from '../State/Meal/Filters/MealTime';
@@ -44,13 +44,15 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
     if (this.props.myHostedMeals.length > 0) {
       segmentContent = (
         <div className='ui grid'>
-          {this.props.myHostedMeals.map((meal: Meal) =>
-            <MealCard
-              key={meal.id}
-              meal={meal}
-              mealCardMode={MealCardMode.Summary}
-              onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
-          )}
+          <Card.Group>
+            {this.props.myHostedMeals.map((meal: Meal) =>
+              <MealCard
+                key={meal.id}
+                meal={meal}
+                mealCardMode={MealCardMode.Summary}
+                onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
+            )}
+          </Card.Group>
         </div>
       );
     }
@@ -75,13 +77,15 @@ export default class HomePage extends React.Component<HomePageProps, {}> {
     if (this.props.myJoinedMeals.length > 0) {
       segmentContent = (
         <div className='ui grid'>
-          {this.props.myJoinedMeals.map((meal: Meal) =>
-            <MealCard
-              key={meal.id}
-              meal={meal}
-              mealCardMode={MealCardMode.Summary}
-              onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
-          )}
+          <Card.Group>
+            {this.props.myJoinedMeals.map((meal: Meal) =>
+              <MealCard
+                key={meal.id}
+                meal={meal}
+                mealCardMode={MealCardMode.Summary}
+                onClick={(meal: Meal)=>CeraonDispatcher(Actions.createViewMealAction(meal.id))}/>
+            )}
+          </Card.Group>
         </div>
       );
     }

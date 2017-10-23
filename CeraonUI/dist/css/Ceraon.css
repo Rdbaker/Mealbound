@@ -120,7 +120,7 @@
   background-color: #ffe066;
   color: #2f2913; }
 
-.ui.ceraon-meal-card.cards > .card > .content > .header.ceraon-meal-card-header {
+.ceraon-meal-card.card > .content > .header.ceraon-meal-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between; }
@@ -771,7 +771,7 @@ body {
     margin-left: auto;
     margin-right: auto; }
   .meal-card-summary {
-    margin: 20px 0;
+    margin: 20px 10px 20px 0;
     width: 250px; } }
 
 @media only screen and (max-width: 766px) {

@@ -174,30 +174,28 @@ export default class MealCard extends React.Component<MealCardProps, any> {
 
   render() {
     let card = (
-      <Card.Group className="ceraon-meal-card">
-        <Card fluid>
-          <Card.Content>
-            <Card.Header className="ceraon-meal-card-header">
-              {this.props.meal.name}
-              <Label className="ceraon-meal-card-price" tag>${this.props.meal.price}</Label>
-            </Card.Header>
-            <Card.Meta>{this.props.meal.host.public_name}</Card.Meta>
-            {this.renderScheduledFor()}
-            {this.renderLocation()}
-            <Card.Description>{this.props.meal.description}</Card.Description>
-          </Card.Content>
-          <Card.Content extra className="ui vertical accordion menu">
-            {this.renderGuestCount()} |
-            {this.renderRating()}
-            {this.renderNumReviews()}
-            {this.renderReviewForm()}
-          </Card.Content>
-        </Card>
-      </Card.Group>
+      <Card fluid className="ceraon-meal-card" onClick={(event) => { event.preventDefault(); this.props.onClick(this.props.meal)}}>
+        <Card.Content>
+          <Card.Header className="ceraon-meal-card-header">
+            {this.props.meal.name}
+            <Label className="ceraon-meal-card-price" tag>${this.props.meal.price}</Label>
+          </Card.Header>
+          <Card.Meta>{this.props.meal.host.public_name}</Card.Meta>
+          {this.renderScheduledFor()}
+          {this.renderLocation()}
+          <Card.Description>{this.props.meal.description}</Card.Description>
+        </Card.Content>
+        <Card.Content extra className="ui vertical accordion menu">
+          {this.renderGuestCount()} |
+          {this.renderRating()}
+          {this.renderNumReviews()}
+          {this.renderReviewForm()}
+        </Card.Content>
+      </Card>
     )
 
     if (this.props.onClick) {
-      card = (<a href={UrlProvider.getViewMealUrl(this.props.meal.id)} onClick={(event) => { event.preventDefault(); this.props.onClick(this.props.meal)}}>
+      card = (<a href={UrlProvider.getViewMealUrl(this.props.meal.id)} onClick={e => e.preventDefault()} >
         {card}
         </a>);
     }
