@@ -125,6 +125,10 @@
   align-items: center;
   justify-content: space-between; }
 
+.meal-card-host-image {
+  border-radius: 3px;
+  margin: 3px 12px 3px auto; }
+
 /* THEMED BROWNS */
 /* THEMED REDS */
 /* THEMED YELLOWS */
@@ -784,6 +788,7 @@ body {
   .stackable {
     flex-direction: column !important; }
   .meal-card-summary {
+    margin: 5px 0;
     width: 100%; } }
 
 .hidden {

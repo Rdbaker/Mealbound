@@ -177,10 +177,13 @@ export default class MealCard extends React.Component<MealCardProps, any> {
       <Card fluid className="ceraon-meal-card" onClick={(event) => { event.preventDefault(); this.props.onClick(this.props.meal)}}>
         <Card.Content>
           <Card.Header className="ceraon-meal-card-header">
-            {this.props.meal.name}
+            <span>{this.props.meal.name}</span>
             <Label className="ceraon-meal-card-price" tag>${this.props.meal.price}</Label>
           </Card.Header>
-          <Card.Meta>{this.props.meal.host.public_name}</Card.Meta>
+          <Card.Meta>
+            <img className="meal-card-host-image" src={this.props.meal.host.image_url} />
+            <span>{this.props.meal.host.public_name}</span>
+          </Card.Meta>
           {this.renderScheduledFor()}
           {this.renderLocation()}
           <Card.Description>{this.props.meal.description}</Card.Description>

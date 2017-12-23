@@ -380,40 +380,39 @@ exports.createViewMealAction = createViewMealAction;
 },{"../CeraonActionType":32}],32:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var CeraonActionType;
-(function (CeraonActionType) {
-    CeraonActionType[CeraonActionType["NotAuthorized"] = -2] = "NotAuthorized";
-    CeraonActionType[CeraonActionType["PageNotFound404"] = -1] = "PageNotFound404";
-    CeraonActionType[CeraonActionType["LoadState"] = 0] = "LoadState";
-    CeraonActionType[CeraonActionType["Login"] = 1] = "Login";
-    CeraonActionType[CeraonActionType["MealSearch"] = 2] = "MealSearch";
-    CeraonActionType[CeraonActionType["GoHome"] = 3] = "GoHome";
-    CeraonActionType[CeraonActionType["ViewMeal"] = 4] = "ViewMeal";
-    CeraonActionType[CeraonActionType["StartLoading"] = 5] = "StartLoading";
-    CeraonActionType[CeraonActionType["MealLoaded"] = 6] = "MealLoaded";
-    CeraonActionType[CeraonActionType["SearchResultsLoaded"] = 7] = "SearchResultsLoaded";
-    CeraonActionType[CeraonActionType["MyMealsLoaded"] = 8] = "MyMealsLoaded";
-    CeraonActionType[CeraonActionType["MealUpdated"] = 9] = "MealUpdated";
-    CeraonActionType[CeraonActionType["UpdateMeal"] = 10] = "UpdateMeal";
-    CeraonActionType[CeraonActionType["CancelMeal"] = 11] = "CancelMeal";
-    CeraonActionType[CeraonActionType["MealCancelled"] = 12] = "MealCancelled";
-    CeraonActionType[CeraonActionType["Landing"] = 13] = "Landing";
-    CeraonActionType[CeraonActionType["GoToSettings"] = 14] = "GoToSettings";
-    CeraonActionType[CeraonActionType["GoToCreateMeal"] = 15] = "GoToCreateMeal";
-    CeraonActionType[CeraonActionType["GoToEditMeal"] = 16] = "GoToEditMeal";
-    CeraonActionType[CeraonActionType["CreateMeal"] = 17] = "CreateMeal";
-    CeraonActionType[CeraonActionType["UpdateUser"] = 18] = "UpdateUser";
-    CeraonActionType[CeraonActionType["UserUpdated"] = 19] = "UserUpdated";
-    CeraonActionType[CeraonActionType["MealCreated"] = 20] = "MealCreated";
-    CeraonActionType[CeraonActionType["ToggleJoinMeal"] = 21] = "ToggleJoinMeal";
-    CeraonActionType[CeraonActionType["UpdatePaymentInfo"] = 22] = "UpdatePaymentInfo";
-    CeraonActionType[CeraonActionType["CreateReview"] = 23] = "CreateReview";
-    CeraonActionType[CeraonActionType["ReviewCreated"] = 24] = "ReviewCreated";
-    CeraonActionType[CeraonActionType["HostedMealsLoaded"] = 25] = "HostedMealsLoaded";
-    CeraonActionType[CeraonActionType["JoinedMealsLoaded"] = 26] = "JoinedMealsLoaded";
-    CeraonActionType[CeraonActionType["MealTagsLoaded"] = 27] = "MealTagsLoaded";
-    CeraonActionType[CeraonActionType["FetchTags"] = 28] = "FetchTags";
-})(CeraonActionType = exports.CeraonActionType || (exports.CeraonActionType = {}));
+const CeraonActionType = {
+    NotAuthorized: 'NotAuthorized',
+    PageNotFound404: 'PageNotFound404',
+    LoadState: 'LoadState',
+    Login: 'Login',
+    MealSearch: 'MealSearch',
+    GoHome: 'GoHome',
+    ViewMeal: 'ViewMeal',
+    StartLoading: 'StartLoading',
+    MealLoaded: 'MealLoaded',
+    SearchResultsLoaded: 'SearchResultsLoaded',
+    MyMealsLoaded: 'MyMealsLoaded',
+    MealUpdated: 'MealUpdated',
+    UpdateMeal: 'UpdateMeal',
+    CancelMeal: 'CancelMeal',
+    MealCancelled: 'MealCancelled',
+    Landing: 'Landing',
+    GoToSettings: 'GoToSettings',
+    GoToCreateMeal: 'GoToCreateMeal',
+    GoToEditMeal: 'GoToEditMeal',
+    CreateMeal: 'CreateMeal',
+    UpdateUser: 'UpdateUser',
+    UserUpdated: 'UserUpdated',
+    MealCreated: 'MealCreated',
+    ToggleJoinMeal: 'ToggleJoinMeal',
+    UpdatePaymentInfo: 'UpdatePaymentInfo',
+    CreateReview: 'CreateReview',
+    ReviewCreated: 'ReviewCreated',
+    HostedMealsLoaded: 'HostedMealsLoaded',
+    JoinedMealsLoaded: 'JoinedMealsLoaded',
+    MealTagsLoaded: 'MealTagsLoaded',
+    FetchTags: 'FetchTags',
+};
 exports.default = CeraonActionType;
 
 },{}],33:[function(require,module,exports){
@@ -780,11 +779,13 @@ class MealCard extends React.Component {
         let card = (React.createElement(semantic_ui_react_1.Card, { fluid: true, className: "ceraon-meal-card", onClick: (event) => { event.preventDefault(); this.props.onClick(this.props.meal); } },
             React.createElement(semantic_ui_react_1.Card.Content, null,
                 React.createElement(semantic_ui_react_1.Card.Header, { className: "ceraon-meal-card-header" },
-                    this.props.meal.name,
+                    React.createElement("span", null, this.props.meal.name),
                     React.createElement(semantic_ui_react_1.Label, { className: "ceraon-meal-card-price", tag: true },
                         "$",
                         this.props.meal.price)),
-                React.createElement(semantic_ui_react_1.Card.Meta, null, this.props.meal.host.public_name),
+                React.createElement(semantic_ui_react_1.Card.Meta, null,
+                    React.createElement("img", { className: "meal-card-host-image", src: this.props.meal.host.image_url }),
+                    React.createElement("span", null, this.props.meal.host.public_name)),
                 this.renderScheduledFor(),
                 this.renderLocation(),
                 React.createElement(semantic_ui_react_1.Card.Description, null, this.props.meal.description)),
